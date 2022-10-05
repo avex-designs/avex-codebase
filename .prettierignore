@@ -1,0 +1,10 @@
+.*
+*.json
+*.md
+*.config
+*.css.liquid
+*.js.liquid
+
+/assets
+/locales
+

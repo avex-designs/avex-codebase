@@ -1,0 +1,115 @@
+.popup-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  overflow: auto;
+  visibility: hidden;
+  background: #0003;
+  opacity: 0;
+}
+
+.popup-modal[open] {
+  z-index: 101;
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup-modal__content {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 92%;
+  height: 80%;
+  padding: 0 1.5rem 0 3rem;
+  margin: 0 auto;
+  margin-top: 5rem;
+  overflow: auto;
+  background-color: #fff;
+  transform: translateX(-50%);
+}
+
+@media screen and (min-width: 750px) {
+  .popup-modal__content {
+    width: 70%;
+    padding: 0 3rem;
+    padding-right: 1.5rem;
+    margin-top: 6.5rem;
+  }
+}
+.popup-modal__content img {
+  max-width: 100%;
+}
+
+@media screen and (max-width: 749px) {
+  .popup-modal__content table {
+    display: block;
+    max-width: fit-content;
+    margin: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+.popup-modal__opener {
+  display: inline-block;
+}
+
+.popup-modal__button {
+  height: 4.4rem;
+  padding-right: 1.3rem;
+  padding-left: 0;
+  font-size: 1.6rem;
+  text-decoration-thickness: 0.1rem;
+  text-underline-offset: 0.3rem;
+  transition: text-decoration-thickness 350ms ease;
+}
+
+.popup-modal__button:hover {
+  text-decoration-thickness: 0.2rem;
+}
+
+.popup-modal__content-info {
+  padding-right: 4.4rem;
+}
+
+.popup-modal__content-info > * {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 749px) {
+  .popup-modal__content-info > * {
+    max-height: 100%;
+  }
+}
+.popup-modal__toggle {
+  position: sticky;
+  top: 1.5rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  padding: 1.2rem;
+  margin: 0 0 0 auto;
+  color: #000;
+  cursor: pointer;
+  background-color: #fff;
+  border: none;
+}
+
+.popup-modal__toggle:hover {
+  color: #000;
+}
+
+.popup-modal__toggle .icon {
+  width: 2.2rem;
+  height: auto;
+  margin: 0;
+}

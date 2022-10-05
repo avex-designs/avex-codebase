@@ -1,0 +1,55 @@
+{%- render 'stylesheet', name: 'article' -%}
+
+<div class="article">
+  <article>
+    <div class="article__header container">
+      <time class="h5 article__date" datetime="{{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' }}">
+        {{- article.published_at | date: '%B %d. %Y' -}}
+      </time>
+      <h1 class="h3 article__title">{{ article.title }}</h1>
+    </div>
+    <div class="article__image-container">
+      {% unless article.image == blank %}
+        {{ article.image | image_url: width: article.image.width | image_tag: preload: true, class: 'cover', loading: "lazy" }}
+      {% endunless %}
+    </div>
+    <div class="container container-min">
+      {% if article.excerpt.size > 0 %}
+        <p class="article__excerpt">{{ article.excerpt | strip_html }}</p>
+      {% endif %}
+      <div class="article__content rte">
+        {{ article.content }}
+      </div>
+
+      {%- if article.tags.size > 0 -%}
+        <div class="article__tags">
+          <ul aria-label="Tags">
+            {%- for tag in article.tags -%}
+              <li>
+                <a href="{{ blog.url }}/tagged/{{ tag | handle }}">
+                  {{ tag }}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+      <div class="article__share">
+        <div>{{ 'blogs.article.share' | t }}</div>
+        {% render 'social-sharing', share_title: article.title, share_permalink: article.url, share_image: article.image %}
+      </div>
+    </div>
+  </article>
+  <h2 class="h3 text-center">{{ 'blogs.article.related_articles' | t }}</h2>
+  <div class="article__related-articles">
+    {%- liquid
+      assign related_article_counter = 0
+                                                                                                                                                                                          			for related_article in blog.articles limit: 3
+                                                                                                                                                                                          				if related_article.handle != article.handle and related_article_counter < 2
+                                                                                                                                                                                          					render 'article-card', article: related_article, show_image: true
+                                                                                                                                                                                          					assign related_article_counter = related_article_counter | plus: 1
+                                                                                                                                                                                          				endif
+                                                                                                                                                                                          			endfor
+    -%}
+  </div>
+</div>

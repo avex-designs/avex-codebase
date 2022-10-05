@@ -1,0 +1,66 @@
+{% render 'stylesheet', name: "cart-item" %}
+
+<div class="cart-item">
+  <div class="cart-item__image">
+    {{ item.image | image_url: width: 150 | image_tag: class: "cover", loading: "lazy", width: "100", height: "150" }}
+  </div>
+  <div class="cart-items__details">
+    <h6 class="cart-item__title">
+      <a href="{{ item.url }}">{{ item.product.title }}</a>
+    </h6>
+    <div class="cart-item__price">
+      {%- if item.product.compare_at_price != nil -%}
+        <span class="cart-item__price-original">{{ item.product.compare_at_price | money }}</span>
+      {%- endif -%}
+      <span class="cart-item__price-current">{{ item.product.price | money }}</span>
+    </div>
+    <div class="cart-item__extra">
+      {% unless item.product.has_only_default_variant %}
+        <ul class="cart-item__options">
+          {% for option in item.options_with_values %}
+            <li>{{ option.name }}: {{ option.value }}</li>
+          {% endfor %}
+        </ul>
+      {% endunless %}
+      {% unless item.properties == empty %}
+        <ul class="cart-item__properties">
+          {% for property in item.properties %}
+            <li>{{ property.first }}: {{ property.last }}</li>
+          {% endfor %}
+        </ul>
+      {% endunless %}
+    </div>
+    <div class="cart-item__quantity-picker">
+      <a
+        href="{{ routes.cart_change_url }}?line={{ index }}&quantity={{ item.quantity | minus: 1 }}"
+        data-ajax-cart-request-button
+        type="button"
+        aria-label="{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}"
+        >&#8212;</a
+      >
+      <input
+        class="count"
+        type="number"
+        value="{{ item.quantity }}"
+        data-ajax-cart-quantity-input="{{ index }}"
+        aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+      >
+      <a
+        href="{{ routes.cart_change_url }}?line={{ index }}&quantity={{ item.quantity | plus: 1 }}"
+        data-ajax-cart-request-button
+        type="button"
+        aria-label="{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}"
+        >&#43;</a
+      >
+    </div>
+    <a
+      href="{{ routes.cart_change_url }}?line={{ index }}&quantity=0"
+      data-ajax-cart-request-button
+      class="cart-item__remove"
+      type="button"
+    >
+      {{- 'sections.ajax_cart.remove' | t -}}
+    </a>
+    <div class="cart-item__error" data-ajax-cart-messages="{{ item.key }}"></div>
+  </div>
+</div>

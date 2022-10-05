@@ -1,0 +1,214 @@
+.product-card {
+  display: grid;
+}
+@media only screen and (max-width: 767px) {
+  .product-card {
+    max-width: 100%;
+  }
+}
+
+.product-card__error {
+  font-size: 10px;
+  color: #d81356;
+}
+.product-card__error > div {
+  margin-bottom: 1rem;
+}
+
+.product-card__image {
+  position: relative;
+  aspect-ratio: 6/9;
+  overflow: hidden;
+}
+.product-card__image .images,
+.product-card__image .main-image {
+  height: 100%;
+}
+.product-card__image .hover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 650ms ease-in-out;
+}
+.product-card__image .responsive-image__wrapper {
+  height: 100%;
+}
+.product-card__image .responsive-image__image {
+  width: 100%;
+  max-width: 100% !important;
+  height: fit-content;
+  height: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover;
+}
+
+.product-card__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.product-card__label span {
+  display: inline-block;
+  font-family: "Futura PT Light", sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+  font-weight: 400;
+  line-height: 1.1875rem;
+  text-transform: uppercase;
+  transform: rotate(90deg) translate(-5px, -9px);
+  transform-origin: 0% 100%;
+}
+@media only screen and (max-width: 767px) {
+  .product-card__label span {
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+    transform: rotate(90deg) translate(-10px, -6px);
+  }
+}
+
+.product-card__wishlist {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.product-card__wishlist button {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin-top: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+.product-card__wishlist button svg {
+  width: 16px;
+  height: 16px;
+}
+.product-card__wishlist button .wk-label {
+  display: none;
+}
+
+.product-card__link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+}
+
+.product-card__form.js-ajax-cart-form-in-progress .secondary-button {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+}
+.product-card__form.js-ajax-cart-form-in-progress .secondary-button::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  left: auto;
+  bottom: auto;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000 #000 #000 transparent;
+  animation: loading 0.5s linear infinite;
+}
+
+.product-card__actions {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+@media only screen and (max-width: 767px) {
+  .product-card__actions {
+    display: none;
+  }
+}
+.product-card__actions--only-one {
+  grid-template-columns: 100%;
+}
+.product-card__actions--only-one .select-tag {
+  display: none;
+}
+
+.product-card__description {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  padding: 1rem 5px 8px;
+}
+@media only screen and (max-width: 767px) {
+  .product-card__description {
+    grid-template-columns: none;
+    padding: 8px;
+  }
+}
+.product-card__description--soldout .title,
+.product-card__description--soldout .current-price {
+  text-decoration: line-through;
+}
+
+.product-card__titleblock .title {
+  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.1875rem;
+}
+@media only screen and (max-width: 767px) {
+  .product-card__titleblock .title {
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+  }
+}
+.product-card__titleblock .title a {
+  color: #000;
+  text-decoration: none;
+  transition: opacity 400ms ease;
+}
+
+.product-card__priceblock {
+  font-family: "Futura PT Light", sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.1875rem;
+  text-align: right;
+}
+@media only screen and (max-width: 767px) {
+  .product-card__priceblock {
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+    text-align: left;
+  }
+}
+.product-card__priceblock .old-price {
+  color: #5c5c5c;
+  text-decoration: line-through;
+}
+
+.bis-notifyme {
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .product-card__image:hover .product-card__actions {
+    opacity: 1;
+  }
+  .product-card__image:hover .hover-image {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,16 @@
+<ul class="socials__links">
+  {%- for link in socials.links -%}
+    <li class="social-links__link">
+      <a
+        href="{{ link.url }}"
+        target="_blank"
+        aria-label="Follow us on {{ link.title }}"
+        aria-describedby="new-window-0"
+        rel="noopener"
+      >
+        {%- assign icon_name = link.title | downcase -%}
+        {%- render 'social-icons' icon: icon_name -%}
+      </a>
+    </li>
+  {%- endfor %}
+</ul>

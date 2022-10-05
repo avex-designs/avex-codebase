@@ -1,0 +1,78 @@
+{%- render 'stylesheet', name: 'giftcard' -%}
+
+{% assign formatted_initial_value = gift_card.initial_value | money_without_trailing_zeros: gift_card.currency %}
+
+<div class="giftcard{% if gift_card.expired or gift_card.enabled != true %} disabled{% endif %}">
+  <div class="giftcard__content">
+    <div class="giftcard__header">
+      <h2 class="h2 giftcard__title">{{ 'gift_cards.issued.subtext' | t }}</h2>
+      {% unless gift_card.enabled %}
+        <span class="giftcard__tag">{{ 'gift_cards.issued.disabled' | t }}</span>
+      {% endunless %}
+      {% assign gift_card_expiry_date = gift_card.expires_on | date: format: 'basic' %}
+      {% if gift_card.expired and gift_card.enabled %}
+        <span class="giftcard__tag">{{ 'gift_cards.issued.expired' | t: expiry: gift_card_expiry_date }}</span>
+      {% endif %}
+      {% if gift_card.expired != true and gift_card.expires_on and gift_card.enabled %}
+        <span class="giftcard__tag giftcard__tag--active">
+          {{- 'gift_cards.issued.active' | t: expiry: gift_card_expiry_date -}}
+        </span>
+      {% endif %}
+    </div>
+
+    <div class="giftcard__wrap">
+      <img
+        src="{{ 'gift-card/card.svg' | shopify_asset_url }}"
+        alt=""
+        class="gift-card__image"
+        height="{{ 570 | divided_by: 1.5 }}"
+        width="570"
+        loading="lazy"
+      >
+
+      {% assign initial_value_size = formatted_initial_value | size %}
+      <div class="h2 giftcard__amount{% if initial_value_size > 6 %} giftcard__amount--medium{% endif %}">
+        {% if gift_card.balance != gift_card.initial_value %}
+          <span class="tooltip">
+            <span class="tooltip__label">
+              {{- gift_card.balance | money }}
+              <small>left</small></span
+            >
+          </span>
+        {% endif %}
+        <strong>{{ formatted_initial_value }}</strong>
+      </div>
+
+      {% assign code_size = gift_card.code | format_code | size %}
+      <div
+        class="giftcard__code{% if code_size <= 25 %} giftcard__code--large{% elsif code_size > 25 and code_size <= 30 %} giftcard__code--medium{% else %} giftcard__code--small{% endif %}"
+        onclick="selectText('GiftCardDigits');"
+      >
+        <div class="giftcard__code__inner">
+          <strong class="giftcard__code__text" id="GiftCardDigits">{{ gift_card.code | format_code }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <p class="giftcard__instructions">
+      {% assign balance =  gift_card.balance | money %}
+      {{ 'gift_cards.issued.redeem_html' | t: value: balance }}
+    </p>
+
+    <div id="QrCode"></div>
+    <script>
+      new QRCode(document.getElementById('QrCode'), {
+        text: "{{ gift_card.qr_identifier }}",
+        width: 120,
+        height: 120
+      });
+    </script>
+
+    <div class="giftcard__actions">
+      <a href="{{ shop.url }}" class="btn" target="_blank">{{ 'gift_cards.issued.shop_link' | t }}</a>
+      <a href="#" class="action-link" onclick="window.print();">
+        <i class="action-link__print"></i><strong>{{ 'gift_cards.issued.print' | t }}</strong>
+      </a>
+    </div>
+  </div>
+</div>

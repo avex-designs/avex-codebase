@@ -1,0 +1,29 @@
+.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: #000;
+  border: 1px solid #000;
+  appearance: none;
+}
+
+.secondary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  color: #000;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #000;
+  appearance: none;
+}

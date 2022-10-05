@@ -1,0 +1,101 @@
+{%- render 'stylesheet', name: 'products-carousel' -%}
+
+{% if section.settings.carousel_coll != blank %}
+  {% assign limit = section.settings.carousel_coll_lm | plus: 0 %}
+  <div class="container-max">
+    {% if collections[section.settings.carousel_coll].products_count != 0 %}
+      {% if section.settings.carousel_title != blank %}
+        <h2 class="products-carousel__title h3">{{ section.settings.carousel_title }}</h2>
+      {% endif %}
+      <div
+        class="swiper products-carousel-swiper"
+        data-limit_per_view_mobile="{{ section.settings.carousel_mob }}"
+        data-limit_per_view="{{ section.settings.carousel_desk }}"
+      >
+        {%- render 'stylesheet', name: 'product-card' -%}
+        <div class="swiper-wrapper">
+          {% for product in collections[section.settings.carousel_coll].products limit: limit %}
+            <div class="swiper-slide">
+              {%- render 'product-card', product: product, without_css: true -%}
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if collections[section.settings.carousel_coll].products_count > section.settings.carousel_desk and limit > section.settings.carousel_desk %}
+          <button class="swiper-button-prev swiper-button" aria-label="{{ 'accessibility.previous_slide' | t }}">
+            {%- render 'icon-carousel-arrow' -%}
+          </button>
+          <button class="swiper-button-next swiper-button" aria-label="{{ 'accessibility.next_slide' | t }}">
+            {%- render 'icon-carousel-arrow' -%}
+          </button>
+        {% endif %}
+      </div>
+
+      {% if section.settings.carousel_b_text != blank %}
+        <div class="products-carousel__button">
+          <a
+            href="{{ collections[section.settings.carousel_coll].url }}"
+            class="secondary-button"
+            style="--sec-color: #000"
+          >
+            {{- section.settings.carousel_b_text -}}
+          </a>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Products Carousel",
+  "class": "products-carousel",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "carousel_title",
+      "label": "Title",
+      "default": "New arrivals"
+    },
+    {
+      "type": "collection",
+      "id": "carousel_coll",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "id": "carousel_coll_lm",
+      "label": "Products Quantity",
+      "default": 15
+    },
+    {
+      "type": "number",
+      "id": "carousel_desk",
+      "label": "Desktop Carousel Visible Items #",
+      "default": 4
+    },
+    {
+      "type": "number",
+      "id": "carousel_mob",
+      "label": "Mobile Carousel Visible Items #",
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "carousel_b_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Products Carousel",
+      "category": "Home Page"
+    }
+  ]
+}
+{% endschema %}

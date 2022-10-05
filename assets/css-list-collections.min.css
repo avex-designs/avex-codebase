@@ -1,0 +1,39 @@
+.collections {
+  padding: 2rem 0 4rem;
+}
+.collections__header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.collections__header .secondary-button {
+  max-width: 200px;
+  margin-top: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+.collections .collection-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.collections .collection-list__item {
+  width: 25%;
+}
+.collections .collection-list__item .card--media {
+  display: block;
+  margin: 1rem;
+  text-decoration: none;
+}
+.collections .collection-list__item img {
+  height: 300px;
+}
+.collections .collection-list__item .card__text {
+  padding: 1rem 0.5rem;
+  background: #f7f7f7;
+}
+.collections .collection-list__item .card__text h2 {
+  display: flex;
+  justify-content: space-between;
+}
+.collections .collection-list__item .card__text h2 svg {
+  width: 12px;
+}

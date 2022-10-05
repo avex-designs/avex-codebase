@@ -1,0 +1,79 @@
+{%- render 'stylesheet', name: 'products-carousel' -%}
+<script src="{{ 'product-recommendations-js.min.js' | asset_url }}" defer="defer"></script>
+
+{%- assign limit = section.settings.recc_coll_lm | plus: 0 -%}
+<product-recommendations
+  class="product-recommendations products-carousel"
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ limit }}"
+>
+  <div class="container-max">
+    {%- if recommendations.performed and recommendations.products_count > 0 -%}
+      {% if section.settings.recc_title != blank %}
+        <h2 class="product-recommendations__title h4">{{ section.settings.recc_title }}</h2>
+      {% endif %}
+
+      <div
+        class="swiper products-recommendations-swiper"
+        data-limit_per_view_mobile="{{ section.settings.recc_mob }}"
+        data-limit_per_view="{{ section.settings.recc_desk }}"
+      >
+        <div class="swiper-wrapper">
+          {%- for product in recommendations.products -%}
+            <div class="swiper-slide">
+              {%- render 'product-card', product: product -%}
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if recommendations.products_count > section.settings.recc_desk and limit > section.settings.recc_desk %}
+          <button class="swiper-button-prev swiper-button" aria-label="{{ 'accessibility.previous_slide' | t }}">
+            {%- render 'icon-carousel-arrow' -%}
+          </button>
+          <button class="swiper-button-next swiper-button" aria-label="{{ 'accessibility.next_slide' | t }}">
+            {%- render 'icon-carousel-arrow' -%}
+          </button>
+        {% endif %}
+      </div>
+    {%- endif -%}
+  </div>
+</product-recommendations>
+
+{% style sheet %}
+  .product-recommendations { text-align: center; margin-bottom: 2rem; display: block; } .product-recommendations__title{
+  margin-bottom: 2rem; }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "recc_title",
+      "label": "Title",
+      "default": "You may also like"
+    },
+    {
+      "type": "range",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "id": "recc_coll_lm",
+      "label": "Products Quantity",
+      "default": 15
+    },
+    {
+      "type": "number",
+      "id": "recc_desk",
+      "label": "Desktop recommendations Visible Items #",
+      "default": 4
+    },
+    {
+      "type": "number",
+      "id": "recc_mob",
+      "label": "Mobile recommendations Visible Items #",
+      "default": 2
+    }
+  ]
+}
+{% endschema %}

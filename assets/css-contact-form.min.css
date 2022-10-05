@@ -1,0 +1,189 @@
+advanced-form {
+  display: block;
+}
+
+.form__fields-wrapper {
+  margin: 0 -0.75rem;
+}
+@media (min-width: 767px) {
+  .form__fields-wrapper {
+    white-space: nowrap;
+  }
+}
+
+.form__field {
+  position: relative;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+.form__field--no-bottom-space {
+  margin-bottom: 0;
+}
+.form__field--half {
+  display: inline-block;
+  width: 100%;
+}
+@media (min-width: 767px) {
+  .form__field--half {
+    width: 50%;
+  }
+}
+.form__field small {
+  display: block;
+  margin-top: 0.5rem;
+  color: #c4c4c4;
+}
+.form__field label {
+  transition: 0.3s ease;
+  position: absolute;
+  color: #c4c4c4;
+  top: 0;
+  left: 0.75rem;
+  transform: translateY(100%);
+}
+.form__field input,
+.form__field textarea {
+  border: 0;
+  padding: 0.75rem 0;
+  background-color: transparent;
+  width: 100%;
+  outline: transparent;
+  box-shadow: 0 2px 0 -1px rgba(0, 0, 0, 0.2);
+  transition: 0.3s ease;
+  appearance: none;
+  border-radius: 0;
+}
+.form__field input::placeholder,
+.form__field textarea::placeholder {
+  opacity: 0;
+  color: #c4c4c4;
+  transition: 0.3s ease;
+}
+.form__field input[aria-invalid=true],
+.form__field textarea[aria-invalid=true] {
+  box-shadow: 0 3px 0 -1px rgba(227, 24, 24, 0.2);
+}
+.form__field input[aria-invalid=true] + label,
+.form__field textarea[aria-invalid=true] + label {
+  color: #e31818;
+}
+.form__field input:focus,
+.form__field textarea:focus {
+  box-shadow: 0 3px 0 -1px #000;
+}
+.form__field input:focus::placeholder,
+.form__field textarea:focus::placeholder {
+  opacity: 1;
+}
+.form__field input:focus + label,
+.form__field textarea:focus + label {
+  bottom: auto;
+  color: #000;
+  transform: translateY(0);
+}
+.form__field input:not(:placeholder-shown) + label,
+.form__field textarea:not(:placeholder-shown) + label {
+  bottom: auto;
+  transform: translateY(0);
+}
+.form__field input[required] + label::after,
+.form__field textarea[required] + label::after {
+  content: "*";
+}
+
+.form__checkbox {
+  padding: 0 0.75rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
+  /* stylelint-disable-next-line no-descending-specificity */
+  /* stylelint-disable-next-line no-descending-specificity */
+}
+.form__checkbox input {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.form__checkbox input:checked + label::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.13385 6.27501L1.68385 3.82501L0.867188 4.64167L4.13385 7.90834L11.1339 0.908341L10.3172 0.0916748L4.13385 6.27501Z' fill='%23000000'/%3E%3C/svg%3E%0A");
+}
+.form__checkbox input:disabled + label {
+  opacity: 0.5;
+}
+.form__checkbox label {
+  display: flex;
+  align-items: center;
+  /* stylelint-disable-next-line no-descending-specificity */
+}
+.form__checkbox label::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #000;
+  margin-right: 0.5rem;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.form__select {
+  padding: 0 0.75rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
+  /* stylelint-disable-next-line no-descending-specificity */
+}
+.form__select select {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 7L8 11L12 7' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  appearance: none;
+  cursor: pointer;
+  width: 100%;
+  padding: 0.75rem 0;
+  padding-right: 1.5rem;
+  border: 0;
+  box-shadow: 0 2px 0 -1px rgba(0, 0, 0, 0.2);
+  transition: 0.3s ease;
+  outline: transparent;
+  background-position: center right;
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  color: inherit;
+}
+.form__select select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 9L8 5L12 9' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  box-shadow: 0 3px 0 -1px #000;
+}
+.form__select label {
+  padding-top: 0.75rem;
+  color: #c4c4c4;
+  display: block;
+}
+
+.form__message {
+  padding: 0 0.5rem;
+  text-align: center;
+  display: block;
+}
+.form__message--error {
+  color: #e31818;
+}
+
+.contact-form form {
+  margin-top: 2rem;
+}
+.contact-form__button {
+  max-width: 200px;
+  margin: 1.5rem 0;
+}
+.contact-form__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}

@@ -1,0 +1,64 @@
+.products-carousel {
+  overflow: hidden;
+}
+@media only screen and (max-width: 767px) {
+  .products-carousel .swiper-slide {
+    flex: 0 0 50%;
+  }
+}
+.products-carousel__title {
+  margin: 3.75rem 1.25rem 1.25rem;
+  text-align: center;
+}
+.products-carousel__button {
+  margin: 2.5rem 1.25rem 2.5rem;
+  text-align: center;
+}
+@media only screen and (max-width: 767px) {
+  .products-carousel__button {
+    margin: 1rem 1rem;
+  }
+}
+.products-carousel .products-carousel-swiper {
+  position: relative;
+}
+.products-carousel .swiper-button {
+  position: absolute;
+  top: 33%;
+  right: 1rem;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+@media only screen and (max-width: 767px) {
+  .products-carousel .swiper-button {
+    top: 45%;
+  }
+}
+@media only screen and (max-width: 479px) {
+  .products-carousel .swiper-button {
+    top: 35%;
+  }
+}
+.products-carousel .swiper-button::after {
+  display: none;
+}
+.products-carousel .swiper-button svg {
+  fill: #000;
+}
+@media only screen and (max-width: 767px) {
+  .products-carousel .swiper-button svg {
+    width: 24px;
+  }
+}
+.products-carousel .swiper-button.swiper-button-disabled svg {
+  fill: none;
+}
+.products-carousel .swiper-button-prev {
+  left: 1rem;
+}
+.products-carousel .swiper-button-prev svg {
+  transform: rotate(180deg);
+}

@@ -1,0 +1,929 @@
+advanced-form {
+  display: block;
+}
+
+.form__fields-wrapper {
+  margin: 0 -0.75rem;
+}
+@media (min-width: 767px) {
+  .form__fields-wrapper {
+    white-space: nowrap;
+  }
+}
+
+.form__field {
+  position: relative;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+.form__field--no-bottom-space {
+  margin-bottom: 0;
+}
+.form__field--half {
+  display: inline-block;
+  width: 100%;
+}
+@media (min-width: 767px) {
+  .form__field--half {
+    width: 50%;
+  }
+}
+.form__field small {
+  display: block;
+  margin-top: 0.5rem;
+  color: #c4c4c4;
+}
+.form__field label {
+  transition: 0.3s ease;
+  position: absolute;
+  color: #c4c4c4;
+  top: 0;
+  left: 0.75rem;
+  transform: translateY(100%);
+}
+.form__field input,
+.form__field textarea {
+  border: 0;
+  padding: 0.75rem 0;
+  background-color: transparent;
+  width: 100%;
+  outline: transparent;
+  box-shadow: 0 2px 0 -1px rgba(0, 0, 0, 0.2);
+  transition: 0.3s ease;
+  appearance: none;
+  border-radius: 0;
+}
+.form__field input::placeholder,
+.form__field textarea::placeholder {
+  opacity: 0;
+  color: #c4c4c4;
+  transition: 0.3s ease;
+}
+.form__field input[aria-invalid=true],
+.form__field textarea[aria-invalid=true] {
+  box-shadow: 0 3px 0 -1px rgba(227, 24, 24, 0.2);
+}
+.form__field input[aria-invalid=true] + label,
+.form__field textarea[aria-invalid=true] + label {
+  color: #e31818;
+}
+.form__field input:focus,
+.form__field textarea:focus {
+  box-shadow: 0 3px 0 -1px #000;
+}
+.form__field input:focus::placeholder,
+.form__field textarea:focus::placeholder {
+  opacity: 1;
+}
+.form__field input:focus + label,
+.form__field textarea:focus + label {
+  bottom: auto;
+  color: #000;
+  transform: translateY(0);
+}
+.form__field input:not(:placeholder-shown) + label,
+.form__field textarea:not(:placeholder-shown) + label {
+  bottom: auto;
+  transform: translateY(0);
+}
+.form__field input[required] + label::after,
+.form__field textarea[required] + label::after {
+  content: "*";
+}
+
+.form__checkbox {
+  padding: 0 0.75rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
+  /* stylelint-disable-next-line no-descending-specificity */
+  /* stylelint-disable-next-line no-descending-specificity */
+}
+.form__checkbox input {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.form__checkbox input:checked + label::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.13385 6.27501L1.68385 3.82501L0.867188 4.64167L4.13385 7.90834L11.1339 0.908341L10.3172 0.0916748L4.13385 6.27501Z' fill='%23000000'/%3E%3C/svg%3E%0A");
+}
+.form__checkbox input:disabled + label {
+  opacity: 0.5;
+}
+.form__checkbox label {
+  display: flex;
+  align-items: center;
+  /* stylelint-disable-next-line no-descending-specificity */
+}
+.form__checkbox label::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #000;
+  margin-right: 0.5rem;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.form__select {
+  padding: 0 0.75rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
+  /* stylelint-disable-next-line no-descending-specificity */
+}
+.form__select select {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 7L8 11L12 7' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  appearance: none;
+  cursor: pointer;
+  width: 100%;
+  padding: 0.75rem 0;
+  padding-right: 1.5rem;
+  border: 0;
+  box-shadow: 0 2px 0 -1px rgba(0, 0, 0, 0.2);
+  transition: 0.3s ease;
+  outline: transparent;
+  background-position: center right;
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  color: inherit;
+}
+.form__select select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 9L8 5L12 9' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  box-shadow: 0 3px 0 -1px #000;
+}
+.form__select label {
+  padding-top: 0.75rem;
+  color: #c4c4c4;
+  display: block;
+}
+
+.form__message {
+  padding: 0 0.5rem;
+  text-align: center;
+  display: block;
+}
+.form__message--error {
+  color: #e31818;
+}
+
+.customer:not(.account, .order) {
+  margin: 6rem auto 9rem;
+  text-align: center;
+}
+
+.customer form {
+  margin-top: 4rem;
+}
+
+.customer ul {
+  padding-left: 4.4rem;
+  margin-bottom: 4rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.customer ul a {
+  display: inline;
+}
+
+.customer strong {
+  font-weight: normal;
+  color: #000;
+}
+
+.customer h2.form__message {
+  font-size: 1rem;
+}
+
+.customer .field {
+  margin: 2rem 0 0;
+}
+
+.customer .field:first-of-type {
+  margin-top: 0;
+}
+
+/* Customer Table */
+.customer table {
+  position: relative;
+  width: 100%;
+  font-size: 1rem;
+  table-layout: auto;
+  border-collapse: collapse;
+  border-bottom: 0.01rem solid #000;
+  box-shadow: none;
+}
+
+@media screen and (min-width: 750px) {
+  .customer table {
+    border: none;
+    box-shadow: 0 0 0 0.1rem #000;
+  }
+}
+@media screen and (forced-colors: active) {
+  .customer table {
+    border-top: 0.1rem solid transparent;
+    border-bottom: 0.1rem solid transparent;
+  }
+}
+.customer tbody {
+  color: #000;
+}
+
+.customer th,
+.customer td {
+  padding: 0;
+  font-weight: 400;
+  line-height: 1;
+  border: none;
+}
+
+@media screen and (min-width: 750px) {
+  .customer td {
+    padding-right: 2.2rem;
+  }
+}
+.customer tbody td {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.customer td:empty {
+  display: initial;
+}
+
+.customer thead th {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07rem;
+}
+
+.customer tbody td:first-of-type {
+  padding-top: 1rem;
+}
+
+@media screen and (min-width: 750px) {
+  .customer th,
+.customer td:first-of-type {
+    padding-right: 1rem;
+    padding-left: 0;
+    text-align: left;
+  }
+
+  .customer thead th,
+.customer tbody td {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .customer th:first-of-type,
+.customer td:first-of-type {
+    padding-left: 1rem;
+  }
+
+  .customer tbody td {
+    vertical-align: top;
+  }
+
+  .customer tbody td:first-of-type {
+    padding-top: 1rem;
+  }
+}
+.customer tbody td:last-of-type {
+  padding-bottom: 4rem;
+}
+
+@media screen and (min-width: 750px) {
+  .customer tbody td:last-of-type {
+    padding-bottom: 0;
+  }
+}
+.customer tbody tr {
+  border-top: 0.01rem solid #000;
+}
+
+@media screen and (min-width: 750px) {
+  .customer tbody tr:first-of-type {
+    border-top: none;
+  }
+}
+@media screen and (forced-colors: active) {
+  .customer tbody tr {
+    border-top: 0.1rem solid transparent;
+  }
+}
+.customer tfoot td:first-of-type,
+.customer tfoot td {
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.customer tfoot td:first-of-type {
+  text-align: left;
+}
+
+.customer tfoot tr:first-of-type td {
+  padding-top: 4rem;
+}
+
+@media screen and (min-width: 750px) {
+  .customer tfoot tr:first-of-type td,
+.customer tfoot tr:first-of-type th {
+    padding-top: 2.4rem;
+  }
+}
+.customer tfoot tr:last-of-type td {
+  padding-bottom: 4rem;
+}
+
+@media screen and (min-width: 750px) {
+  .customer tfoot tr:last-of-type td,
+.customer tfoot tr:last-of-type th {
+    padding-bottom: 2.4rem;
+  }
+}
+/* works around colspan phantom border issues */
+.customer thead::after,
+.customer tfoot::before {
+  position: absolute;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 0.1rem;
+  content: " ";
+  background: #000;
+}
+
+@media screen and (forced-colors: active) {
+  .customer thead::after,
+.customer tfoot::before {
+    background: canvastext;
+  }
+}
+/* mobile table overrides */
+@media screen and (max-width: 749px) {
+  .customer thead,
+.customer th,
+.customer tfoot td:first-of-type {
+    display: none;
+  }
+
+  .customer td {
+    display: flex;
+    text-align: right;
+  }
+
+  .customer td::before {
+    flex-grow: 1;
+    padding-right: 2rem;
+    font-size: 1.4rem;
+    color: #000;
+    text-align: left;
+    text-transform: uppercase;
+    content: attr(data-label);
+  }
+
+  .customer td:first-of-type {
+    display: flex;
+    align-items: center;
+  }
+
+  .customer tr {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+/* Pagination */
+.customer .pagination {
+  margin-top: 5rem;
+  margin-bottom: 7rem;
+}
+
+@media screen and (min-width: 990px) {
+  .customer .pagination {
+    margin-top: 7rem;
+    margin-bottom: 10rem;
+  }
+}
+.customer .pagination ul {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  list-style: none;
+}
+
+.customer .pagination li {
+  flex: 1 1;
+  max-width: 4rem;
+}
+
+.customer .pagination li:not(:last-child) {
+  margin-right: 1rem;
+}
+
+.customer .pagination li :first-child {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 4rem;
+  padding: 0;
+  text-decoration: none;
+}
+
+.customer .pagination li :first-child svg {
+  height: 0.6rem;
+}
+
+.customer .pagination li:first-of-type svg {
+  margin-left: -0.2rem;
+  transform: rotate(90deg);
+}
+
+.customer .pagination li:last-of-type svg {
+  margin-right: -0.2rem;
+  transform: rotate(-90deg);
+}
+
+.customer .pagination li [aria-current]::after {
+  position: absolute;
+  bottom: 0.08rem;
+  left: 50%;
+  display: block;
+  width: 2rem;
+  height: 0.01rem;
+  content: "";
+  background-color: currentcolor;
+  transform: translateX(-50%);
+}
+
+/* Login */
+.login a {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.login a[href="#recover"] {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.login .field + a {
+  margin-top: 1rem;
+}
+
+.login p {
+  margin: 1.5rem 0;
+}
+
+.login h3 {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  text-align: left;
+}
+
+#customer_login_guest button {
+  margin-top: 0;
+}
+
+#recover,
+#recover + div {
+  display: none;
+}
+
+#recover:target {
+  display: block;
+}
+
+#recover:target + div {
+  display: block;
+}
+
+#recover:target ~ #login,
+#recover:target ~ #login + div {
+  display: none;
+}
+
+#recover,
+#login {
+  scroll-margin-top: 20rem;
+}
+
+#recover {
+  margin-bottom: 0;
+}
+
+.activate button[name=decline],
+.addresses li > button,
+.addresses form button[type] {
+  color: #000;
+  background-color: transparent;
+  box-shadow: 0 0 0 0.1rem #000;
+}
+
+.activate button[name=decline]:hover,
+.addresses li > button:hover,
+.addresses form button[type]:hover {
+  box-shadow: 0 0 0 0.2rem #000;
+}
+
+@media only screen and (min-width: 750px) {
+  .activate button[name=decline] {
+    margin-top: inherit;
+    margin-left: 1rem;
+  }
+}
+/* Account/Order */
+:is(.account, .order) {
+  margin: 6rem auto 9rem;
+}
+
+@media screen and (min-width: 990px) {
+  :is(.account, .order) > div:nth-of-type(2) {
+    display: flex;
+    margin-top: 5rem;
+  }
+}
+@media screen and (min-width: 990px) {
+  :is(.account, .order) > div:nth-of-type(2) > div:first-of-type {
+    flex-grow: 1;
+    padding-right: 3.2rem;
+  }
+}
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .order > div:nth-of-type(2) > div:last-of-type {
+    display: flex;
+  }
+
+  .order > div:nth-of-type(2) > div:last-of-type div {
+    padding-right: 3.2rem;
+  }
+}
+:is(.account, .order) p {
+  margin: 0 0 2rem;
+  font-size: 1rem;
+}
+
+:is(.account, .order) h1 {
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+}
+
+:is(.account, .order) h2 {
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+  font-size: 1.6875rem;
+}
+
+@media screen and (min-width: 990px) {
+  :is(.account, .order) h2 {
+    margin-top: 0;
+  }
+}
+.customer-header {
+  text-align: center;
+}
+
+.customer-account-body__item {
+  margin-bottom: 2rem;
+}
+
+.account h1 + a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.account a svg {
+  width: 1.5rem;
+  margin-right: 1rem;
+  margin-bottom: -0.03rem;
+}
+
+@media screen and (min-width: 750px) {
+  .account thead th:last-child,
+.account td:last-child {
+    text-align: right;
+  }
+}
+.account table td:first-of-type a {
+  font-size: 1rem;
+  text-decoration: underline;
+  border: 0.1rem solid transparent;
+}
+
+.order td:first-of-type {
+  align-items: initial;
+}
+
+@media screen and (min-width: 750px) {
+  .order thead th:nth-last-child(-n+3),
+.order td:nth-last-child(-n+3) {
+    text-align: right;
+  }
+}
+.order tfoot tr:last-of-type td,
+.order tfoot tr:last-of-type th {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.order tfoot tr:last-of-type td::before {
+  font-size: 1rem;
+}
+
+.order table p,
+.order > div:nth-of-type(2) > div:first-of-type h2,
+.order > div:nth-of-type(2) > div:last-of-type h2 + p {
+  margin-bottom: 1rem;
+}
+
+.order > div:nth-of-type(2) > div:first-of-type h2 ~ p {
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+
+.order > div:nth-of-type(2) > div:first-of-type h2 ~ p:last-of-type {
+  margin-bottom: 3rem;
+}
+
+.order .item-props {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.05px;
+  font-size: 1rem;
+}
+
+.order .item-props > span {
+  line-height: 1.2;
+  word-break: break-all;
+}
+
+.order .fulfillment {
+  width: fit-content;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  text-align: left;
+  border: 0.01rem solid #000;
+}
+
+.order .fulfillment a {
+  margin: 0.7rem 0;
+}
+
+.order .fulfillment span {
+  display: block;
+}
+
+.order .cart-discount {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+@media screen and (min-width: 750px) {
+  .order td .cart-discount {
+    display: none;
+  }
+}
+.order tbody ul {
+  padding-left: 0;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  text-align: right;
+  list-style: none;
+}
+
+@media screen and (min-width: 750px) {
+  .order tbody ul {
+    text-align: left;
+  }
+}
+.order table a {
+  line-height: 1.3;
+}
+
+.order tbody tr:first-of-type td:first-of-type > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+@media screen and (min-width: 750px) {
+  .order tbody tr:first-of-type td:first-of-type > div {
+    align-items: flex-start;
+  }
+}
+.order .properties {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.order .properties span {
+  display: block;
+  line-height: 1.2;
+}
+
+.order svg {
+  width: 1.1rem;
+  margin-right: 0.5rem;
+  color: #000;
+}
+
+.order dl {
+  margin: 0;
+}
+
+.order dd {
+  margin-left: 0;
+  line-height: 1.3;
+}
+
+.order dd s {
+  color: #000;
+}
+
+.order .unit-price {
+  margin-top: 0.2rem;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.07rem;
+}
+
+.order .regular-price {
+  font-size: 1.3rem;
+}
+
+/* Addresses */
+.addresses li > button {
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.addresses li > button + button,
+.addresses form button + button {
+  margin-top: 0;
+}
+
+.address-buttons {
+  display: flex;
+}
+
+@media screen and (min-width: 750px) {
+  .addresses li > button:first-of-type {
+    margin-top: 3rem;
+  }
+}
+.addresses form button:first-of-type {
+  margin-right: 1rem;
+}
+
+label[for=AddressCountryNew],
+label[for=AddressProvinceNew] {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 1.4rem;
+}
+
+.addresses form {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.addresses form > div {
+  width: 100%;
+  text-align: left;
+}
+
+.addresses ul {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  text-align: center;
+  list-style: none;
+}
+
+.address-text.default {
+  border: 1px solid #000;
+}
+
+li[data-address] {
+  flex: 0 0 25%;
+  width: 25%;
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.addresses [aria-expanded=false] ~ div[id] {
+  display: none;
+}
+
+.addresses [aria-expanded=true] ~ div[id] {
+  display: block;
+}
+
+.addresses h2 {
+  text-align: left;
+}
+
+li[data-address] > h2 {
+  margin-bottom: 0;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+@media only screen and (min-width: 750px) {
+  li[data-address] > h2 {
+    font-size: 2.2rem;
+  }
+}
+.addresses ul p {
+  margin-bottom: 0;
+}
+
+.addresses input[type=checkbox] {
+  margin-top: 2rem;
+  margin-left: 0;
+}
+
+@media only screen and (min-width: 750px) {
+  .addresses form > div:nth-of-type(1) {
+    padding-right: 2rem;
+  }
+
+  .addresses form > div:nth-of-type(2) {
+    margin-top: 0;
+  }
+
+  .addresses form > div:nth-of-type(1),
+.addresses form > div:nth-of-type(2) {
+    box-sizing: border-box;
+    flex-basis: 50%;
+  }
+}
+.addresses form > div:nth-of-type(7),
+.addresses form > div:nth-of-type(7) + div[id] {
+  margin-top: 1.5rem;
+}
+
+.customer .button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  margin: 2rem 5px 1.5rem;
+  font: inherit;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: #fff;
+  border: 0.1rem solid transparent;
+  border-radius: 0;
+  box-shadow: 0 0 0 0.1rem #000;
+  transition: box-shadow 300ms ease;
+  appearance: none;
+  appearance: none;
+}
+
+.customer .button.black {
+  color: #fff;
+  background-color: #000;
+}
+
+.customer .primary-button {
+  max-width: 250px;
+  margin-top: 2rem;
+  margin-right: auto;
+  margin-left: auto;
+  color: #fff;
+  background-color: #000;
+}
+
+#ProductPopup-newAddress {
+  margin-bottom: 2rem;
+}
+
+.customer form {
+  max-width: 550px;
+  margin-right: auto;
+  margin-left: auto;
+}

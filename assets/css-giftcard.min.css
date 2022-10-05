@@ -1,0 +1,13 @@
+.giftcard {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+.giftcard img {
+  margin: 0 auto 2rem;
+}
+.giftcard__header {
+  margin-bottom: 2rem;
+}
+.giftcard__wrap {
+  margin-bottom: 2rem;
+}

@@ -1,0 +1,40 @@
+{%- if image -%}
+  {%- liquid
+    assign sizes = "(min-width: 540px) 100vw, 50vw"
+
+        if imageSizes
+        assign sizes = imageSizes
+        endif
+
+        assign image_widths = '180,360,540,720,900,1080,1296,1512,1728,1944,2160,2376,2592,2808,3024' | split: ','
+        assign srcSet = ''
+
+    for width in image_widths
+        assign width_num = width | plus: 0 | round
+
+        if image.width >= width_num
+            assign xWidth = width | prepend: 'w_'
+            assign imageUrl = image.cloudinary_src | append: xWidth | append: ' ' | append: width | append: 'w'
+            assign srcSet = srcSet | append: imageUrl | append: ', '
+        endif
+
+    endfor
+    assign imgMaster = image.width | append: 'x'
+    assign imgMasterUrl = image.src
+    assign srcSet = srcSet | append: imgMasterUrl | append: ' ' | append: image.width | append: 'w'
+  -%}
+
+  <img
+    class="{{ imageClass }}"
+    src="{{ image.cloudinary_src | append: 'w_1440' }}"
+    srcset="{{ srcSet }}"
+    {% unless notLazy %}
+      loading="lazy"
+    {% endunless %}
+    width="{{ image.width }}"
+    height="{{ image.height }}"
+    alt="{{ image.alt }}"
+    sizes="{{ sizes }}"
+    {{ imageAttributes }}
+  >
+{%- endif -%}

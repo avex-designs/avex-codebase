@@ -1,0 +1,49 @@
+<div class="mega-menu" data-mega-menu>
+  {%- if block.settings.f_image -%}
+    <div
+      class="mega-menu__image"
+      {% if block.settings.f_image_ord == "1" %}
+        style="order: 1"
+      {% endif %}
+    >
+      <img
+        src="{{ block.settings.f_image | image_url: width: block.settings.f_image.width }}"
+        alt="{{ block.settings.f_image.alt }}"
+        width="{{block.settings.f_image.width}}"
+        height="{{block.settings.f_image.height}}"
+        loading="lazy"
+      >
+      {% if block.settings.f_title != blank %}
+        <div class="mega-menu__imagetext" style="color: {{ block.settings.f_color }}">
+          <h5 class="pretitle">{{ block.settings.f_pretitle }}</h5>
+          <h3 class="title">{{ block.settings.f_title }}</h3>
+          <a
+            href="{{ block.settings.f_url }}"
+            class="secondary-button"
+            style="color: {{ block.settings.f_color }}; --sec-color: #fff"
+          >
+            {{- block.settings.f_urltext -}}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  {%- endif -%}
+  <div class="mega-menu__nav-wrapper">
+    <ul class="menu-parent">
+      {% for child_link in menuItem.links %}
+        <li class="menu-parent__item">
+          <a class="menu-parent__link" href="{{ child_link.url }}">{{ child_link.title }}</a>
+          {% if child_link.links != blank %}
+            <ul class="menu-child">
+              {% for grandchild_link in child_link.links %}
+                <li class="menu-child__item">
+                  <a class="menu-child__link" href="{{ grandchild_link.url }}">{{ grandchild_link.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

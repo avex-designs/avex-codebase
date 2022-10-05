@@ -1,0 +1,84 @@
+{%- render 'stylesheet', name: 'blog' -%}
+
+{%- paginate blog.articles by 6 -%}
+  <section class="blog">
+    <div class="container-max">
+      <div class="blog__header">
+        <h1 class="blog__main-title">{{ blog.title | escape }}</h1>
+        {% if blog.tags.size > 0 %}
+          <div class="blog__filter">
+            <div class="blog-filter">
+              <select class="select-tag">
+                <option value="{{ blog.url }}">All</option>
+                {% for tag in blog.all_tags %}
+                  <option
+                    value="{{ blog.url }}/tagged/{{ tag | handleize }}"
+                    {% if current_tags.first == tag %}
+                      selected
+                    {% endif %}
+                  >
+                    {{ tag }}
+                  </option>
+                {%- endfor -%}
+              </select>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="blog__articles articles-list">
+        {%- for article in blog.articles -%}
+          <div class="articles-list__item">
+            {%- render 'article-card', article: article, show_image: section.settings.show_image, show_date: section.settings.show_date, show_author: section.settings.show_author -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        {%- render 'pagination', paginate: paginate -%}
+      {%- endif -%}
+    </div>
+  </section>
+{%- endpaginate -%}
+
+<script>
+  const selecttag = document.querySelector('.select-tag')
+
+  function applyFilter() {
+    filterValue = selecttag.value;
+    if(filterValue !== '') {
+      window.location.href = filterValue;
+    }
+  }
+
+  selecttag.addEventListener('change', applyFilter);
+</script>
+
+{% schema %}
+{
+  "name": "Blog Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Article content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "Show image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "Show date"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": false,
+      "label": "Show author"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,214 @@
+{%- render 'stylesheet', name: 'hero-banner' -%}
+<section></section>
+<div class="container-max">
+  <div class="hero-banner__bg">
+    {%- if section.settings.hero_video != blank -%}
+      <video
+        class="video"
+        crossorigin="anonymous"
+        autoplay
+        playsinline
+        muted
+        loop
+        poster="{{ section.settings.hero_img | img_url: 'master' }}"
+        preload="none"
+        type="video/mp4"
+        src="{{ section.settings.hero_video }}"
+      ></video>
+    {%- else -%}
+      {% if section.settings.hero_img %}
+        <div class="desktop">
+          {{ section.settings.hero_img | image_url: width: section.settings.hero_img.width | image_tag: preload: true, class: 'cover', sizes: "(min-width: 540px) 100vw, 50vw" }}
+        </div>
+      {% endif %}
+      {% if section.settings.hero_img_mob %}
+        <div class="mobile">
+          {{ section.settings.hero_img_mob | image_url: width: section.settings.hero_img.width | image_tag: preload: true, class: 'cover', sizes: "(min-width: 540px) 100vw, 50vw" }}
+        </div>
+      {% endif %}
+    {%- endif -%}
+  </div>
+  <div
+    class="hero-banner__cover"
+    style="opacity: {{ section.settings.hero_cover_opacity }}%; background-color: {{ section.settings.hero_cover_color }};"
+  ></div>
+  <div
+    class="hero-banner__content"
+    style="align-items: {{ section.settings.vertical_alignment }}; text-align: {{ section.settings.text_align }}; justify-content: {{ section.settings.horizontal_alignment }}"
+  >
+    <div class="hero-banner__body" style="color: {{ section.settings.hero_text_color }};">
+      {% if section.settings.hero_pre_title != blank -%}
+        <span class="hero-banner__pretitle h5">{{ section.settings.hero_pre_title }}</span>
+      {%- endif %}
+      {% if section.settings.hero_title != blank -%}
+        <h2 class="hero-banner__title h1" style="-webkit-text-stroke: 1px {{ section.settings.hero_text_color }};">
+          {{ section.settings.hero_title }}
+        </h2>
+      {%- endif %}
+      {% if section.settings.hero_text != blank -%}
+        <div class="hero-banner__text">{{ section.settings.hero_text }}</div>
+      {%- endif %}
+      {% if section.settings.hero_b_text != blank -%}
+        <div>
+          <a
+            href="{{ section.settings.hero_b_url }}"
+            class="hero-banner__link"
+            style="--sec-color: {% if  section.settings.hero_text_color != blank %}{{ section.settings.hero_text_color }}{% else %}#fff{% endif %}"
+          >
+            {{- section.settings.hero_b_text -}}
+          </a>
+        </div>
+      {%- endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_img",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_img_mob",
+      "label": "Mobile Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_video",
+      "label": "Video Url (mp4)"
+    },
+    {
+      "type": "header",
+      "content": "Text Block Settings"
+    },
+    {
+      "type": "text",
+      "id": "hero_pre_title",
+      "label": "Pre Title"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "hero_b_text",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "hero_b_url",
+      "label": "Button Url"
+    },
+    {
+      "type": "color",
+      "id": "hero_text_color",
+      "label": "Text Color",
+      "default": "#000"
+    },
+    {
+      "type": "header",
+      "content": "Overlay Settings"
+    },
+    {
+      "type": "color",
+      "id": "hero_cover_color",
+      "label": "Cover Color"
+    },
+    {
+      "type": "range",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "id": "hero_cover_opacity",
+      "label": "Cover Opacity",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Alignment"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "label": "Text alignment",
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Middle"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "label": "Vertical alignment",
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "label": "Horizontal alignment",
+      "default": "center"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "category": "Home Page"
+    }
+  ]
+}
+{% endschema %}

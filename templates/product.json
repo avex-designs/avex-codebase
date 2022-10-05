@@ -1,0 +1,93 @@
+{
+  "sections": {
+    "main": {
+      "type": "product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "compare_price": true
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "2fdef2dc-0a7a-47da-ade6-fbcb3d84132c": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "FIT & FEEL",
+            "content": "<p><strong>How does the piece fit? </strong></p><p>Longline fit quarter zip bra designed with minimalism in mind brings athletic and sophisticated streetwear styleExposed zipper and removable bust pads with a built in shelf bra offer added support and style customizationRacerback style back and ultra soft waistband accentuates the waist and holds you securely in place Engineered for movement, luxurious comfort, and effortless styleOur signature <strong>Cloud</strong> Fabric is buttery soft with an all way stretch and light compression that flatters your figure</p><p><strong>Details:</strong></p><p>True to SizeModerate SupportOur Signature <strong>Cloud</strong> Fabric75% Nylon, 25% Spandex</p>",
+            "page": "",
+            "isOpen": false
+          }
+        },
+        "99bc5e0d-d3f2-4a70-9a88-197fc3207f83": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "PRODUCT CARE",
+            "content": "<p><strong>Washing</strong></p><p>Inside outWith like colorsUse \"Cool\" water temperature</p><p><strong>Drying</strong></p><p>Hang dryDo not tumble dryDo not dry clean</p>",
+            "page": "",
+            "isOpen": false
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "2fdef2dc-0a7a-47da-ade6-fbcb3d84132c",
+        "99bc5e0d-d3f2-4a70-9a88-197fc3207f83"
+      ],
+      "settings": {}
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "recc_title": "You may also like",
+        "recc_coll_lm": 15,
+        "recc_desk": 4,
+        "recc_mob": 2
+      }
+    },
+    "1634690105fbe44cb6": {
+      "type": "half-media-text",
+      "settings": {
+        "half_image": "shopify://shop_images/210210215637-best-jewelry-under-100-lead.jpg",
+        "half_image_p": "1",
+        "half_video": "https://cdn.shopify.com/s/files/1/0580/9379/7582/files/file_example_MP4_1280_10MG.mp4?v=1634690190",
+        "half_title": "FEATURED WORK",
+        "half_title_tag": "h3",
+        "half_text": "<p>Avex is a <a href=\"https://avexdesigns.com/shopify-agency-partner-services\">NYC Shopify Partner Agency</a>. We design, develop and optimize eCommerce websites & email marketing campaigns for some of the world's most popular brands.</p>",
+        "half_b_text": "",
+        "half_b_url": "",
+        "half_text_color": "#000",
+        "half_bg_color": "#fff"
+      }
+    }
+  },
+  "order": ["main", "product-recommendations", "1634690105fbe44cb6"]
+}

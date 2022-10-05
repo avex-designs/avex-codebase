@@ -1,0 +1,23 @@
+<ul class="pagination">
+  {% unless paginate.previous.is_link %}
+    <li aria-hidden="true">
+      <button class="btn btn--tertiary btn--narrow" disabled>&lt;</button>
+    </li>
+  {% else %}
+    <li>
+      <a href="{{ paginate.previous.url }}" class="btn btn--tertiary btn--narrow"> &lt; </a>
+    </li>
+  {% endunless %}
+  <li class="pagination__text">
+    {{ 'general.pagination.current_page' | t: current: paginate.current_page, total: paginate.pages }}
+  </li>
+  {% unless paginate.next.is_link %}
+    <li aria-hidden="true">
+      <button class="btn btn--tertiary btn--narrow" disabled>&lt;</button>
+    </li>
+  {% else %}
+    <li>
+      <a href="{{ paginate.next.url }}" class="btn btn--tertiary btn--narrow"> &gt; </a>
+    </li>
+  {% endunless %}
+</ul>

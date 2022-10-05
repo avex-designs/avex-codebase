@@ -1,0 +1,14 @@
+{
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "stylelint.validate": ["css", "scss"],
+  "shopifyLiquid.formatterDevPreview": true,
+  //use if you have "Shopify Liquid" installed
+  "[liquid]": {
+    "editor.defaultFormatter": "Shopify.theme-check-vscode"
+  },
+  "emmet.includeLanguages": {
+    "liquid": "html"
+  },
+}

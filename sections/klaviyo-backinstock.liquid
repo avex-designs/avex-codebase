@@ -1,0 +1,307 @@
+{%- comment -%}
+  Usage:
+      1. Copy paste {%- section 'klaviyo-backinstock' -%} to theme.liquid
+      2. In product.liquid add <script type="application/json" data-product-json-variants>{{ product.variants | json }}</script> inside product form. (if you already have it just add data-bis-vaiants attribute)
+      3. Adjust klaviyo ID in this section. (in code or create section fields and let the client to edit it)
+      4. Please add data-bis-disabled attribute if you want to disable Notify me button and keep sold out.
+{%- endcomment -%}
+
+{%- style -%}
+  .backinstock-modal {
+      box-sizing: border-box;
+     opacity: 0;
+     position: fixed;
+     visibility: hidden;
+     z-index: -1;
+     margin: 0 auto;
+     top: 0;
+     left: 0;
+     overflow: auto;
+     width: 100%;
+     background: #0009;
+     height: 100%;
+     border-radius: 3px;
+  }
+
+  .backinstock-modal[open] {
+     opacity: 1;
+     visibility: visible;
+     z-index: 101;
+  }
+  .backinstock-modal__close{
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1;
+      color: #ccc;
+      text-shadow: 0 1px 0 #fff;
+      -webkit-appearance: none;
+      padding: 0;
+      cursor: pointer;
+      background: 0 0;
+      border: 0;
+      position: absolute;
+      top: 7px;
+      right: 15px;
+  }
+  .backinstock-modal__content {
+     background-color: #fff;
+     overflow: auto;
+     margin: 0 auto;
+     left: 50%;
+     transform: translateX(-50%);
+     margin-top: 5rem;
+     width: 100%;
+     max-width: 460px;
+     position: absolute;
+     top: 0;
+  }
+  .backinstock-modal__body{
+      padding: 2rem;
+  }
+  .backinstock-title{
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.5;
+      font-family: "nimbus-sans-extended",sans-serif;
+  }
+  .backinstock-modal__body select{
+      margin-top: 1rem
+  }
+  .backinstock-modal__body select, .backinstock-modal__body input{
+      width: 100%;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      font-size: 14px;
+      height: 46px;
+      padding: 10px 16px;
+      line-height: 1.3333333;
+      margin-bottom: 1rem;
+      color: #000;
+      box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+  }
+  .backinstock-modal__body button{
+      width: 100%;
+  }
+  .backinstock-alert-success{
+      background-color: #d3efcd;
+      border-color: #d3efcd;
+      color: #1B9500;font-size: 12px;
+      margin-top: 8px;
+      padding: 8px;
+      text-align: center;
+  }
+  .backinstock-hidden{
+    display: none;
+  }
+  .marginBottom{
+      margin-bottom: 0.5rem;
+  }
+  .bis-notifyme{
+      -webkit-appearance: none;
+      cursor: pointer;
+      width: 100%;
+      height: 48px;
+      background: #000;
+      color: #fff;
+      text-transform: uppercase;
+      border: 1px solid #000;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      text-decoration: none;
+  }
+{%- endstyle -%}
+<backinstock-modal data-backinstock-modal class="backinstock-modal">
+  <div role="dialog" aria-label="" aria-modal="true" class="backinstock-modal__content" tabindex="-1">
+    <button data-backinstock-close type="button" class="backinstock-modal__close">×</button>
+    <div class="backinstock-modal__body">
+      <form method="post" action="/">
+        <div data-backinstock-body></div>
+        <input name="a" value="WXeasw" type="hidden">
+        <input name="platform" value="shopify" type="hidden">
+        <input type="email" required name="email" placeholder="Email">
+        <button type="submit" class="primary-button klaviyo-form-submit">{{ 'products.product.notify_me' | t }}</button>
+        <div class="backinstock-alert-success backinstock-hidden" data-backinstock-success>
+          {{ 'products.product.notify_me_success' | t }}
+        </div>
+      </form>
+    </div>
+  </div>
+</backinstock-modal>
+
+<script>
+  const bisModal = {
+      buttonClass: ['bis-notifyme', 'secondClass'],
+      buttonText: "{{ 'products.product.notify_me' | t }}"
+  }
+
+  class BackInStockModal extends HTMLElement {
+    constructor() {
+      super();
+      this.querySelector('[data-backinstock-close]').addEventListener(
+        'click',
+        this.hide.bind(this)
+      );
+      this.addEventListener('keyup', (event) => {
+        if (event.code?.toUpperCase() === 'ESCAPE') this.hide();
+      });
+      this.addEventListener('click', (event) => {
+        if (event.target.nodeName === 'MODAL-DIALOG') this.hide();
+      });
+      this.querySelector('form').addEventListener('submit', function(event){
+          event.preventDefault()
+          const successBlock = this.querySelector('[data-backinstock-success]')
+          const button = this.querySelector('button[type="submit"]')
+
+          const formData = new FormData(this);
+          const url = 'https://a.klaviyo.com/onsite/components/back-in-stock/subscribe'
+          button.classList.add('backinstock-hidden')
+          fetch(url, {
+              method: 'post',
+              body: formData,
+          })
+          .then((response) => response.json())
+          .then((data) => {
+              if(data.success){
+                  successBlock.classList.remove('backinstock-hidden')
+              }else{
+                  button.classList.remove('backinstock-hidden')
+              }
+          })
+          .catch((error) => {
+              button.classList.remove('backinstock-hidden')
+              return new Error("Error: ", error);
+          });
+      })
+    }
+
+    show(opener) {
+      this.openedBy = opener;
+      document.body.classList.add('overflow-hidden');
+      this.setAttribute('open', '');
+    }
+
+    hide() {
+      document.body.classList.remove('overflow-hidden');
+      this.removeAttribute('open');
+      this.querySelector('[data-backinstock-success]').classList.add('backinstock-hidden')
+    }
+  }
+  customElements.define('backinstock-modal', BackInStockModal);
+
+
+  class BackInStock{
+      constructor(){
+          this.backinstockInit()
+          document.addEventListener("click", (event) => event && this.backinstockClickInit(event),false);
+          document.addEventListener("change",(event) => event && this.backinstockChangeInit(event),false);
+      }
+
+      backinstockClickInit(event){
+          const element = event.target.closest('[data-bis-button]');
+          if (element) {
+              const form = element.closest('form[action="/cart/add"]')
+              if(form){
+                  const variants = form.querySelector('[data-product-json-variants]')
+                  const jsonVariants = JSON.parse(variants.textContent);
+                  const currentVariant = form.querySelector('[name="id"]')
+                  const modal = document.querySelector('backinstock-modal');
+
+                  if (modal){
+                      if(!modal.querySelector('[name="variant"]')){
+                      modal.querySelector('[data-backinstock-body]').appendChild(this.buildBackinStockSelect(jsonVariants, currentVariant.value))
+                      }
+                      modal.show()
+                  };
+              }
+          }
+      }
+
+      backinstockChangeInit(event){
+          const element = event.target.closest('[name="id"]');
+          if (element) {
+              const form = element.closest('form[action="/cart/add"]')
+              this.backinstockInit([form], element)
+          }
+      }
+
+      backinstockInit(forms = document.querySelectorAll('form[action="/cart/add"]'), currentVariantId){
+          if(!forms || !forms.length) return null
+
+          forms.forEach(form => {
+              let variantID = currentVariantId
+              if(!currentVariantId){
+                  variantID = form.querySelector('[name="id"]')
+              }
+
+              const submitButton = form.querySelector('[type="submit"]');
+              const variants = form.querySelector('[data-product-json-variants]')
+              if(!variants) return null;
+              const bisButton = form.querySelector('[data-bis-button]')
+              const jsonVariants = JSON.parse(variants.textContent);
+              const selectedVariant = jsonVariants.find(item => item.id === Number(variantID.value))
+
+              if(selectedVariant){
+                  if(selectedVariant.available){
+                      submitButton.style.display = ''
+                      if(bisButton){
+                          bisButton.remove()
+                      }
+                  }else{
+                      if(!submitButton.hasAttribute("data-bis-disabled")){
+                          submitButton.style.display = 'none'
+                          if(!bisButton){
+                              submitButton.after(this.buildBackinStockButton(bisModal.buttonClass, bisModal.buttonText))
+                          }
+                      }
+                  }
+              }
+          })
+
+      }
+
+      buildBackinStockButton(className = "", text = "Notify me when available"){
+          const aTag = document.createElement("a");
+          aTag.innerHTML = text
+          aTag.setAttribute('data-bis-button', '')
+          if(className){
+              if(className.length){
+                  className.forEach(classN => {
+                      aTag.classList.add(classN)
+                  });
+              }else{
+                  aTag.classList.add(className)
+              }
+          }
+          aTag.href = "#"
+          return aTag
+      }
+
+      buildBackinStockSelect(variants, selected){
+          if(!variants) return null
+
+          const variantTag = document.createElement(variants.length > 1 ? "select" : "input");
+          variantTag.name = "variant"
+          if(variants.length === 1){
+              variantTag.type = 'hidden'
+              variantTag.value = variants[0]?.id
+          }else{
+              let options = ''
+              for (var i = 0; i < variants.length; i++) {
+                  options += `<option value="${variants[i]['id']}" ${variants[i]['available'] && 'disabled'}>${variants[i]['title']}</option>`;
+              }
+              variantTag.innerHTML = options
+          }
+
+          if(selected){
+              variantTag.value = selected
+          }
+
+          return variantTag
+      }
+  }
+
+  new BackInStock()
+</script>

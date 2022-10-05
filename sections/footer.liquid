@@ -1,0 +1,74 @@
+<div class="container">
+  <div class="grid-container">
+    <div class="grid-item">
+      <nav class="footer__navigation" role="navigation">
+        <ul class="footer-nav__menu">
+          {% for link in section.settings.footer_linklist.links %}
+            <li class="footer-nav__item">
+              <a href="{{ link.url }}" class="footer-nav__link">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+    <div class="grid-item">
+      {%- if section.settings.newsletter_element != blank -%}
+        <div class="newsletter">
+          <span>{{ section.settings.newsletter_title }}</span>
+          {{- section.settings.newsletter_element -}}
+        </div>
+      {%- endif -%}
+      {%- if section.settings.footer_socials != blank and linklists[section.settings.footer_socials] -%}
+        <div class="socials">
+          {%- render 'social-links', socials: linklists[section.settings.footer_socials] -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="footer__copyrights">
+    <small>&copy; {{ 'now' | date: "%Y" }}, {{ section.settings.copyrights }}</small>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "footer",
+  "class": "footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Main Settings"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_linklist",
+      "label": "Menu",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "copyrights",
+      "label": "Copyrights",
+      "default": "Company"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Newsletter Title",
+      "default": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_element",
+      "label": "Newsletter Snippet",
+      "default": "<div class='klaviyo-form-SJLAFx'></div>"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_socials",
+      "label": "Social links"
+    }
+  ]
+}
+{% endschema %}

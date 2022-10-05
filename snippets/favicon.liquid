@@ -1,0 +1,19 @@
+{%- comment -%}
+  	1.generate image assets on https://realfavicongenerator.net/
+  	2.update site manifest and browser config
+  	3.upload rendered files into Files (upload largest favicon.png)
+  	4.update hex colors in meta links as needed
+
+   		TODO: add version controller
+  		TODO: change manifest asset urls or find some dynamic way
+{%- endcomment -%}
+
+<link rel="apple-touch-icon" sizes="144x144" href="{{ 'apple-touch-icon.png' | file_url | split: '?' | first }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ 'favicon.png' | file_img_url: '32x32' | split: '?' | first }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ 'favicon.png' | file_img_url: '16x16' | split: '?' | first }}">
+<link rel="manifest" href="{{ 'site.webmanifest' | file_url | split: '?' | first }}">
+<link rel="mask-icon" href="{{ 'safari-pinned-tab.svg' | file_url | split: '?' | first }}" color="#0c1b2a">
+<link rel="shortcut icon" href="{{ 'favicon.ico' | file_url | split: '?' | first }}">
+<meta name="msapplication-TileColor" content="#f8f7f6">
+<meta name="msapplication-config" content="{{ 'browserconfig.xml' | file_url | split: '?' | first }}">
+<meta name="theme-color" content="#ffffff">

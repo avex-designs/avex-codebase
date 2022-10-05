@@ -1,0 +1,74 @@
+@import "sass-rem";
+@import "./css-icons.scss";
+
+// Breakpoints: min-width
+$bp-xl: 1200px;
+$bp-l: 992px;
+$bp-m: 768px;
+$bp-s: 576px;
+
+// Breakpoints: max-width
+$max-bp-l: 1199px;
+$max-bp-m: 991px;
+$max-bp-s: 767px;
+$max-bp-xs: 575px;
+
+/*
+Media query mixin.
+Usage: 
+@include media($bp-l, min)
+*/
+@mixin media($breakpoint, $name: min) {
+  @if ($name == max) {
+    @media only screen and (max-width: $breakpoint) {
+      @content;
+    }
+  } @else if ($name == min) {
+    @media only screen and (min-width: $breakpoint) {
+      @content;
+    }
+  } @else {
+    @error "Unknown query name: #{$name}";
+  }
+}
+
+/*
+Mixin to add loading spinner to button/element.
+Usage: 
+@include loading()
+*/
+@mixin loading($top: 5px, $left: auto, $bottom: auto, $right: 5px) {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: $top;
+    right: $right;
+    left: $left;
+    bottom: $bottom;
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: $color-black $color-black $color-black transparent;
+    animation: loading-spinner 0.5s linear infinite;
+    @content;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}

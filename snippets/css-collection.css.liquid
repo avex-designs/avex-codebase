@@ -1,0 +1,119 @@
+.collection-page {
+  padding: 2rem 0;
+}
+
+.collection-page__body .reset-all {
+  display: block;
+  text-align: right;
+}
+.collection-page__body .filter-toggle-button {
+  font-weight: bold;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid;
+}
+
+.collection-page__sort-imitator {
+  text-align: right;
+}
+@media only screen and (max-width: 767px) {
+  .collection-page__sort-imitator label {
+    display: none;
+  }
+}
+.collection-page__sort-imitator select {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 7L8 11L12 7' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-position: center right;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+  padding-left: 0.5rem;
+  cursor: pointer;
+  border: 0;
+  border-bottom: 1px solid #000;
+  appearance: none;
+}
+
+.collection-page__product-list-wrapper {
+  position: relative;
+  padding-top: 1rem;
+}
+.collection-page__product-list-wrapper.loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+}
+.collection-page__product-list-wrapper.loading::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 20px);
+  right: 5px;
+  left: calc(50% - 20px);
+  bottom: auto;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000 #000 #000 transparent;
+  animation: loading 0.5s linear infinite;
+  width: 40px;
+  height: 40px;
+}
+
+.collection-page__product-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+@media only screen and (max-width: 767px) {
+  .collection-page__product-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.collection-page__product-list-pagination {
+  margin-top: 2rem;
+  text-align: center;
+}
+.collection-page__product-list-pagination span {
+  margin: 0 4px;
+}
+
+.collection-page__products {
+  display: flex;
+}
+.collection-page__products .mobile-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  display: none;
+  background: #00000082;
+}
+
+.collection-page__header {
+  position: relative;
+  text-align: center;
+}
+.collection-page__header .cover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.collection-page__header .container {
+  position: relative;
+}
+.collection-page__header .total-products {
+  display: inline-block;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 14px;
+  color: #909090;
+}

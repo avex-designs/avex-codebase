@@ -1,0 +1,90 @@
+/**
+Critical.scss: 
+You can insert here any critical styles, these will be loaded first as inline style (tag).
+Allowed: 
+  - normalize/reset css
+  - layout shifting styles
+  - root variables
+Restricted: 
+  - Lorem ipsum
+  - Lorem ipsum
+  - Lorem ipsum
+*/
+@import "./reset.scss";
+
+:root,
+::before,
+::after {
+    // Colors
+    --color-blue: $color-blue;
+    --color-brown: $color-brown;
+
+    // Font family
+    --font-main: $font-main;
+    --font-extended: $font-extended;
+}
+
+html {
+  font-family: var(--font-main);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 136%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  scroll-behavior: smooth;
+  text-rendering: optimizespeed;
+  &.js-ajax-cart-opened {
+    overflow: hidden;
+  }
+}
+
+.disabled {
+  text-decoration: line-through;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.visually-disabled {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* CSS Animations */
+
+@keyframes loading-spinner {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes opacity-appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

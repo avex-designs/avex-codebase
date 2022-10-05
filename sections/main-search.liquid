@@ -1,0 +1,161 @@
+{% render 'stylesheet', name: 'search' %}
+
+<script src="{{ 'search-js.min.js' | asset_url }}" defer="defer"></script>
+
+<div class="search {% unless search.performed and search.results_count > 0 %}search--empty{% endunless %}">
+  <div class="container">
+    <section class="search__header">
+      <h1 class="h3">{{ 'templates.search.title' | t }}</h1>
+      <predictive-search data-loading-text="{{ 'accessibility.loading' | t }}">
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search form">
+          <div class="form__field">
+            <input
+              class="search__input"
+              id="Search-In-Template"
+              type="search"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="{{ 'general.search.search' | t }}"
+              role="combobox"
+              aria-expanded="false"
+              aria-owns="predictive-search-results-list"
+              aria-controls="predictive-search-results-list"
+              aria-haspopup="listbox"
+              aria-autocomplete="list"
+              autocorrect="off"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            >
+            <label for="Search-In-Template">{{ 'general.search.search' | t }}</label>
+            <input name="options[prefix]" type="hidden" value="last">
+
+            <div class="predictive-search predictive-search--search-template" tabindex="-1" data-predictive-search>
+              <div class="predictive-search__loading-state">
+                <div class="spinner">Loading</div>
+              </div>
+            </div>
+
+            <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+
+            <button type="submit" class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+              {%- render 'icon-search' -%}
+            </button>
+          </div>
+        </form>
+      </predictive-search>
+    </section>
+    {%- if search.performed -%}
+      {%- unless section.settings.enable_filtering or section.settings.enable_sorting -%}
+        {%- if search.results_count > 0 -%}
+          <p role="status">
+            {{ 'templates.search.results_with_count_and_term' | t: terms: search.terms, count: search.results_count }}
+          </p>
+        {%- endif -%}
+      {%- endunless -%}
+      {%- if search.results_count == 0 and search.filters == empty -%}
+        <p role="status">{{ 'templates.search.no_results' | t: terms: search.terms }}</p>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if search.performed -%}
+      {% comment %}
+        Filters can be added here.
+        {%- if search.filters != empty -%}
+            {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+                <div class="search__filters">
+                    Filters
+                </div>
+            {%- endif -%}
+        {%- endif -%}
+      {% endcomment %}
+
+      {%- unless search.results.size == 0 and search.filters != empty -%}
+        <section class="search__results">
+          {% paginate search.results by 23 %}
+            <div class="search-result-list">
+              {%- for item in search.results -%}
+                <div class="search-result-list__item {{ item.object_type }}">
+                  {%- case item.object_type -%}
+                    {%- when 'product' -%}
+                      <div class="card-badge">
+                        <span class="badge">{{ 'templates.search.product' | t }}</span>
+                      </div>
+                      {%- render 'product-card' product: item -%}
+                    {%- when 'article' -%}
+                      <div class="card-badge">
+                        <span class="badge">{{ 'templates.search.article' | t }}</span>
+                      </div>
+                      {%- render 'article-card', article: item, show_image: true, show_date: section.settings.article_show_date, show_author: section.settings.article_show_author -%}
+                    {%- when 'page' -%}
+                      <div class="card-badge">
+                        <span class="badge">{{ 'templates.search.page' | t }}</span>
+                      </div>
+                      <a href="{{ item.url }}" class="page-card">
+                        <div class="page-card__card">
+                          <div class="page-card__inner card">
+                            <div class="card__content">
+                              <h2 class="card__title h3">{{ item.title | escape }}</h2>
+                              <p class="card__text">{{ item.content | strip_html | truncatewords: 30 }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                  {%- endcase -%}
+                </div>
+              {%- endfor -%}
+            </div>
+            <div class="search-pagination">
+              {{ paginate | default_pagination }}
+            </div>
+          {% endpaginate %}
+        </section>
+      {%- endunless -%}
+    {%- endif -%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Search Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Filter"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "default": true,
+      "label": "Enable filtering"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "default": true,
+      "label": "Enable Sorting"
+    },
+    {
+      "type": "header",
+      "content": "Article settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "articles_show",
+      "default": true,
+      "label": "Show articles in search"
+    },
+    {
+      "type": "checkbox",
+      "id": "article_show_date",
+      "default": true,
+      "label": "Show date"
+    },
+    {
+      "type": "checkbox",
+      "id": "article_show_author",
+      "default": false,
+      "label": "Show author"
+    }
+  ]
+}
+{% endschema %}

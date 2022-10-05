@@ -1,0 +1,20 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "AvexTheme",
+    "theme_version": "2.0",
+    "theme_author": "Sanjar S",
+    "theme_documentation_url": "https://github.com/avex-designs/avex-boilerplate",
+    "theme_support_email": "sanjar@avexdesigns.com"
+  },
+  {
+    "name": "Klaviyo settings",
+    "settings": [
+      {
+        "id": "klaviyo_id",
+        "type": "text",
+        "label": "Klaviyo ID"
+      }
+    ]
+  }
+]

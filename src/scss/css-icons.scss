@@ -1,0 +1,82 @@
+/**
+Include icons in scss/css.
+Usage: 
+ @include icon(close);
+*/
+@mixin icon(
+  $name,
+  $color: #000,
+  $property: background-image,
+  $important: false
+) {
+  $cl: encodecolor($color);
+
+  // use https://yoksel.github.io/url-encoder/ to encode svg
+
+  @if $name == arrowLeft {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 4L5 8L9 12' stroke='#{$cl}' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else if $name == arrowRight {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 4L11 8L7 12' stroke='#{$cl}' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else if $name == arrowBottom {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 7L8 11L12 7' stroke='#{$cl}' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else if $name == arrowTop {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 9L8 5L12 9' stroke='#{$cl}' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else if $name == tick {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.13385 6.27501L1.68385 3.82501L0.867188 4.64167L4.13385 7.90834L11.1339 0.908341L10.3172 0.0916748L4.13385 6.27501Z' fill='#{$cl}'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else if $name == discount {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cmask id='path-1-inside-1_1112_56657' fill='white'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M14.5531 3H1.45312V5.03276C2.82526 5.03277 3.93759 6.1451 3.93759 7.51724C3.93759 8.88938 2.82526 10.0017 1.45312 10.0017V12.0345H14.5531V3Z'/%3E%3C/mask%3E%3Cpath d='M1.45312 3V2.3H0.753125V3H1.45312ZM14.5531 3H15.2531V2.3H14.5531V3ZM1.45312 5.03276H0.753125V5.73275L1.45312 5.73276L1.45312 5.03276ZM1.45312 10.0017L1.45312 9.30172L0.753125 9.30173V10.0017H1.45312ZM1.45312 12.0345H0.753125V12.7345H1.45312V12.0345ZM14.5531 12.0345V12.7345H15.2531V12.0345H14.5531ZM1.45312 3.7H14.5531V2.3H1.45312V3.7ZM2.15312 5.03276V3H0.753125V5.03276H2.15312ZM1.45312 5.73276C2.43866 5.73276 3.23759 6.5317 3.23759 7.51724H4.63759C4.63759 5.75851 3.21186 4.33277 1.45313 4.33276L1.45312 5.73276ZM3.23759 7.51724C3.23759 8.50278 2.43866 9.30172 1.45312 9.30172L1.45313 10.7017C3.21186 10.7017 4.63759 9.27598 4.63759 7.51724H3.23759ZM2.15312 12.0345V10.0017H0.753125V12.0345H2.15312ZM14.5531 11.3345H1.45312V12.7345H14.5531V11.3345ZM13.8531 3V12.0345H15.2531V3H13.8531Z' fill='#{$cl}' mask='url(%23path-1-inside-1_1112_56657)'/%3E%3Ccircle cx='6.89068' cy='5.59747' r='0.892241' stroke='#{$cl}' stroke-width='0.7'/%3E%3Ccircle cx='10.5079' cy='9.43707' r='0.892241' stroke='#{$cl}' stroke-width='0.7'/%3E%3Cline x1='10.685' y1='5.55126' x2='6.5743' y2='9.66195' stroke='#{$cl}' stroke-width='0.7'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else if $name == share {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 7.99593L9.59745 2V5.57728H8.44882C4.88719 5.57728 2 8.49946 2 12.1042V14L2.51019 13.4341C4.24479 11.5106 6.69915 10.4146 9.27233 10.4146H9.59745V13.9919L15 7.99593Z' fill='#{$cl}'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else if $name == bag {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='17' height='16' viewBox='0 0 17 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15.1693 5.66666C15.1693 4.92666 14.5759 4.33332 13.8359 4.33332H11.1693V2.99999C11.1693 2.25999 10.5759 1.66666 9.83594 1.66666H7.16927C6.42927 1.66666 5.83594 2.25999 5.83594 2.99999V4.33332H3.16927C2.42927 4.33332 1.8426 4.92666 1.8426 5.66666L1.83594 13C1.83594 13.74 2.42927 14.3333 3.16927 14.3333H13.8359C14.5759 14.3333 15.1693 13.74 15.1693 13V5.66666ZM9.83594 4.33332V2.99999H7.16927V4.33332H9.83594ZM3.16927 5.66666V13H13.8359V5.66666H3.16927Z' fill='#{$cl}'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else if $name == mapPoint {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M7.99967 1.33328C5.41967 1.33328 3.33301 3.41995 3.33301 5.99995C3.33301 9.49995 7.99967 14.6666 7.99967 14.6666C7.99967 14.6666 12.6663 9.49995 12.6663 5.99995C12.6663 3.41995 10.5797 1.33328 7.99967 1.33328ZM4.66634 5.99995C4.66634 4.15995 6.15967 2.66662 7.99967 2.66662C9.83967 2.66662 11.333 4.15995 11.333 5.99995C11.333 7.91995 9.41301 10.7933 7.99967 12.5866C6.61301 10.8066 4.66634 7.89995 4.66634 5.99995ZM6.33301 5.99995C6.33301 5.07947 7.0792 4.33328 7.99967 4.33328C8.59512 4.33328 9.14533 4.65095 9.44305 5.16662C9.74077 5.68228 9.74077 6.31761 9.44305 6.83328C9.14533 7.34895 8.59512 7.66662 7.99967 7.66662C7.0792 7.66662 6.33301 6.92042 6.33301 5.99995Z' fill='#{$cl}'/%3E%3C/svg%3E")
+      is-important($important);
+  } @else if $name == play {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24ZM9.75 15.8971L16.5 12L9.75 8.10289V15.8971Z' fill='#{$cl}'/%3E%3C/svg%3E")
+      is-important($important);
+  } @else if $name == highlight {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4.84C3.74648 4.84 4.51174 2.28 4.67606 1C4.67606 3.64533 6.22535 4.66222 7 4.84C5.4507 4.84 4.80516 7.61333 4.67606 9C4.67606 6.01333 2.89202 4.98222 2 4.84Z' stroke='#{$cl}' stroke-linejoin='round'/%3E%3Cpath d='M7 8.76C9.44507 8.76 10.5164 4.92 10.7465 3C10.7465 6.968 12.9155 8.49333 14 8.76C11.831 8.76 10.9272 12.92 10.7465 15C10.7465 10.52 8.24883 8.97333 7 8.76Z' stroke='#{$cl}' stroke-linejoin='round'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else if $name == circleTick {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='20' fill='#{$cl}'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M28.1096 14.9907C28.6671 15.6035 28.6222 16.5522 28.0093 17.1096L18.2051 26.0277L11.9907 20.3749C11.3779 19.8175 11.333 18.8688 11.8904 18.256C12.4478 17.6432 13.3965 17.5983 14.0093 18.1557L18.2051 21.9723L25.9907 14.8904C26.6035 14.333 27.5522 14.3779 28.1096 14.9907Z' fill='white'/%3E%3C/svg%3E%0A");
+  } @else if $name == percentLabel {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='17' height='16' viewBox='0 0 17 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cmask id='path-1-inside-1_875_46971' fill='white'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15.0502 3H1.9502V5.03276C3.32233 5.03277 4.43466 6.1451 4.43466 7.51724C4.43466 8.88938 3.32233 10.0017 1.9502 10.0017V12.0345H15.0502V3Z'/%3E%3C/mask%3E%3Cpath d='M1.9502 3V2.3H1.2502V3H1.9502ZM15.0502 3H15.7502V2.3H15.0502V3ZM1.9502 5.03276H1.2502V5.73275L1.95019 5.73276L1.9502 5.03276ZM1.9502 10.0017L1.95019 9.30172L1.2502 9.30173V10.0017H1.9502ZM1.9502 12.0345H1.2502V12.7345H1.9502V12.0345ZM15.0502 12.0345V12.7345H15.7502V12.0345H15.0502ZM1.9502 3.7H15.0502V2.3H1.9502V3.7ZM2.6502 5.03276V3H1.2502V5.03276H2.6502ZM1.95019 5.73276C2.93573 5.73276 3.73466 6.5317 3.73466 7.51724H5.13466C5.13466 5.75851 3.70893 4.33277 1.9502 4.33276L1.95019 5.73276ZM3.73466 7.51724C3.73466 8.50278 2.93573 9.30172 1.95019 9.30172L1.9502 10.7017C3.70893 10.7017 5.13466 9.27598 5.13466 7.51724H3.73466ZM2.6502 12.0345V10.0017H1.2502V12.0345H2.6502ZM15.0502 11.3345H1.9502V12.7345H15.0502V11.3345ZM14.3502 3V12.0345H15.7502V3H14.3502Z' fill='#{$cl}' mask='url(%23path-1-inside-1_875_46971)'/%3E%3Ccircle cx='7.38726' cy='5.59744' r='0.892241' stroke='#{$cl}' stroke-width='0.7'/%3E%3Ccircle cx='11.001' cy='9.43707' r='0.892241' stroke='#{$cl}' stroke-width='0.7'/%3E%3Cline x1='11.1806' y1='5.55126' x2='7.0699' y2='9.66195' stroke='#{$cl}' stroke-width='0.7'/%3E%3C/svg%3E")
+      is-important($important);
+  } @else if $name == close {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='14' height='13' viewBox='0 0 14 13' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.06079 5.93933L12.4698 1.53033C12.7627 1.23744 12.7627 0.762564 12.4698 0.469671C12.1769 0.176777 11.702 0.176777 11.4091 0.46967L7.00013 4.87867L2.61194 0.490475C2.31905 0.197582 1.84417 0.197581 1.55128 0.490475C1.25839 0.783368 1.25839 1.25824 1.55128 1.55113L5.93947 5.93933L0.909123 10.9697C0.61623 11.2626 0.61623 11.7374 0.909123 12.0303C1.20202 12.3232 1.67689 12.3232 1.96978 12.0303L7.00013 6.99999L12.0305 12.0303C12.3233 12.3232 12.7982 12.3232 13.0911 12.0303C13.384 11.7374 13.384 11.2626 13.0911 10.9697L8.06079 5.93933Z' fill='#{$cl}'/%3E%3C/svg%3E%0A");
+  } @else if $name == tick {
+    #{$property}: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.13385 6.27501L1.68385 3.82501L0.867188 4.64167L4.13385 7.90834L11.1339 0.908341L10.3172 0.0916748L4.13385 6.27501Z' fill='#{$cl}'/%3E%3C/svg%3E%0A")
+      is-important($important);
+  } @else {
+    @error "Unknown icon name: #{$name}.";
+  }
+}
+
+@mixin mask($icon) {
+  @include icon($icon, -webkit-mask);
+
+  @include icon($icon, mask);
+}
+
+@function encodecolor($string) {
+  @if type-of($string) == "color" {
+    $hex: str-slice(ie-hex-str($string), 4);
+    $string: unquote("#{$hex}");
+    $string: "%23" + $string;
+  }
+
+  @return $string;
+}
+
+@function is-important($important) {
+  @return #{if($important, "!important", "")};
+}

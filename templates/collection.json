@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "main": {
+      "type": "collection",
+      "settings": {
+        "products_per_page": 8,
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "collection_cover_color": "#202020",
+        "collection_cover_opacity": 0,
+        "collection_text_color": "#202020",
+        "show_secondary_image": true,
+        "show_vendor": true,
+        "enable_filtering": true,
+        "enable_sorting": true,
+        "tag_filters": "collection-tag-filters"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,490 @@
+.product {
+  padding: 4rem 2.5rem;
+}
+@media only screen and (max-width: 991px) {
+  .product {
+    padding: 0;
+    padding-bottom: 2rem;
+  }
+}
+.product .product-container {
+  display: grid;
+  grid-template-columns: 50% 46%;
+  grid-gap: 4%;
+}
+@media only screen and (max-width: 991px) {
+  .product .product-container {
+    grid-template-columns: auto;
+    grid-gap: initial;
+  }
+}
+.product .title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-family: "Futura PT Light", sans-serif;
+  font-size: 1rem;
+  line-height: 1.1875rem;
+}
+.product__gallery {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6.1875rem 1fr;
+  grid-gap: 24px;
+}
+@media only screen and (max-width: 991px) {
+  .product__gallery {
+    grid-template-columns: auto;
+  }
+}
+.product__gallery .product-thumbnails {
+  height: 100%;
+  max-height: 660px;
+}
+@media only screen and (max-width: 991px) {
+  .product__gallery .product-thumbnails {
+    display: none;
+    max-height: 400px;
+  }
+}
+.product__gallery .product-thumbnails__item {
+  max-height: 200px;
+  cursor: pointer;
+}
+.product__gallery .product-thumbnails__item.swiper-slide-thumb-active {
+  border: 1px solid #000;
+}
+.product__gallery .product-thumbnails img {
+  height: 100%;
+  object-fit: cover;
+}
+.product__gallery .product-thumbnails .video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+}
+.product__gallery .product-images {
+  width: 100%;
+  margin-left: 0;
+}
+@media only screen and (max-width: 767px) {
+  .product__gallery .product-images .swiper-slide {
+    height: 300px;
+  }
+  .product__gallery .product-images img {
+    height: 100%;
+  }
+}
+.product__gallery .product-images .video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+.product__gallery .product-images .video-play:hover svg {
+  filter: drop-shadow(0 0 4px #fff);
+}
+.product__gallery .product-images .video-play svg {
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+  transition: filter 450ms ease;
+}
+.product__gallery .product-images img {
+  width: 100%;
+  object-fit: cover;
+}
+.product__gallery .product-images .swiper-zoom-container {
+  align-items: flex-start;
+}
+.product__gallery .product-images .swiper-wrapper {
+  height: auto;
+}
+.product__gallery .product-images figure.zoom {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 6/9;
+  overflow: hidden;
+  cursor: zoom-in;
+  background-position: 50% 50%;
+}
+.product__gallery .product-images figure.zoom img:hover {
+  opacity: 0;
+}
+@media only screen and (max-width: 767px) {
+  .product__gallery .product-images figure.zoom img:hover {
+    opacity: 1;
+  }
+}
+.product__gallery .product-images figure.zoom img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.5s;
+  object-fit: cover;
+}
+.product__gallery .product-images .swiper-button {
+  display: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+@media only screen and (max-width: 991px) {
+  .product__gallery .product-images .swiper-button {
+    display: block;
+  }
+}
+.product__gallery .product-images .swiper-button::after {
+  display: none;
+}
+.product__gallery .product-images .swiper-button svg {
+  fill: #000;
+}
+@media only screen and (max-width: 767px) {
+  .product__gallery .product-images .swiper-button svg {
+    width: 24px;
+  }
+}
+.product__gallery .product-images .swiper-button.swiper-button-disabled svg {
+  fill: none;
+}
+.product__gallery .product-images .swiper-button-prev svg {
+  transform: rotate(180deg);
+}
+.product__gallery .product-images .swiper-pagination-bullet {
+  width: 14px;
+  height: 14px;
+  background: none;
+  border: 1px solid #fff;
+  opacity: 1;
+}
+.product__gallery .product-images .swiper-pagination-bullet-active {
+  background-color: #fff;
+}
+.product__details {
+  display: flex;
+  padding-top: 5%;
+}
+@media only screen and (max-width: 991px) {
+  .product__details {
+    max-width: 538px;
+    margin: 0 auto;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .product__details {
+    padding-top: 1rem;
+  }
+}
+.product__details .product-details {
+  width: 100%;
+}
+@media only screen and (max-width: 991px) {
+  .product__details .product-details {
+    padding: 0 16px;
+  }
+}
+.product__details .product-details__title {
+  margin-bottom: 0.875rem;
+}
+@media only screen and (max-width: 991px) {
+  .product__details .product-details__title {
+    margin-bottom: 5px;
+    font-size: 2rem;
+    line-height: 2.375rem;
+  }
+}
+.product__details .product-details__price {
+  display: flex;
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+.product__details .product-details__price h5 {
+  margin: 0;
+  font-weight: 400;
+}
+.product__details .product-details__price .sale-price {
+  font-weight: bold;
+}
+.product__details .product-details__price .compare-at-price {
+  margin-left: 1rem;
+  text-decoration: line-through;
+}
+.product__details .product-details__shopPay {
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 136%;
+}
+.product__details .product-details__description {
+  margin-bottom: 1rem;
+}
+.product__details .product-details__description [data-accordion=content-container] {
+  height: 0;
+  overflow: hidden;
+  transition: all 0.1s linear;
+}
+.product__details .product-details__description .accordion__item {
+  margin-bottom: 1rem;
+}
+.product__details .product-details__description .accordion__trigger {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding-left: 0;
+  font-family: "Futura PT Light", sans-serif;
+  font-size: 1rem;
+  line-height: 1.1875rem;
+  text-align: left;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.product__details .product-details__description .accordion__trigger::after {
+  position: absolute;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  margin-left: 1rem;
+  content: "";
+  background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3QgeT0iNyIgd2lkdGg9IjE2IiBoZWlnaHQ9IjIiIGZpbGw9ImJsYWNrIi8+CjxyZWN0IHg9IjciIHk9IjE0IiB3aWR0aD0iMTIiIGhlaWdodD0iMiIgdHJhbnNmb3JtPSJyb3RhdGUoLTkwIDcgMTQpIiBmaWxsPSJibGFjayIvPgo8L3N2Zz4K") 0 0 no-repeat;
+  transition: all 0.2s linear;
+}
+.product__details .product-details__description .accordion__trigger.is-collapsed::after {
+  background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3QgeT0iNyIgd2lkdGg9IjE2IiBoZWlnaHQ9IjIiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPgo=") 0 0 no-repeat;
+}
+.product__details .product-details__description .accordion__content {
+  padding: 10px 0 0;
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 136%;
+}
+.product__details .product-details__description .accordion__content p {
+  margin-bottom: 4px;
+}
+.product__details .product-details__description .accordion__content ul {
+  padding-left: 22px;
+  margin: 1rem 0 0;
+  list-style: disc;
+}
+.product__details .product-details__description .accordion__content ul li {
+  margin-bottom: 3px;
+}
+.product__details .product-details__quantityblock {
+  margin-bottom: 1rem;
+}
+.product__details .product-details__quantityblock .quantity {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  max-width: 192px;
+  height: 50px;
+  text-align: center;
+  border: 1px solid #c4c4c4;
+  /* Chrome, Safari, Edge, Opera */
+  /* Firefox */
+}
+.product__details .product-details__quantityblock .quantity__title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  text-transform: initial;
+}
+.product__details .product-details__quantityblock .quantity__button {
+  width: 100%;
+  font-family: "Futura PT Light", sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.1875rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.product__details .product-details__quantityblock .quantity input[type=number] {
+  max-width: 50%;
+  font-family: "Futura PT Light", sans-serif;
+  font-size: 1rem;
+  line-height: 1.1875rem;
+  text-align: center;
+  border: none;
+}
+.product__details .product-details__quantityblock .quantity input[type=number]::-webkit-outer-spin-button,
+.product__details .product-details__quantityblock .quantity input[type=number]::-webkit-inner-spin-button {
+  margin: 0;
+  appearance: none;
+}
+.product__details .product-details__quantityblock .quantity input[type=number] {
+  appearance: textfield;
+}
+
+.variant-button__wrapper {
+  padding: 0;
+  margin-bottom: 1rem;
+  margin-left: 0;
+  border: none;
+}
+.variant-button__label {
+  margin-bottom: 0.5rem;
+}
+.variant-button input[type=radio] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.variant-button input[type=radio] + label {
+  display: inline-block;
+  padding: 0.5rem 2rem;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid #e7e6e6;
+  transition: border-color 300ms ease;
+}
+.variant-button input[type=radio].unavailable + label {
+  background: linear-gradient(to top right, #fff calc(50% - 1px), #4c4c4c, #fff calc(50% + 1px));
+}
+.variant-button input[type=radio].hidden + label {
+  display: none;
+}
+.variant-button input[type=radio]:checked + label {
+  border-color: #000;
+}
+
+.variant-dropdown__wrapper {
+  margin-bottom: 1rem;
+}
+.variant-dropdown__label {
+  margin-bottom: 0.5rem;
+}
+.variant-dropdown .select {
+  position: relative;
+  max-width: 12rem;
+}
+.variant-dropdown .select select {
+  box-sizing: border-box;
+  width: 100%;
+  height: 3rem;
+  padding: 0 4rem 0 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  cursor: pointer;
+  border-color: #c4c4c4;
+  border-radius: 0;
+  appearance: none;
+  appearance: none;
+}
+.variant-dropdown .select .icon-caret {
+  position: absolute;
+  top: calc(50% - 0.2rem);
+  right: 1.5rem;
+  width: 10px;
+  height: 0.6rem;
+  pointer-events: none;
+}
+
+.product-form__error-message {
+  font-size: 10px;
+  color: #e31818;
+}
+.product-form__error-message > div {
+  padding-bottom: 1rem;
+}
+.product-form__submit {
+  position: relative;
+}
+.product-form__submit:disabled {
+  opacity: 0.5;
+}
+.product-form .shopify-payment-button__button {
+  text-transform: uppercase;
+  background-color: #795548;
+  border-radius: 0;
+}
+.product-form .shopify-payment-button__button:hover {
+  background-color: #af725d;
+}
+
+.js-ajax-cart-form-in-progress .product-form__submit {
+  font-size: 1px;
+  background-color: #fff;
+}
+.js-ajax-cart-form-in-progress .product-form__submit::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 25px;
+  height: 25px;
+  margin-top: -12px;
+  margin-left: -12px;
+  content: "";
+  border: 4px solid grey;
+  border-radius: 50px;
+  animation: loading 0.5s linear infinite;
+}
+
+.option-select {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0;
+  border: none;
+}
+.option-select .product-form__field {
+  position: relative;
+  flex: 0 0 calc(20% - 8px);
+  margin: 0 0.5rem 0.5rem 0;
+  line-height: 2.5rem;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #c4c4c4;
+}
+@media only screen and (max-width: 767px) {
+  .option-select .product-form__field {
+    flex: 0 0 calc(33% - 8px);
+  }
+}
+.option-select .product-form__field.active {
+  border: 1px solid #000;
+}
+.option-select .product-form__field.disabled {
+  pointer-events: auto;
+  opacity: 0.4;
+}
+.option-select .product-form__field.disabled label {
+  text-decoration: line-through;
+}
+.option-select .product-form__field input[type=radio] {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+  opacity: 0;
+}
+.option-select .product-form__field input[type=radio] + label {
+  margin-bottom: 0;
+}
+.option-select--swatches label {
+  pointer-events: none;
+}
+.option-select--swatches label img {
+  pointer-events: none;
+}
+
+.comingsoon .notifyme-button {
+  display: block !important;
+}
+
+.comingsoon-button {
+  margin-bottom: 5px;
+}

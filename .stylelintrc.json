@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-sass-guidelines",
+    "stylelint-prettier/recommended"
+  ],
+  "defaultSeverity": "warning",
+  "ignoreFiles": ["assets/*.css", "snippets/*.css.liquid"],
+  "rules": {
+    "selector-class-pattern": "^.[a-z]([a-z0-9-]+)?(__([a-z0-9]+-?)+)?(--([a-z0-9]+-?)+){0,2}$",
+    "selector-no-qualifying-type": null,
+    "function-no-unknown": null,
+    "max-nesting-depth": 3,
+    "order/properties-alphabetical-order": null,
+    "declaration-block-no-redundant-longhand-properties": null
+  }
+}
