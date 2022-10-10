@@ -1,18 +1,24 @@
 {%- render 'stylesheet', name: 'product' -%}
 <script src="{{ 'js-product.min.js' | asset_url }}" defer="defer"></script>
 
-{%- comment -%}{%- assign current_variant = product.selected_or_first_available_variant -%}{%- endcomment -%}
-{%- assign current_variant = product.selected_variant -%}
-
-
-{%- comment -%}
-  Use the "product_form_id" variable to attach input fields outside the product form to the form via the "form" attribute
-{%- endcomment -%}
-
 {%- liquid 
+
+  # What should happen if the variant ID is not passed in URL:
+  #
+  # 1. Automatically select the first available variant
+  # assign current_variant = product.selected_or_first_available_variant
+  #
+  # 2. Don't preselect any variant and let the user choose
+  assign current_variant = product.selected_variant
+  
+  if current_variant == nil and product.has_only_default_variant
+    assign current_variant = product.variants[0]
+  endif
+
+
+  # Use the unique product form ID to link input fields that are outside of the form
   assign product_form_id = 'product-form-' | append: section.id
 -%}
-
 
 <div>
   {%- for media in product.media -%}
@@ -58,25 +64,57 @@
         <h1>{{ product.title | escape }}</h1>
 
       {%- when 'price' -%}
-        <div class="product-details__price" data-price>
-          {% if current_variant.compare_at_price > 0 %}
-            <s>
-              {{- current_variant.compare_at_price | money_without_trailing_zeros -}}
-            </s>
-          {% endif %}
-          <span>
-            {{- current_variant.price | money_without_trailing_zeros -}}
-          </span>
+        <div>
+          {%- if current_variant -%}
+            {% if current_variant.compare_at_price > 0 %}
+              <s>
+                {{- current_variant.compare_at_price | money -}}
+              </s>
+            {% endif %}
+            <span>
+              {{- current_variant.price | money -}}
+            </span>
+          {%- else -%}
+            {{- product.price | money -}}
+            {%- if product.price_varies -%}
+              <span> — </span>
+              {{- product.price_max | money -}}
+            {%- endif -%}
+          {%- endif -%}
         </div>
 
       {%- when 'payment_terms' -%}
-        <div class="product-details__shopPay-terms">
+        <div>
           {{ form | payment_terms }}
         </div>
 
       {%- when 'variant_picker' -%}
         {%- unless product.has_only_default_variant -%}
+          <div>
+            <details>
+              <summary>
+                {%- liquid 
+                  if current_variant
+                    echo 'Variant: ' | append: current_variant.title | escape
+                  else 
+                    echo 'Choose a variant'
+                  endif
+                -%}
+              </summary>
+              {%- for variant in product.variants -%}
+                <div>
+                  <a href="{{ variant.url }}">
+                    {{ variant.title | escape }}
+                    {%- if variant.available == false %}({{ 'products.product.sold_out' | t }}){% endif %}
+                    — {% if variant.compare_at_price > 0 %}<s>{{ variant.compare_at_price | money | escape }}</s>{% endif %}
+                    {{ variant.price | money | escape }}
+                  </a>
+                </div>
+              {%- endfor -%}
+            </details>
+          </div>
         {%- endunless -%}
+
 
       {%- when 'buy_buttons' -%}
         {%- form: 'product', product, id: product_form_id -%}
@@ -86,7 +124,7 @@
             <button
               type="submit"
               name="add"
-              {% if current_variant == null or current_variant.available == false %}
+              {% if current_variant == nil or current_variant.available == false %}
                 disabled
               {% endif %}
             >
@@ -95,8 +133,10 @@
                   echo 'Sold out'
                 elsif current_variant.available
                   echo 'Add to cart'
-                else
+                elsif product.available
                   echo 'Select an option'
+                else
+                  echo 'Sold out'
                 endif
               -%}
             </button>
