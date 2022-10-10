@@ -12496,96 +12496,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/***/ }),
-
-/***/ "./src/scripts/helpers.js":
-/*!********************************!*\
-  !*** ./src/scripts/helpers.js ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "findAncestor": () => (/* binding */ findAncestor),
-/* harmony export */   "isInViewport": () => (/* binding */ isInViewport),
-/* harmony export */   "serializeForm": () => (/* binding */ serializeForm),
-/* harmony export */   "debounce": () => (/* binding */ debounce),
-/* harmony export */   "parseTag": () => (/* binding */ parseTag),
-/* harmony export */   "getCollectionUrl": () => (/* binding */ getCollectionUrl),
-/* harmony export */   "swiperArrows": () => (/* binding */ swiperArrows)
-/* harmony export */ });
-function findAncestor(el, sel) {
-  while (
-    (el = el.parentElement) &&
-    !(el.matches || el.matchesSelector).call(el, sel)
-  );
-  return el;
-}
-
-const isInViewport = (elem) => {
-  const bounding = elem && elem.getBoundingClientRect();
-  return bounding && bounding.top < window.innerHeight && bounding.bottom >= 0;
-};
-
-function serializeForm(form) {
-  let obj = {};
-  let formData = new FormData(form);
-
-  for (let key of formData.keys()) {
-    obj[key] = formData.get(key);
-  }
-
-  return obj;
-}
-
-function debounce(fn, wait) {
-  let t;
-  return (...args) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn.apply(this, args), wait);
-  };
-}
-
-function parseTag(url) {
-  const regex = /[^/]+$/;
-  return url.match(regex)[0];
-}
-
-function getCollectionUrl(url) {
-  const regex = /\/\S+\//;
-  return url.match(regex)[0];
-}
-
-function swiperArrows(_this, mobile_limit, desktop_limit) {
-  if (
-    _this.el.querySelector(".swiper-button-prev") &&
-    _this.el.querySelector(".swiper-button-next")
-  ) {
-    if (
-      window.matchMedia("(max-width: 767px)").matches &&
-      _this.slides.length <= mobile_limit
-    ) {
-      _this.allowSlidePrev = _this.allowSlideNext = false;
-      _this.el.querySelector(".swiper-button-prev").style.display = "none";
-      _this.el.querySelector(".swiper-button-next").style.display = "none";
-    } else if (
-      window.matchMedia("(min-width: 768px)").matches &&
-      _this.slides.length <= desktop_limit
-    ) {
-      _this.allowSlidePrev = _this.allowSlideNext = false;
-      _this.el.querySelector(".swiper-button-prev").style.display = "none";
-      _this.el.querySelector(".swiper-button-next").style.display = "none";
-    } else {
-      _this.allowSlidePrev = _this.allowSlideNext = true;
-      _this.el.querySelector(".swiper-button-prev").style.display =
-        "inline-flex";
-      _this.el.querySelector(".swiper-button-next").style.display =
-        "inline-flex";
-    }
-  }
-}
-
-
 /***/ })
 
 /******/ 	});
@@ -12662,26 +12572,27 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./src/scripts/common.js ***!
   \*******************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers */ "./src/scripts/helpers.js");
-/* harmony import */ var swiper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! swiper */ "./node_modules/swiper/swiper.esm.js");
-/* harmony import */ var liquid_ajax_cart__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! liquid-ajax-cart */ "./node_modules/liquid-ajax-cart/liquid-ajax-cart.js");
+/* harmony import */ var swiper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! swiper */ "./node_modules/swiper/swiper.esm.js");
+/* harmony import */ var liquid_ajax_cart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! liquid-ajax-cart */ "./node_modules/liquid-ajax-cart/liquid-ajax-cart.js");
 
 
 
-console.log("Hello");
-/**
- * Configure Liquid Ajax Cart
- */
-(0,liquid_ajax_cart__WEBPACK_IMPORTED_MODULE_2__.configureCart)("addToCartCssClass", "js-ajax-cart-opened");
+  /**
+   * Configure Liquid Ajax Cart
+   */
+  // move to theme.liquid refer to Kit&ace
+  // configureCart("addToCartCssClass", "js-ajax-cart-opened");
 
 /**
  * Configure Swiper Modules
  */
-swiper__WEBPACK_IMPORTED_MODULE_1__.default.use([swiper__WEBPACK_IMPORTED_MODULE_1__.Navigation, swiper__WEBPACK_IMPORTED_MODULE_1__.Pagination, swiper__WEBPACK_IMPORTED_MODULE_1__.Thumbs]);
-window.Swiper = swiper__WEBPACK_IMPORTED_MODULE_1__.default;
+// try to use in component level
+swiper__WEBPACK_IMPORTED_MODULE_0__.default.use([swiper__WEBPACK_IMPORTED_MODULE_0__.Navigation, swiper__WEBPACK_IMPORTED_MODULE_0__.Pagination, swiper__WEBPACK_IMPORTED_MODULE_0__.Thumbs]);
+window.Swiper = swiper__WEBPACK_IMPORTED_MODULE_0__.default;
 
 /**
  * Event Listeners
+ * Use one eventlistener for all methods
  */
 document.addEventListener(
   "click",
@@ -12695,114 +12606,7 @@ document.addEventListener(
 
 window.addEventListener("resize", () => {});
 
-document.addEventListener("DOMContentLoaded", () => {
-  productsCarousel();
-});
 
-// TODO: refactor event listener and menu-items
-/**
- * Header menu
- */
-const menuItemsWithSub = document.querySelectorAll("[data-mainmenu-hassub]");
-
-menuItemsWithSub.forEach((item) => {
-  item.addEventListener("mouseenter", function () {
-    this.querySelector("[data-mega-menu]")?.classList.add("mega-menu--active");
-  });
-  // Navigation menu mouse leave delay
-  item.addEventListener("mouseleave", function () {
-    setTimeout(() => {
-      const elem = this.querySelector("[data-mega-menu]");
-      if (elem?.classList) {
-        elem.classList.remove("mega-menu--active");
-      }
-    }, 300);
-  });
-});
-
-/**
- * Mobile menu
- */
-const mobileMenuItems = document.querySelectorAll("[data-drawer-itemtoggle]");
-
-mobileMenuItems.forEach((item) => {
-  const parentItem = (0,_helpers__WEBPACK_IMPORTED_MODULE_0__.findAncestor)(item, ".hasSub");
-
-  item.addEventListener("click", function () {
-    parentItem.querySelector("[data-drawer-child]").classList.toggle("open");
-  });
-});
-
-const drawer = document.querySelector("[data-drawer]");
-const openDrawer = document.querySelectorAll("[data-open-drawer]");
-const closeDrawer = document.querySelectorAll("[data-close-drawer]");
-
-openDrawer.forEach((item) => {
-  item.addEventListener("click", function () {
-    drawer.classList.add("open");
-    document.body.classList.add("disable-body");
-  });
-});
-
-closeDrawer.forEach((item) => {
-  item.addEventListener("click", function () {
-    drawer.classList.remove("open");
-    document.body.classList.remove("disable-body");
-  });
-});
-
-/**
- * Swiper products carousel component
- */
-function productsCarousel() {
-  const carouselElements = document.querySelectorAll(
-    ".products-carousel-swiper"
-  );
-  if (carouselElements.length) {
-    console.log(carouselElements);
-    carouselElements.forEach((carousel) => {
-      const limitPerView = carousel.getAttribute("data-limit_per_view");
-      const limitPerViewMobile = carousel.getAttribute(
-        "data-limit_per_view_mobile"
-      );
-      new swiper__WEBPACK_IMPORTED_MODULE_1__.default(carousel, {
-        spaceBetween: 0,
-        slidesPerView: limitPerViewMobile ? limitPerViewMobile : 2,
-        allowTouchMove: true,
-        autoHeight: true,
-        watchOverflow: true,
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-        pagination: {
-          el: ".swiper-pagination",
-          type: "bullets",
-          clickable: true,
-        },
-        cssMode: false,
-        breakpoints: {
-          768: {
-            slidesPerView: limitPerViewMobile ? limitPerViewMobile : 2,
-          },
-          990: {
-            cssMode: false,
-            allowTouchMove: true,
-            slidesPerView: limitPerView ? limitPerView : 2,
-          },
-        },
-        on: {
-          init: function () {
-            (0,_helpers__WEBPACK_IMPORTED_MODULE_0__.swiperArrows)(this, limitPerViewMobile, limitPerView);
-          },
-          resize: function () {
-            (0,_helpers__WEBPACK_IMPORTED_MODULE_0__.swiperArrows)(this, limitPerViewMobile, limitPerView);
-          },
-        },
-      });
-    });
-  }
-}
 
 function sampleMethod(event) {
   const element = event.target.closest("[data-some-attr]"); // add your element class/id/data-attr.
