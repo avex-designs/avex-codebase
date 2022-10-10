@@ -4,6 +4,120 @@
 {%- comment -%}{%- assign current_variant = product.selected_or_first_available_variant -%}{%- endcomment -%}
 {%- assign current_variant = product.selected_variant -%}
 
+
+{%- comment -%}
+  Use the "product_form_id" variable to attach input fields outside the product form to the form via the "form" attribute
+{%- endcomment -%}
+
+{%- liquid 
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+
+<div>
+  {%- for media in product.media -%}
+    
+    {%- comment-%}
+      Add "lazyload" for images that aren't visible on the first screen
+    {%- endcomment -%}
+    {%- liquid 
+      assign media_loading = 'lazy'
+      if media.position == 1
+        assign media_loading = 'eager'
+      endif
+    -%}
+
+    {%- if media.media_type == 'video' -%}
+      {{- media | video_tag: preload: 'none' -}}
+    {%- elsif media.media_type == 'external_video' -%}
+      {{- media | external_video_tag: loading: media_loading -}}
+    {%- elsif media.media_type == 'model' -%}
+      {{- media | model_viewer_tag -}}
+    {%- else -%}
+
+      {%- comment-%}
+        Set the correct "sizes" argument according to the design
+      {%- endcomment -%}
+      <image-loader>
+        {{- media.preview_image 
+          | image_url: width: media.preview_image.width 
+          | image_tag: loading: media_loading, sizes: '(min-width: 992px) 50vw, 100vw' 
+        -}}
+      </image-loader>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+<div>
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+      {%- when '@app' -%}
+        {% render block %}
+
+      {%- when 'title' -%}
+        <h1>{{ product.title | escape }}</h1>
+
+      {%- when 'price' -%}
+        <div class="product-details__price" data-price>
+          {% if current_variant.compare_at_price > 0 %}
+            <s>
+              {{- current_variant.compare_at_price | money_without_trailing_zeros -}}
+            </s>
+          {% endif %}
+          <span>
+            {{- current_variant.price | money_without_trailing_zeros -}}
+          </span>
+        </div>
+
+      {%- when 'payment_terms' -%}
+        <div class="product-details__shopPay-terms">
+          {{ form | payment_terms }}
+        </div>
+
+      {%- when 'variant_picker' -%}
+        {%- unless product.has_only_default_variant -%}
+        {%- endunless -%}
+
+      {%- when 'buy_buttons' -%}
+        {%- form: 'product', product, id: product_form_id -%}
+
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          <div>
+            <button
+              type="submit"
+              name="add"
+              {% if current_variant == null or current_variant.available == false %}
+                disabled
+              {% endif %}
+            >
+              {%- liquid
+                if current_variant.available == false
+                  echo 'Sold out'
+                elsif current_variant.available
+                  echo 'Add to cart'
+                else
+                  echo 'Select an option'
+                endif
+              -%}
+            </button>
+            {%- if block.settings.show_dynamic_checkout -%}
+              {{ form | payment_button }}
+            {%- endif -%}
+          </div>
+        {%- endform -%}
+      {%- when 'description' -%}
+        <div>
+          {{ product.description }}
+        </div>
+    {%- endcase -%}
+  {%- endfor -%}
+</div>
+
+
+
+<hr style="margin: 80px 0" />
+
+
 <div class="product">
   <div class="container-max product-container">
     <div class="product__gallery">
@@ -304,15 +418,7 @@
     {
       "type": "price",
       "name": "Price",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "checkbox",
-          "id": "compare_price",
-          "label": "Show compare price?",
-          "default": true
-        }
-      ]
+      "limit": 1
     },
     {
       "type": "quantity_selector",
