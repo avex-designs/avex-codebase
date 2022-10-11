@@ -1,8 +1,162 @@
 {%- render 'stylesheet', name: 'product' -%}
 <script src="{{ 'js-product.min.js' | asset_url }}" defer="defer"></script>
 
-{%- comment -%}{%- assign current_variant = product.selected_or_first_available_variant -%}{%- endcomment -%}
-{%- assign current_variant = product.selected_variant -%}
+{%- liquid 
+
+  # What should happen if the variant ID is not passed in URL:
+  #
+  # 1. Automatically select the first available variant
+  # assign current_variant = product.selected_or_first_available_variant
+  #
+  # 2. Don't preselect any variant and let the user choose
+  assign current_variant = product.selected_variant
+  
+  if current_variant == nil and product.has_only_default_variant
+    assign current_variant = product.variants[0]
+  endif
+
+
+  # Use the unique product form ID to link input fields that are outside of the form
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+<div>
+  {%- for media in product.media -%}
+    
+    {%- comment-%}
+      Add "lazyload" for images that aren't visible on the first screen
+    {%- endcomment -%}
+    {%- liquid 
+      assign media_loading = 'lazy'
+      if media.position == 1
+        assign media_loading = 'eager'
+      endif
+    -%}
+
+    {%- if media.media_type == 'video' -%}
+      {{- media | video_tag: preload: 'none' -}}
+    {%- elsif media.media_type == 'external_video' -%}
+      {{- media | external_video_tag: loading: media_loading -}}
+    {%- elsif media.media_type == 'model' -%}
+      {{- media | model_viewer_tag -}}
+    {%- else -%}
+
+      {%- comment-%}
+        Set the correct "sizes" argument according to the design
+      {%- endcomment -%}
+      <image-loader>
+        {{- media.preview_image 
+          | image_url: width: media.preview_image.width 
+          | image_tag: loading: media_loading, sizes: '(min-width: 992px) 50vw, 100vw' 
+        -}}
+      </image-loader>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+<div>
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+      {%- when '@app' -%}
+        {% render block %}
+
+      {%- when 'title' -%}
+        <h1>{{ product.title | escape }}</h1>
+
+      {%- when 'price' -%}
+        <div>
+          {%- if current_variant -%}
+            {% if current_variant.compare_at_price > 0 %}
+              <s>
+                {{- current_variant.compare_at_price | money -}}
+              </s>
+            {% endif %}
+            <span>
+              {{- current_variant.price | money -}}
+            </span>
+          {%- else -%}
+            {{- product.price | money -}}
+            {%- if product.price_varies -%}
+              <span> — </span>
+              {{- product.price_max | money -}}
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+
+      {%- when 'payment_terms' -%}
+        <div>
+          {{ form | payment_terms }}
+        </div>
+
+      {%- when 'variant_picker' -%}
+        {%- unless product.has_only_default_variant -%}
+          <div>
+            <details>
+              <summary>
+                {%- liquid 
+                  if current_variant
+                    echo 'Variant: ' | append: current_variant.title | escape
+                  else 
+                    echo 'Choose a variant'
+                  endif
+                -%}
+              </summary>
+              {%- for variant in product.variants -%}
+                <div>
+                  <a href="{{ variant.url }}">
+                    {{ variant.title | escape }}
+                    {%- if variant.available == false %}({{ 'products.product.sold_out' | t }}){% endif %}
+                    — {% if variant.compare_at_price > 0 %}<s>{{ variant.compare_at_price | money | escape }}</s>{% endif %}
+                    {{ variant.price | money | escape }}
+                  </a>
+                </div>
+              {%- endfor -%}
+            </details>
+          </div>
+        {%- endunless -%}
+
+
+      {%- when 'buy_buttons' -%}
+        {%- form: 'product', product, id: product_form_id -%}
+
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          <div>
+            <button
+              type="submit"
+              name="add"
+              {% if current_variant == nil or current_variant.available == false %}
+                disabled
+              {% endif %}
+            >
+              {%- liquid
+                if current_variant.available == false
+                  echo 'Sold out'
+                elsif current_variant.available
+                  echo 'Add to cart'
+                elsif product.available
+                  echo 'Select an option'
+                else
+                  echo 'Sold out'
+                endif
+              -%}
+            </button>
+            {%- if block.settings.show_dynamic_checkout -%}
+              {{ form | payment_button }}
+            {%- endif -%}
+          </div>
+        {%- endform -%}
+      {%- when 'description' -%}
+        <div>
+          {{ product.description }}
+        </div>
+    {%- endcase -%}
+  {%- endfor -%}
+</div>
+
+
+
+<hr style="margin: 80px 0" />
+
 
 <div class="product">
   <div class="container-max product-container">
@@ -304,15 +458,7 @@
     {
       "type": "price",
       "name": "Price",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "checkbox",
-          "id": "compare_price",
-          "label": "Show compare price?",
-          "default": true
-        }
-      ]
+      "limit": 1
     },
     {
       "type": "quantity_selector",
