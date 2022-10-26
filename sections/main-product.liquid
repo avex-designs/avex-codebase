@@ -56,7 +56,7 @@
     {%- endfor -%}
   </div>
 
-  <div>
+  <div data-product-section-area="details">
 
     <h1>{{ product.title | escape }}</h1>
     <div>
@@ -76,6 +76,9 @@
           {{- product.price_max | money -}}
         {%- endif -%}
       {%- endif -%}
+    </div>
+    <div data-product-section-area>
+      Test
     </div>
 
     <div>
@@ -150,9 +153,7 @@
             endif
           -%}
         </button>
-        {%- if block.settings.show_dynamic_checkout -%}
-          {{ form | payment_button }}
-        {%- endif -%}
+        {{ form | payment_button }}
       </div>
 
       <div>
