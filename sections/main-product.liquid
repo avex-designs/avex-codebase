@@ -55,10 +55,10 @@
     {%- endfor -%}
   </div>
 
-  <div data-product-section-area>
+  <div>
 
     <h1>{{ product.title | escape }}</h1>
-    <div>
+    <div data-product-section-area>
       {%- if current_variant -%}
         {% if current_variant.compare_at_price > 0 %}
           <s>
@@ -101,7 +101,7 @@
         {%- endfor -%}
       </div>
       <div>
-        <details>
+        <details data-product-section-area>
           <summary>
             {%- liquid 
               if current_variant
@@ -136,6 +136,7 @@
           {% if current_variant == nil or current_variant.available == false %}
             disabled
           {% endif %}
+          data-product-section-area="innerHTML,disabled"
         >
           {%- liquid
             if current_variant.available == false
@@ -162,7 +163,7 @@
 </product-section>
 
 
-
+{% comment %}
 <hr style="margin: 80px 0" />
 
 
@@ -432,116 +433,11 @@
     </div>
   </div>
 </div>
+{% endcomment %}
 
 {% schema %}
 {
   "name": "Product page",
-  "tag": "section",
-  "blocks": [
-    {
-      "type": "@app"
-    },
-    {
-      "type": "text",
-      "name": "Text",
-      "settings": [
-        {
-          "type": "text",
-          "id": "text",
-          "default": "Text block",
-          "label": "Text"
-        }
-      ]
-    },
-    {
-      "type": "title",
-      "name": "Title",
-      "limit": 1
-    },
-    {
-      "type": "payment_terms",
-      "name": "Payment terms",
-      "limit": 1
-    },
-    {
-      "type": "price",
-      "name": "Price",
-      "limit": 1
-    },
-    {
-      "type": "quantity_selector",
-      "name": "Quantity selector",
-      "limit": 1
-    },
-    {
-      "type": "variant_picker",
-      "name": "Variant Picker",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "select",
-          "id": "picker_type",
-          "options": [
-            {
-              "value": "dropdown",
-              "label": "Dropdown"
-            },
-            {
-              "value": "button",
-              "label": "Buttons"
-            }
-          ],
-          "default": "button",
-          "label": "Variant Picker"
-        }
-      ]
-    },
-    {
-      "type": "buy_buttons",
-      "name": "Buy buttons",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "checkbox",
-          "id": "show_dynamic_checkout",
-          "default": true,
-          "label": "Show dynamic checkout buttons"
-        }
-      ]
-    },
-    {
-      "type": "description",
-      "name": "Product description",
-      "limit": 1
-    },
-    {
-      "type": "collapsible_tab",
-      "name": "Accordion",
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "default": "Accordion Title",
-          "label": "Title"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Text"
-        },
-        {
-          "type": "page",
-          "id": "page",
-          "label": "Page"
-        },
-        {
-          "type": "checkbox",
-          "id": "isOpen",
-          "label": "Is open"
-        }
-      ]
-    }
-  ],
   "settings": []
 }
 {% endschema %}
