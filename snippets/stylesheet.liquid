@@ -9,28 +9,37 @@
   {% render 'stylesheet', name: 'product-card', loading: 'defer' %}
 {% endcomment %}
 
-{% liquid
-  assign stylesheet_path = name
-  unless name contains '.css'
-    assign stylesheet_path = stylesheet_path | append: '.min.css' | prepend: 'css-' | asset_url
-  endunless
--%}
-
-{%- if loading == 'defer' -%}
-  {% comment %}todo: check if defer works -- there should be the flash of unstyle content {% endcomment %}
-  <link
-    href="{{ stylesheet_path }}"
-    rel="preload"
-    as="style"
-    onload="this.onload=null;if(document.querySelector('link[href=\'{{ stylesheet_path }}\']') !== this){this.remove()}else{this.rel='stylesheet'}"
-  >
-
-  <noscript><link rel="stylesheet" href="{{ stylesheet_path }}"></noscript>
+{%- if inline -%}
+  {%- liquid
+    assign stylesheet_snippet = name | append: '.css'
+    style
+      render stylesheet_snippet
+    endstyle
+  -%}
 {%- else -%}
-  <link
-    href="{{ stylesheet_path }}"
-    rel="stylesheet"
-    type="text/css"
-    onload="this.onload=null;if(document.querySelector('link[href=\'{{ stylesheet_path }}\']') !== this) this.remove()"
-  >
+  {%- liquid
+    assign stylesheet_path = name
+    unless name contains '.css'
+      assign stylesheet_path = stylesheet_path | append: '.min.css' | prepend: 'css-' | asset_url
+    endunless
+  -%}
+
+  {%- if loading == 'defer' -%}
+    {% comment %}todo: check if defer works -- there should be the flash of unstyle content {% endcomment %}
+    <link
+      href="{{ stylesheet_path }}"
+      rel="preload"
+      as="style"
+      onload="this.onload=null;if(document.querySelector('link[href=\'{{ stylesheet_path }}\']') !== this){this.remove()}else{this.rel='stylesheet'}"
+    >
+
+    <noscript><link rel="stylesheet" href="{{ stylesheet_path }}"></noscript>
+  {%- else -%}
+    <link
+      href="{{ stylesheet_path }}"
+      rel="stylesheet"
+      type="text/css"
+      onload="this.onload=null;if(document.querySelector('link[href=\'{{ stylesheet_path }}\']') !== this) this.remove()"
+    >
+  {%- endif -%}
 {%- endif -%}

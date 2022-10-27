@@ -13,3 +13,6 @@ Mixin to add loading spinner to button/element.
 Usage: 
 @include loading()
 */
+.main-login {
+  background-color: yellowgreen !important;
+}
