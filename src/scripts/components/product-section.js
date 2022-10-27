@@ -258,49 +258,54 @@ class ProductSection extends HTMLElement {
     const newdocument = new DOMParser().parseFromString(html, "text/html");
     const $newElement = newdocument.querySelector(elementName);
     if (!$newElement)
-      throw new Error(`The "${elementName} element is not found`);
-    const newElementHtml = $newElement.innerHTML;
+      throw new Error(`The "${elementName}" element is not found`);
 
     this.querySelector(`[${attributes.json}]`).innerHTML =
       $newElement.querySelector(`[${attributes.json}]`).innerHTML;
 
-    const $$prevAreas = Array.from(
+    const $$curAreas = Array.from(
       this.querySelectorAll(`[${attributes.area}]`)
     );
     const $$newAreas = Array.from(
       $newElement.querySelectorAll(`[${attributes.area}]`)
     );
 
-    if ($$prevAreas.length < $$newAreas.length) {
+    if ($$curAreas.length !== $$newAreas.length) {
       console.warn(
-        `Previous ${attributes.area} elements don't match the new received ones`
+        `Previous "${attributes.area}" elements don't match the new received ones. The HTML of the component will be replaced completely.`
       );
-      return (this.innerHTML = newElementHtml);
+      this.innerHTML = $newElement.innerHTML;
+      if ($newElement.querySelector("[data-shopify='payment-button']"))
+        window.Shopify?.PaymentButton?.init();
+      return;
     }
 
-    $$prevAreas.forEach(($prevArea) => {
-      const areaId = $prevArea.getAttribute(attributes.area);
-      const newAreaIndex = $$newAreas.findIndex(
-        (el) => el.getAttribute(attributes.area) === areaId
-      );
-      if (newAreaIndex === -1) {
-        console.warn(
-          `Previous ${attributes.area} elements don't match the new received ones`
-        );
-        $prevArea.remove();
-        return;
+    let hasShopifyPaymentButton = false;
+    $$curAreas.forEach(($curArea, areaIndex) => {
+      const $newArea = $$newAreas[areaIndex];
+      let replacingString = "innerHTML";
+      if ($newArea.getAttribute(attributes.area)) {
+        replacingString = $newArea.getAttribute(attributes.area);
       }
-      const $newArea = $$newAreas[newAreaIndex];
-      $prevArea.before($newArea);
-      $prevArea.remove();
-      $$newAreas.splice(newAreaIndex, 1);
+      replacingString.split(",").forEach((replacingValue) => {
+        replacingValue = replacingValue.trim();
+        if (replacingValue === "innerHTML") {
+          $curArea.innerHTML = $newArea.innerHTML;
+          if ($newArea.querySelector("[data-shopify='payment-button']"))
+            hasShopifyPaymentButton = true;
+          return;
+        }
+        if (!$newArea.hasAttribute(replacingValue)) {
+          $curArea.removeAttribute(replacingValue);
+          return;
+        }
+        $curArea.setAttribute(
+          replacingValue,
+          $newArea.getAttribute(replacingValue)
+        );
+      });
     });
-    if ($$newAreas.length > 0) {
-      console.warn(
-        `Previous ${attributes.area} elements don't match the new received ones`
-      );
-      this.innerHTML = newElementHtml;
-    }
+    if (hasShopifyPaymentButton) window.Shopify?.PaymentButton?.init();
   }
 
   #updateAvailability() {
