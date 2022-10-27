@@ -1,4 +1,4 @@
-{% comment %}
+{% comment %} {% comment %}
   TODO: improve logic for hide/show in specific pages
 {% endcomment %}
 
@@ -12,7 +12,7 @@
           {{- 'general.breadcrumbs.home' | t -}}
         </a>
       </li>
-      {% render 'icon-chevron-right' %}
+    >
       {% case t %}
         {% when 'page' %}
           <li>
@@ -21,16 +21,16 @@
         {% when 'product' %}
           {% if collection.url %}
             <li>{{ collection.title | link_to: collection.url }}</li>
-            {% render 'icon-chevron-right' %}
+          >
           {% endif %}
           <li>
             <a href="{{ collection.url }}{{ product.url }}" class="current" aria-current="page">{{ product.title }}</a>
           </li>
-          {% render 'icon-chevron-right' %}
+        >
         {% when 'collection' and collection.handle %}
           {% if current_tags %}
             <li>{{ collection.title | link_to: collection.url }}</li>
-            {% render 'icon-chevron-right' %}
+           >
             <li>
               {% capture tag_url %}{{ collection.url }}/{{ current_tags | join: "+" }}{% endcapture %}
               <a href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + " }}</a>
@@ -43,7 +43,7 @@
         {% when 'blog' %}
           {% if current_tags %}
             <li>{{ blog.title | link_to: blog.url }}</li>
-            {% render 'icon-chevron-right' %}
+           >
             <li>
               {% capture tag_url %}{{ blog.url }}/tagged/{{ current_tags | join: "+" }}{% endcapture %}
               <a href="{{ tag_url }}" class="current" aria-current="page">{{ current_tags | join: " + " }}</a>
@@ -55,7 +55,7 @@
           {% endif %}
         {% when 'article' %}
           <li>{{ blog.title | link_to: blog.url }}</li>
-          {% render 'icon-chevron-right' %}
+        >
           <li>
             <a href="{{ article.url }}" class="current" aria-current="page">{{ article.title }}</a>
           </li>
@@ -85,4 +85,4 @@
       {% endcase %}
     </ul>
   </nav>
-{%- endunless -%}
+{%- endunless -%} {% endcomment %}

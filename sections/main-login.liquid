@@ -1,12 +1,8 @@
 {%- render 'stylesheet', name: 'login' -%}
-{% comment %} {%- render 'script', name: 'login' -%} {% endcomment %}
-
-<login-component>
-SOME COMP
-</login-component>
 
 <div class="main-login">
   <div class="main-login__recover">
+    <h2>Forgot password</h2>
     {%- form 'recover_customer_password', class: 'form form--recovery' -%}
       {% assign recover_success = form.posted_successfully? %}
       {%- comment -%}
@@ -27,31 +23,32 @@ SOME COMP
             aria-describedby="RecoverEmail-email-error"
             autofocus
           {% endif %}
-          placeholder="{{ 'customer.login_page.email' | t }}"
+          placeholder="Email"
         >
         <label for="RecoverEmail">
-          {{ 'customer.login_page.email' | t }}
+          Email
         </label>
       </div>
       {%- if form.errors -%}
-        <small id="RecoverEmail-email-error" class="form__errors">
+        <small id="RecoverEmail-email-error">
           {{ form.errors.messages.form }}
         </small>
       {%- endif -%}
 
-      <button class="form__submit">
-        {{ 'customer.login_page.submit' | t }}
+      <button>
+        Submit
       </button>
 
-      <a href="#login" class="form__cancel">
-        {{ 'customer.login_page.cancel' | t }}
+      <a href="#login">
+        Cancel
       </a>
     {%- endform -%}
   </div>
-
+  <br/>
   <div class="main-login__main">
+    <h2>Login</h2>
     {%- if recover_success == true -%}
-      {{ 'customer.recover_password.success' | t }}
+      Success
     {%- endif -%}
     {%- form 'customer_login', class: 'form', novalidate: 'novalidate' -%}
       {%- if form.errors -%}
@@ -69,15 +66,15 @@ SOME COMP
           {% if form.errors contains 'form' %}
             aria-invalid="true"
           {% endif %}
-          placeholder="{{ 'customer.login_page.email' | t }}"
+          placeholder="Email"
         >
         <label for="CustomerEmail">
-          {{ 'customer.login_page.email' | t }}
+         Email
         </label>
       </div>
 
       {%- if form.password_needed -%}
-        <div class="field">
+        <div>
           <input
             type="password"
             value=""
@@ -87,24 +84,24 @@ SOME COMP
             {% if form.errors contains 'form' %}
               aria-invalid="true"
             {% endif %}
-            placeholder="{{ 'customer.login_page.password' | t }}"
+            placeholder="Password"
           >
           <label for="CustomerPassword">
-            {{ 'customer.login_page.password' | t }}
+            Password
           </label>
         </div>
 
         <a href="#recover">
-          {{ 'customer.login_page.forgot_password' | t }}
+          Forgot password
         </a>
       {%- endif -%}
 
       <button>
-        {{ 'customer.login_page.sign_in' | t }}
+        Sign in
       </button>
 
       <a href="{{ routes.account_register_url }}">
-        {{ 'customer.login_page.create_account' | t }}
+        Create account
       </a>
     {%- endform -%}
   </div>
@@ -113,7 +110,7 @@ SOME COMP
     <div class="main-login__guest">
       {%- form 'guest_login' -%}
         <button>
-          {{ 'customer.login_page.guest_continue' | t }}
+          Guest login
         </button>
       {%- endform -%}
     </div>
