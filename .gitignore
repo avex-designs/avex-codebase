@@ -19,6 +19,7 @@
 # track these files, if they exist
 !.vscode
 !.gitignore
+!.shopifyignore
 !.editorconfig
 !.eslintrc.json
 !.eslintignore
