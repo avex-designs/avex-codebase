@@ -16,29 +16,12 @@
     assign current_variant = product.selected_variant
   endif
 
-
   # Use the unique product form ID to link input fields that are outside of the form
   assign product_form_id = 'product-form-' | append: section.id
 -%}
 
-<product-section data-product-section="{{ section.id }}">
-  {% comment %}
-    The object should be full {{ product | json }} or only needed properties of that object
-  {% endcomment %}
-  <script type="application/json" data-product-section-json>
-    {
-      "variants": [
-        {%- for variant in product.variants -%}
-          {
-            "id": {{ variant.id }},
-            "options": {{ variant.options | json }}
-          }
-          {%- unless forloop.last -%}, {%- endunless -%}
-        {%- endfor -%}
-      ]
-    }
-  </script>
-
+<product-section>
+  {%- render 'product-section-json', product: product, variant_id: current_variant.id, section_id: section.id, update_url: true -%}
   <div>
     {%- for media in product.media -%}
       
@@ -73,103 +56,110 @@
     {%- endfor -%}
   </div>
 
-  <div>
-    {%- for block in section.blocks -%}
-      {%- case block.type -%}
-        {%- when '@app' -%}
-          {% render block %}
+  <div data-product-section-area="details">
 
-        {%- when 'title' -%}
-          <h1>{{ product.title | escape }}</h1>
+    <h1>{{ product.title | escape }}</h1>
+    <div>
+      {%- if current_variant -%}
+        {% if current_variant.compare_at_price > 0 %}
+          <s>
+            {{- current_variant.compare_at_price | money -}}
+          </s>
+        {% endif %}
+        <span>
+          {{- current_variant.price | money -}}
+        </span>
+      {%- else -%}
+        {{- product.price | money -}}
+        {%- if product.price_varies -%}
+          <span> — </span>
+          {{- product.price_max | money -}}
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+    <div data-product-section-area>
+      Test
+    </div>
 
-        {%- when 'price' -%}
-          <div>
-            {%- if current_variant -%}
-              {% if current_variant.compare_at_price > 0 %}
-                <s>
-                  {{- current_variant.compare_at_price | money -}}
-                </s>
-              {% endif %}
-              <span>
-                {{- current_variant.price | money -}}
-              </span>
-            {%- else -%}
-              {{- product.price | money -}}
-              {%- if product.price_varies -%}
-                <span> — </span>
-                {{- product.price_max | money -}}
-              {%- endif -%}
-            {%- endif -%}
-          </div>
+    <div>
+      {{ product.description }}
+    </div>
 
-        {%- when 'payment_terms' -%}
-          <div>
-            {{ form | payment_terms }}
-          </div>
-
-        {%- when 'variant_picker' -%}
-          {%- unless product.has_only_default_variant -%}
+    {%- unless product.has_only_default_variant -%}
+      <div>
+        {%- for option in product.options_with_values -%}
+          <product-option data-product-option-name="{{ option.name | escape }}">
+            {% comment%} todo: add condition if current_variant exists, then show the selected_value string after the option.name {% endcomment %}
+            <div>{{ option.name | escape }}</div>
+            {%- for value in option.values -%}
+              <label>
+                <input 
+                  type="radio"
+                  name="{{ option.name | escape }}" {% comment %} todo: create a safe name {% endcomment %}
+                  value="{{ value | escape }}"
+                  {% if current_variant and option.selected_value == value %}checked{% endif %}>
+                <span>{{ value | escape }}</span>
+              </label>
+            {%- endfor -%}
+          </product-option>
+        {%- endfor -%}
+      </div>
+      <div>
+        <details>
+          <summary>
+            {%- liquid 
+              if current_variant
+                echo 'Variant: ' | append: current_variant.title | escape
+              else 
+                echo 'Choose a variant'
+              endif
+            -%}
+          </summary>
+          {%- for variant in product.variants -%}
             <div>
-              <details>
-                <summary>
-                  {%- liquid 
-                    if current_variant
-                      echo 'Variant: ' | append: current_variant.title | escape
-                    else 
-                      echo 'Choose a variant'
-                    endif
-                  -%}
-                </summary>
-                {%- for variant in product.variants -%}
-                  <div>
-                    <a href="{{ variant.url }}">
-                      {{ variant.title | escape }}
-                      {%- if variant.available == false %}({{ 'products.product.sold_out' | t }}){% endif %}
-                      — {% if variant.compare_at_price > 0 %}<s>{{ variant.compare_at_price | money | escape }}</s>{% endif %}
-                      {{ variant.price | money | escape }}
-                    </a>
-                  </div>
-                {%- endfor -%}
-              </details>
+              <a href="{{ variant.url }}">
+                {{ variant.title | escape }}
+                {%- if variant.available == false %}({{ 'products.product.sold_out' | t }}){% endif %}
+                — {% if variant.compare_at_price > 0 %}<s>{{ variant.compare_at_price | money | escape }}</s>{% endif %}
+                {{ variant.price | money | escape }}
+              </a>
             </div>
-          {%- endunless -%}
+          {%- endfor -%}
+        </details>
+      </div>
+    {%- endunless -%}
 
 
-        {%- when 'buy_buttons' -%}
-          {%- form: 'product', product, id: product_form_id -%}
+    {%- form: 'product', product, id: product_form_id -%}
 
-            <input type="hidden" name="id" value="{{ current_variant.id }}">
-            <div>
-              <button
-                type="submit"
-                name="add"
-                {% if current_variant == nil or current_variant.available == false %}
-                  disabled
-                {% endif %}
-              >
-                {%- liquid
-                  if current_variant.available == false
-                    echo 'Sold out'
-                  elsif current_variant.available
-                    echo 'Add to cart'
-                  elsif product.available
-                    echo 'Select an option'
-                  else
-                    echo 'Sold out'
-                  endif
-                -%}
-              </button>
-              {%- if block.settings.show_dynamic_checkout -%}
-                {{ form | payment_button }}
-              {%- endif -%}
-            </div>
-          {%- endform -%}
-        {%- when 'description' -%}
-          <div>
-            {{ product.description }}
-          </div>
-      {%- endcase -%}
-    {%- endfor -%}
+      <input type="hidden" name="id" value="{{ current_variant.id }}">
+      <div>
+        <button
+          type="submit"
+          name="add"
+          {% if current_variant == nil or current_variant.available == false %}
+            disabled
+          {% endif %}
+        >
+          {%- liquid
+            if current_variant.available == false
+              echo 'Sold out'
+            elsif current_variant.available
+              echo 'Add to cart'
+            elsif product.available
+              echo 'Select an option'
+            else
+              echo 'Sold out'
+            endif
+          -%}
+        </button>
+        {{ form | payment_button }}
+      </div>
+
+      <div>
+        {{ form | payment_terms }}
+      </div>
+    {%- endform -%}
   </div>
 </product-section>
 

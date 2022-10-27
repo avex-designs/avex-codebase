@@ -20,8 +20,10 @@
     constructor() {
       super();
       Object.keys(components).forEach((component) => {
+       console.log("this.querySelector(component)", this.querySelector(component))
         if (this.querySelector(component)) {
           this.injectScript(components[component], component);
+          console.log(component)
           delete components[component];
         }
       });
