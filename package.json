@@ -5,8 +5,8 @@
   "main": "webpack.config.js",
   "scripts": {
     "webpack-build": "webpack",
-    "dev": "webpack --watch & node watch.js & shopify theme dev --store=onlinestore2-test",
-    "push": "NODE_ENV=production webpack && shopify theme push",
+    "start": "webpack --watch & node watch.js & shopify theme dev --store=onlinestore2-test",
+    "deploy": "NODE_ENV=production webpack && shopify theme push --store=onlinestore2-test",
     "zip": "NODE_ENV=production webpack & shopify theme package --verbose",
     "prepare": "husky install",
     "eslint": "eslint --fix src/**/*.js",
