@@ -61,7 +61,7 @@ class ProductSection extends HTMLElement {
 
   #isHydration = false;
 
-  #renderPromise = undefined;
+  #abortController;
 
   constructor() {
     super();
@@ -212,7 +212,11 @@ class ProductSection extends HTMLElement {
   }
 
   async #render(event) {
-    this.#renderPromise = undefined;
+    if (this.#abortController) {
+      this.#abortController.abort();
+      this.#abortController = undefined;
+    }
+
     this.#$$variantInputs.forEach(($input) => {
       $input.value = this.#variantId || "";
       $input.setAttribute("value", this.#variantId || "");
@@ -235,11 +239,13 @@ class ProductSection extends HTMLElement {
     const url = `${this.#data.section.requestURL}?${
       this.#variantId > 0 ? `variant=${this.#variantId}&` : ""
     }section_id=${this.#data.section.sectionId}`;
-    const renderPromise = (this.#renderPromise = fetch(url));
-    try {
-      const response = await renderPromise;
-      if (renderPromise !== this.#renderPromise) return;
 
+    this.#abortController = new AbortController();
+
+    try {
+      const response = await fetch(url, {
+        signal: this.#abortController.signal,
+      });
       if (!response.ok)
         throw new Error(`Response error from the "${response.url}" URL`);
 
@@ -247,10 +253,10 @@ class ProductSection extends HTMLElement {
       this.#changeHTML(html);
       this.#hydrate();
     } catch (error) {
-      if (renderPromise === this.#renderPromise) {
+      if (error.name !== "AbortError") {
         this.#hydrate(); // revert state back -- load data from the current HTML
+        throw error;
       }
-      throw error;
     }
   }
 
