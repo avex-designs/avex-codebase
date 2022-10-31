@@ -4,9 +4,12 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
+    "start": "run-p  webpack-watch components-watch shopify-watch",
+    "deploy": "NODE_ENV=production webpack && shopify theme push --store=onlinestore2-test",
     "webpack-build": "webpack",
-    "dev": "webpack --watch & node watch.js & shopify theme dev --store=dynamic-yield-app.myshopify.com",
-    "push": "NODE_ENV=production webpack && shopify theme push --env=development",
+    "webpack-watch": "webpack --watch",
+    "components-watch": "node watch.js",
+    "shopify-watch": "shopify theme dev --store=onlinestore2-test",
     "zip": "NODE_ENV=production webpack & shopify theme package --verbose",
     "prepare": "husky install",
     "eslint": "eslint --fix src/**/*.js",
@@ -21,6 +24,7 @@
     "swiper": "^7.4.1"
   },
   "devDependencies": {
+    "npm-run-all": "^4.1.5",
     "@shopify/prettier-plugin-liquid": "^0.1.4",
     "@shopify/themekit": "^1.1.7",
     "clean-webpack-plugin": "^4.0.0-alpha.0",

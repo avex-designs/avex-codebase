@@ -1,4 +1,4 @@
-{%- style -%}
+{% comment %} {%- style -%}
   {%- render "css-header.css" -%}
 {%- endstyle -%}
 
@@ -47,7 +47,7 @@
           <div class="header__quickaccess">
             {% if section.settings.search_icon %}
               <div class="header__quickaccess-item">
-                <a href="/search" class="searchlink">{%- render 'icon-search' -%}</a>
+                <a href="/search" class="searchlink"></a>
               </div>
             {% endif %}
             {% if section.settings.user_icon %}
@@ -55,7 +55,7 @@
                 href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
                 class="header__quickaccess-item"
               >
-                {%- render 'icon-account' -%}
+               
               </a>
             {% endif %}
             {% if template != 'cart' %}
@@ -64,7 +64,6 @@
                   class="header__quickaccess-item miniCart"
                   data-ajax-cart-toggle-class-button="js-ajax-cart-opened"
                 >
-                  {% render 'icon-bag' %}
                 </button>
                 <span class="cart-total" data-ajax-cart-bind-state="cart.item_count">{{ cart.item_count }}</span>
               {% endif %}
@@ -93,7 +92,7 @@
       </div>
       <div class="grid-item text-right">
         <button class="mob-main__cart-button miniCart" data-ajax-cart-toggle-class-button="js-ajax-cart-opened">
-          {% render 'icon-bag' %}
+          
           <span class="cart-total" data-ajax-cart-bind-state="cart.item_count">{{ cart.item_count }}</span>
         </button>
       </div>
@@ -111,7 +110,7 @@
 
           <li class="mobtop__item">
             <button class="close-button" data-close-drawer aria-label="{{ 'accessibility.close' | t }}">
-              {% render 'icon-close' %}
+        
             </button>
           </li>
         </ul>
@@ -186,7 +185,7 @@
     }
   </script>
 {% endif %}
-
+{% endcomment %}
 {% schema %}
 {
   "name": {
@@ -329,4 +328,4 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %} 
