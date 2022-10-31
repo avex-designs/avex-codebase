@@ -1,6 +1,13 @@
 <!doctype html>
 <html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
+    <script>
+      document.documentElement.classList.remove('no-js');
+      document.documentElement.classList.add('js');
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="canonical" href="{{ canonical_url }}">
@@ -13,26 +20,38 @@
 
     <!-- Title -->
     <title>
-      {{- page_title -}}
-      {%- if current_tags -%}
-        {%- assign meta_tags = current_tags | join: ', ' -%}
-        &ndash;
-        {{- 'general.meta.tags' | t: tags: meta_tags -}}
-      {%- endif -%}
-      {%- if current_page != 1 -%}
-        &ndash;
-        {{- 'general.meta.page' | t: page: current_page -}}
-      {%- endif -%}
-      {%- unless page_title contains shop.name -%}&ndash; {{ shop.name }}{%- endunless -%}
+      {%- liquid
+        if template.name == 'gift_card'
+          assign formatted_initial_value = gift_card.initial_value | money_without_trailing_zeros | strip_html
+          echo 'gift_cards.issued.title' | t: value: formatted_initial_value, shop: shop.name
+        elsif template.name == 'password'
+          echo shop.name
+        else
+          echo page_title
+          if current_tags
+            assign current_tags_joined = current_tags | join: ', '
+            echo ' &ndash; '
+            echo 'general.title.tags' | t: tags: current_tags_joined
+          endif
+          if current_page != 1
+            echo ' &ndash; '
+            echo 'general.title.page' | t: page: current_page
+          endif
+          unless page_title contains shop.name
+            echo ' &ndash; '
+            echo shop.name
+          endunless
+        endif
+      -%}
     </title>
 
     <!-- Meta Desc -->
-    {%- if page_description -%}
+    {%- if template.name == 'gift_card' -%}
+      <meta name="description" content="{{ 'gift_cards.issued.subtext' | t }}">
+    {% elsif page_description %}
       <meta name="description" content="{{ page_description | escape }}">
+      {%- render 'social-meta-tags' -%}
     {%- endif -%}
-
-    <!-- SEO and Social Media Meta -->
-    {%- render 'social-meta-tags' -%}
 
     <!-- Shopify Header Hooks -->
     {{ content_for_header }}

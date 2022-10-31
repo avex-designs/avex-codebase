@@ -15,13 +15,13 @@ Restricted:
 :root,
 ::before,
 ::after {
-    // Colors
-    --color-blue: $color-blue;
-    --color-brown: $color-brown;
+  // Colors
+  --color-blue: $color-blue;
+  --color-brown: $color-brown;
 
-    // Font family
-    --font-main: $font-main;
-    --font-extended: $font-extended;
+  // Font family
+  --font-main: $font-main;
+  --font-extended: $font-extended;
 }
 
 html {
@@ -37,6 +37,7 @@ body {
   line-height: 1.5;
   scroll-behavior: smooth;
   text-rendering: optimizespeed;
+
   &.js-ajax-cart-opened {
     overflow: hidden;
   }
@@ -69,12 +70,25 @@ body {
   border: 0 !important;
 }
 
+.no-js .no-js-hidden {
+  display: none;
+}
+
+.no-js-block {
+  display: none;
+
+  .no-js & {
+    display: block;
+  }
+}
+
 /* CSS Animations */
 
 @keyframes loading-spinner {
   0% {
     transform: rotate(0);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -84,6 +98,7 @@ body {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
