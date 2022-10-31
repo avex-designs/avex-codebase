@@ -1,102 +1,103 @@
-{%- render 'stylesheet', name: 'login' -%}
-
-<div data-account-login>
-  <h2>Forgot password</h2>
-  {%- form 'recover_customer_password', class: 'form form--recovery' -%}
-    {% assign recover_success = form.posted_successfully? %}
-    <input type="hidden" name="return_to" value="{{ routes.account_login_url }}#recover">
-    <div>
-      <input
-        type="email"
-        value=""
-        name="email"
-        id="RecoverEmail"
-        autocorrect="off"
-        autocapitalize="off"
-        autocomplete="email"
-        {% if form.errors %}
-          aria-invalid="true"
-          aria-describedby="RecoverEmail-email-error"
-          autofocus
-        {% endif %}
-        placeholder="Email"
-      >
-      <label for="RecoverEmail"> Email </label>
-    </div>
-    {%- if form.errors -%}
-      <small id="RecoverEmail-email-error">
-        {{ form.errors.messages.form }}
-      </small>
-    {%- endif -%}
-
-    <button>Submit</button>
-
-    <a href="#login"> Cancel </a>
-  {%- endform -%}
-</div>
-<br>
-<div data-login>
-  <h2>Login</h2>
-  {%- if recover_success == true -%}
-    Success
-  {%- endif -%}
-  {%- form 'customer_login', class: 'form', novalidate: 'novalidate' -%}
-    {%- if form.errors -%}
-      {{ form.errors | default_errors }}
-    {%- endif -%}
-
-    <div>
-      <input
-        type="email"
-        name="customer[email]"
-        id="CustomerEmail"
-        autocomplete="email"
-        autocorrect="off"
-        autocapitalize="off"
-        {% if form.errors contains 'form' %}
-          aria-invalid="true"
-        {% endif %}
-        placeholder="Email"
-      >
-      <label for="CustomerEmail"> Email </label>
-    </div>
-
-    {%- if form.password_needed -%}
+{%- render 'stylesheet', name: 'account' -%}
+<page-viewer data-viewer-default="login">
+  <div data-viewer-block="recover">
+    <h2>Forgot password</h2>
+    {%- form 'recover_customer_password', class: 'form form--recovery' -%}
+      {% assign recover_success = form.posted_successfully? %}
+      <input type="hidden" name="return_to" value="{{ routes.account_login_url }}#recover">
       <div>
         <input
-          type="password"
+          type="email"
           value=""
-          name="customer[password]"
-          id="CustomerPassword"
-          autocomplete="current-password"
+          name="email"
+          id="RecoverEmail"
+          autocorrect="off"
+          autocapitalize="off"
+          autocomplete="email"
+          {% if form.errors %}
+            aria-invalid="true"
+            aria-describedby="RecoverEmail-email-error"
+            autofocus
+          {% endif %}
+          placeholder="Email"
+        >
+        <label for="RecoverEmail"> Email </label>
+      </div>
+      {%- if form.errors -%}
+        <small id="RecoverEmail-email-error">
+          {{ form.errors.messages.form }}
+        </small>
+      {%- endif -%}
+
+      <button>Submit</button>
+
+      <a href="#login" data-viewer-action="login"> Cancel </a>
+    {%- endform -%}
+  </div>
+  <br>
+  <div data-viewer-block="login">
+    <h2>Login</h2>
+    {%- if recover_success == true -%}
+      Success
+    {%- endif -%}
+    {%- form 'customer_login', class: 'form', novalidate: 'novalidate' -%}
+      {%- if form.errors -%}
+        {{ form.errors | default_errors }}
+      {%- endif -%}
+
+      <div>
+        <input
+          type="email"
+          name="customer[email]"
+          id="CustomerEmail"
+          autocomplete="email"
+          autocorrect="off"
+          autocapitalize="off"
           {% if form.errors contains 'form' %}
             aria-invalid="true"
           {% endif %}
-          placeholder="Password"
+          placeholder="Email"
         >
-        <label for="CustomerPassword"> Password </label>
+        <label for="CustomerEmail"> Email </label>
       </div>
 
-      <a href="#recover"> Forgot password </a>
+      {%- if form.password_needed -%}
+        <div>
+          <input
+            type="password"
+            value=""
+            name="customer[password]"
+            id="CustomerPassword"
+            autocomplete="current-password"
+            {% if form.errors contains 'form' %}
+              aria-invalid="true"
+            {% endif %}
+            placeholder="Password"
+          >
+          <label for="CustomerPassword"> Password </label>
+        </div>
+
+        <a href="#recover" data-viewer-action="recover"> Forgot password </a>
+      {%- endif -%}
+
+      <button>Sign in</button>
+
+      <a href="{{ routes.account_register_url }}"> Create account </a>
+    {%- endform -%}
+
+    {%- if shop.checkout.guest_login -%}
+      <div data-account>
+        {%- form 'guest_login' -%}
+          <button>Guest login</button>
+        {%- endform -%}
+      </div>
     {%- endif -%}
 
-    <button>Sign in</button>
-
-    <a href="{{ routes.account_register_url }}"> Create account </a>
-  {%- endform -%}
-
-  {%- if shop.checkout.guest_login -%}
-    <div data-account>
-      {%- form 'guest_login' -%}
-        <button>Guest login</button>
-      {%- endform -%}
-    </div>
-  {%- endif -%}
-
-  {% schema %}
-  {
-    "name": "Main Login",
-    "settings": []
-  }
-  {% endschema %}
-</div>
+    {% schema %}
+    {
+      "name": "Main Login",
+      "settings": []
+    }
+    {% endschema %}
+  </div>
+</page-viewer>
