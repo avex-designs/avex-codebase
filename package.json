@@ -4,7 +4,7 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "run-p  webpack-watch components-watch shopify-watch",
+    "start": "run-p webpack-watch components-watch shopify-watch",
     "deploy": "NODE_ENV=production webpack && shopify theme push --store=onlinestore2-test",
     "webpack-build": "webpack",
     "webpack-watch": "webpack --watch",
