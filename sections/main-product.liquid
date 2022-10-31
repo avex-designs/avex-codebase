@@ -55,7 +55,16 @@
     {%- endfor -%}
   </div>
 
-  <div>
+  <style type="text/css">
+    .my-loading-class:after {
+      content: 'Loading'
+    }
+  </style>
+  <div data-product-section-loading="my-loading-class">
+
+    <div data-product-section-error hidden>
+      {{ 'products.product_section_component.error' | t }}
+    </div>
 
     <h1>{{ product.title | escape }}</h1>
     <div data-product-section-area>
@@ -75,6 +84,9 @@
           {{- product.price_max | money -}}
         {%- endif -%}
       {%- endif -%}
+    </div>
+    <div>
+      {{ form | payment_terms }}
     </div>
 
     <div>
@@ -100,14 +112,18 @@
           </product-option>
         {%- endfor -%}
       </div>
+
+      {%- comment -%}
+        Use the following block for non-js state only
+      {%- endcomment -%}
       <div>
         <details data-product-section-area>
           <summary>
             {%- liquid 
               if current_variant
-                echo 'Variant: ' | append: current_variant.title | escape
+                echo current_variant.title | escape
               else 
-                echo 'Choose a variant'
+                echo 'products.product.choose_options' | t
               endif
             -%}
           </summary>
@@ -137,26 +153,21 @@
             disabled
           {% endif %}
           data-product-section-area="innerHTML,disabled"
+          data-product-section-doesnotexist="{{ 'products.product.unavailable' | t }}"
         >
           {%- liquid
-            if current_variant.available == false
-              echo 'Sold out'
-            elsif current_variant.available
-              echo 'Add to cart'
-            elsif product.available
-              echo 'Select an option'
-            else
-              echo 'Sold out'
+            if current_variant.available
+              echo 'products.product.add_to_cart' | t
+            elsif current_variant.available == false or product.available == false
+              echo 'products.product.sold_out' | t
+            else 
+              echo 'products.product.choose_options' | t
             endif
           -%}
         </button>
         <div>
           {{ form | payment_button }}
         </div>
-      </div>
-
-      <div>
-        {{ form | payment_terms }}
       </div>
     {%- endform -%}
   </div>

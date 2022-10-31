@@ -1,6 +1,9 @@
 const attributes = {
   json: "data-product-section-json",
   area: "data-product-section-area",
+  doesNotExistText: "data-product-section-doesnotexist",
+  loadingClass: "data-product-section-loading",
+  errorMessage: "data-product-section-error",
 };
 const Events = {
   STATECHANGE: "statechange",
@@ -61,7 +64,11 @@ class ProductSection extends HTMLElement {
 
   #isHydration = false;
 
+  // to abort previous Section API fetch requests
   #abortController;
+
+  // keeps the latest HTML of the component to get back to it if a fetch error occurs
+  #latestHTML;
 
   constructor() {
     super();
@@ -69,6 +76,7 @@ class ProductSection extends HTMLElement {
 
   connectedCallback() {
     this.addEventListener(Events.STATECHANGE, this.#render.bind(this));
+    this.#latestHTML = `<div>${this.outerHTML}</div>`;
     this.#hydrate();
   }
 
@@ -222,9 +230,25 @@ class ProductSection extends HTMLElement {
       $input.setAttribute("value", this.#variantId || "");
     });
 
+    this.#setLoadingClasses(false);
+    this.#showErrorMessages(false);
+
     if (!event.detail.isVariantChanged || this.#isHydration) return;
 
-    if (this.#variantId === null) return;
+    if (this.#variantId === null) {
+      this.#$$addToCartButtons.forEach(($button) => {
+        $button.disabled = true;
+      });
+      this.querySelectorAll(`[${attributes.doesNotExistText}]`).forEach(
+        ($element) => {
+          const text = $element.getAttribute(attributes.doesNotExistText);
+          if (text) {
+            $element.textContent = text;
+          }
+        }
+      );
+      return;
+    }
 
     if (this.#data.section.updateURL) {
       window.history.replaceState(
@@ -242,6 +266,12 @@ class ProductSection extends HTMLElement {
 
     this.#abortController = new AbortController();
 
+    this.#$$addToCartButtons.forEach(($button) => {
+      $button.disabled = true;
+    });
+
+    this.#setLoadingClasses(true);
+
     try {
       const response = await fetch(url, {
         signal: this.#abortController.signal,
@@ -251,13 +281,36 @@ class ProductSection extends HTMLElement {
 
       const html = await response.text();
       this.#changeHTML(html);
-      this.#hydrate();
+      this.#setLoadingClasses(false);
     } catch (error) {
       if (error.name !== "AbortError") {
-        this.#hydrate(); // revert state back -- load data from the current HTML
+        this.#changeHTML(this.#latestHTML);
+        this.#setLoadingClasses(false);
+        this.#showErrorMessages(true);
         throw error;
       }
     }
+  }
+
+  #setLoadingClasses(show) {
+    this.querySelectorAll(`[${attributes.loadingClass}]`).forEach(
+      ($element) => {
+        const className = $element.getAttribute(attributes.loadingClass);
+        if (className) {
+          if (show) $element.classList.add(className);
+          else $element.classList.remove(className);
+        }
+      }
+    );
+  }
+
+  #showErrorMessages(show) {
+    this.querySelectorAll(`[${attributes.errorMessage}]`).forEach(
+      ($element) => {
+        if (show) $element.hidden = false;
+        else $element.hidden = true;
+      }
+    );
   }
 
   #changeHTML(html) {
@@ -265,6 +318,7 @@ class ProductSection extends HTMLElement {
     const $newElement = newdocument.querySelector(elementName);
     if (!$newElement)
       throw new Error(`The "${elementName}" element is not found`);
+    this.#latestHTML = html;
 
     this.querySelector(`[${attributes.json}]`).innerHTML =
       $newElement.querySelector(`[${attributes.json}]`).innerHTML;
@@ -276,42 +330,42 @@ class ProductSection extends HTMLElement {
       $newElement.querySelectorAll(`[${attributes.area}]`)
     );
 
+    let hasShopifyPaymentButton = false;
     if ($$curAreas.length !== $$newAreas.length) {
       console.warn(
         `Previous "${attributes.area}" elements don't match the new received ones. The HTML of the component will be replaced completely.`
       );
       this.innerHTML = $newElement.innerHTML;
       if ($newElement.querySelector("[data-shopify='payment-button']"))
-        window.Shopify?.PaymentButton?.init();
-      return;
-    }
-
-    let hasShopifyPaymentButton = false;
-    $$curAreas.forEach(($curArea, areaIndex) => {
-      const $newArea = $$newAreas[areaIndex];
-      let replacingString = "innerHTML";
-      if ($newArea.getAttribute(attributes.area)) {
-        replacingString = $newArea.getAttribute(attributes.area);
-      }
-      replacingString.split(",").forEach((replacingValue) => {
-        replacingValue = replacingValue.trim();
-        if (replacingValue === "innerHTML") {
-          $curArea.innerHTML = $newArea.innerHTML;
-          if ($newArea.querySelector("[data-shopify='payment-button']"))
-            hasShopifyPaymentButton = true;
-          return;
+        hasShopifyPaymentButton = true;
+    } else {
+      $$curAreas.forEach(($curArea, areaIndex) => {
+        const $newArea = $$newAreas[areaIndex];
+        let replacingString = "innerHTML";
+        if ($newArea.getAttribute(attributes.area)) {
+          replacingString = $newArea.getAttribute(attributes.area);
         }
-        if (!$newArea.hasAttribute(replacingValue)) {
-          $curArea.removeAttribute(replacingValue);
-          return;
-        }
-        $curArea.setAttribute(
-          replacingValue,
-          $newArea.getAttribute(replacingValue)
-        );
+        replacingString.split(",").forEach((replacingValue) => {
+          replacingValue = replacingValue.trim();
+          if (replacingValue === "innerHTML") {
+            $curArea.innerHTML = $newArea.innerHTML;
+            if ($newArea.querySelector("[data-shopify='payment-button']"))
+              hasShopifyPaymentButton = true;
+            return;
+          }
+          if (!$newArea.hasAttribute(replacingValue)) {
+            $curArea.removeAttribute(replacingValue);
+            return;
+          }
+          $curArea.setAttribute(
+            replacingValue,
+            $newArea.getAttribute(replacingValue)
+          );
+        });
       });
-    });
+    }
     if (hasShopifyPaymentButton) window.Shopify?.PaymentButton?.init();
+    this.#hydrate();
   }
 
   #updateAvailability() {
