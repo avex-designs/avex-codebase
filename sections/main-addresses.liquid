@@ -79,30 +79,32 @@
             >
             <label for="AddressCityNew">City</label>
           </div>
-          <div>
-            <label for="AddressCountryNew">Country</label>
-            <div>
-              <select
-                id="AddressCountryNew"
-                name="address[country]"
-                data-default="{{ form.country }}"
-                autocomplete="country"
-              >
-                {{ all_country_option_tags }}
-              </select>
+          <country-province-selector>
+            <div data-country-container>
+              <label for="AddressCountryNew">Country</label>
+              <div>
+                <select
+                  id="AddressCountryNew"
+                  name="address[country]"
+                  data-default="{{ form.country }}"
+                  autocomplete="country"
+                >
+                  {{ all_country_option_tags }}
+                </select>
+              </div>
             </div>
-          </div>
-          <div>
-            <label for="AddressProvinceNew">Province/State</label>
-            <div class="select">
-              <select
-                id="AddressProvinceNew"
-                name="address[province]"
-                data-default="{{ form.province }}"
-                autocomplete="address-level1"
-              ></select>
+            <div data-province-container style="display: none">
+              <label for="AddressProvinceNew">Province/State</label>
+              <div class="select">
+                <select
+                  id="AddressProvinceNew"
+                  name="address[province]"
+                  data-default="{{ form.province }}"
+                  autocomplete="address-level1"
+                ></select>
+              </div>
             </div>
-          </div>
+          </country-province-selector>
           <div>
             <input
               type="text"
@@ -138,8 +140,8 @@
       </div>
     </div>
 
-    <hr/>
-
+    <hr>
+    <h2 style="font-size: 20px">All addresses</h2>
     <ul role="list">
       {%- for address in customer.addresses -%}
         <li>
@@ -233,34 +235,35 @@
                 >
                 <label for="AddressCity_{{ form.id }}">City</label>
               </div>
-              <div>
-                <label for="AddressCountry_{{ form.id }}">
-                  {{ 'customer.addresses.country' | t }}
-                </label>
-                <div class="select">
-                  <select
-                    id="AddressCountry_{{ form.id }}"
-                    name="address[country]"
-                    data-address-country-select
-                    data-default="{{ form.country }}"
-                    data-form-id="{{ form.id }}"
-                    autocomplete="country"
-                  >
-                    {{ all_country_option_tags }}
-                  </select>
+              <country-province-selector>
+                <div>
+                  <label for="AddressCountry_{{ form.id }}">
+                    {{ 'customer.addresses.country' | t }}
+                  </label>
+                  <div class="select">
+                    <select
+                      id="AddressCountry_{{ form.id }}"
+                      name="address[country]"
+                      data-default="{{ form.country }}"
+                      data-form-id="{{ form.id }}"
+                      autocomplete="country"
+                    >
+                      {{ all_country_option_tags }}
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div id="AddressProvinceContainer_{{ form.id }}">
-                <label for="AddressProvince_{{ form.id }}"> Province/state </label>
-                <div class="select">
-                  <select
-                    id="AddressProvince_{{ form.id }}"
-                    name="address[province]"
-                    data-default="{{ form.province }}"
-                    autocomplete="address-level1"
-                  ></select>
+                <div data-province-container id="AddressProvinceContainer_{{ form.id }}">
+                  <label for="AddressProvince_{{ form.id }}"> Province/state </label>
+                  <div class="select">
+                    <select
+                      id="AddressProvince_{{ form.id }}"
+                      name="address[province]"
+                      data-default="{{ form.province }}"
+                      autocomplete="address-level1"
+                    ></select>
+                  </div>
                 </div>
-              </div>
+              </country-province-selector>
               <div>
                 <input
                   type="text"
@@ -295,9 +298,10 @@
             {%- endform -%}
           </div>
         </li>
+        <hr>
       {%- endfor -%}
     </ul>
-    <hr/>
+    <hr>
     {%- if paginate.pages > 1 -%}
       {%- if paginate.parts.size > 0 -%}
         <nav role="navigation" aria-label="Pagination">
