@@ -80,22 +80,7 @@
 
     <h1>{{ product.title | escape }}</h1>
     <div data-product-section-area>
-      {%- if current_variant -%}
-        {% if current_variant.compare_at_price > 0 %}
-          <s>
-            {{- current_variant.compare_at_price | money -}}
-          </s>
-        {% endif %}
-        <span>
-          {{- current_variant.price | money -}}
-        </span>
-      {%- else -%}
-        {{- product.price | money -}}
-        {%- if product.price_varies -%}
-          <span> — </span>
-          {{- product.price_max | money -}}
-        {%- endif -%}
-      {%- endif -%}
+      {%- render 'price', product: product, variant: current_variant -%}
     </div>
     <div>
       {{ form | payment_terms }}
