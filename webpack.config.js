@@ -4,7 +4,7 @@ const glob = require("glob");
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
 const WebpackHookPlugin = require("webpack-hook-plugin");
 const mode = process.env.NODE_ENV || "development";
-
+console.log(process.env.NODE_ENV);
 const files = {
   // templates_scssPath: "./src/scss/templates/*.scss",
   blocks_scssPath: "./src/scss/components/*.scss",
@@ -88,7 +88,8 @@ function templatesEntry(arr) {
 }
 
 const entries = {
-  common: mergePaths([files.common_scssPath, files.common_jsPath]),
+  "css-common.min": [files.common_scssPath],
+  "js-common.min": [files.common_jsPath],
   // vendor: mergePaths([files.vendor_scssPath, files.vendor_jsPath]),
   ...templatesEntry([files.blocks_scssPath]),
   ...templatesEntry([files.sections_jsPath]),

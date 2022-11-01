@@ -16,7 +16,7 @@
     <link rel="preconnect" href="//cdn.shopify.com" crossorigin>
 
     <!-- Favicon -->
-    {%- render 'favicon' -%}
+    {% comment %} {%- render 'favicon' -%} {% endcomment %}
 
     <!-- Title -->
     <title>
@@ -65,14 +65,15 @@
     {%- render 'stylesheet', name: 'common' -%}
 
     <!-- Common/Main js file -->
-    <script src="{{ 'js-common.min.js' | asset_url }}" defer="defer"></script>
+    {%- render 'script', name: 'common' -%}
   </head>
   <body
     id="{{ page_title | handle }}"
     class="{% if customer %}customer-logged-in {% endif %}template-{{ request.page_type | handle }} template-{{ template.name }}"
- 
   >
-    <a class="skip-to-content-link button visually-hidden" href="#MainContent">{{ 'accessibility.skip_to_text' | t -}}</a>
+    <a class="skip-to-content-link button visually-hidden" href="#MainContent">
+      {{- 'accessibility.skip_to_text' | t -}}
+    </a>
 
     {%- section 'header' -%}
     {%- render 'breadcrumbs' -%}
@@ -81,7 +82,6 @@
         {{ content_for_layout }}
       </main>
 
-      
       {%- section 'footer' -%}
 
       {%- section 'ajax-cart' -%}
@@ -103,14 +103,14 @@
 
     <script>
       window.routes = {
-        predictive_search_url: '{{ routes.predictive_search_url }}'
+        predictive_search_url: '{{ routes.predictive_search_url }}',
       };
 
       window.variantStrings = {
         addToCart: `{{ 'products.product.add_to_cart' | t }}`,
         soldOut: `{{ 'products.product.sold_out' | t }}`,
         unavailable: `{{ 'products.product.unavailable' | t }}`,
-      }
+      };
     </script>
 
     {%- if settings.klaviyo_id != blank -%}
@@ -119,14 +119,16 @@
         async
         type="text/javascript"
         src="//static.klaviyo.com/onsite/js/klaviyo.js?company_id={{ settings.klaviyo_id }}"
-      >
-      </script>
+      ></script>
       <script>
         var _learnq = _learnq || [];
         if ('{{ customer.email }}') {
-          _learnq.push(['identify', {
-              '$email' : '{{ customer.email }}'
-            }]);
+          _learnq.push([
+            'identify',
+            {
+              $email: '{{ customer.email }}',
+            },
+          ]);
         }
       </script>
       {% comment %}theme-check-enable{% endcomment %}
