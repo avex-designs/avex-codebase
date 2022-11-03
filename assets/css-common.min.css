@@ -32,6 +32,3 @@ Restricted:
   src: local("Futura PT Light"), local("Futura-PT-Light"), url(FuturaPT-Light.woff2) format("woff2"), url(FuturaPT-Light.woff) format("woff"), url(FuturaPT-Light.ttf) format("truetype");
   font-display: swap;
 }
-html {
-  background-color: green !important;
-}

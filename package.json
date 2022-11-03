@@ -1,6 +1,6 @@
 {
-  "name": "avex-shopify-theme",
-  "version": "2.0.0",
+  "name": "avex-shopify-theme-codebase",
+  "version": "1.0.0",
   "description": "",
   "main": "webpack.config.js",
   "scripts": {

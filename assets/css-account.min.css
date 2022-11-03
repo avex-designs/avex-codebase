@@ -13,6 +13,10 @@ Mixin to add loading spinner to button/element.
 Usage: 
 @include loading()
 */
-.main-login {
-  background-color: yellow !important;
+[data-viewer-block] {
+  display: none;
+}
+
+[data-viewer-visible] {
+  display: block;
 }

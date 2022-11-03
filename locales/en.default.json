@@ -1,3 +1,18 @@
 {
-  
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "choose_options": "Choose options",
+      "quantity": {
+        "input_label": "Quantity for {{ product }}",
+        "increase": "Increase quantity for {{ product }}",
+        "decrease": "Decrease quantity for {{ product }}"
+      },
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable"
+    },
+    "product_section_component": {
+      "error": "Error"
+    }
+  }
 }

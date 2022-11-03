@@ -6,6 +6,7 @@
   if product.has_only_default_variant
     assign current_variant = product.variants[0]
   else
+    # TODO:
     # What should happen if the variant ID is not passed in URL:
     #
     # 1. Automatically select the first available variant
@@ -21,11 +22,14 @@
 
 <product-section>
   {%- render 'product-section-json', product: product, variant_id: current_variant.id, section_id: section.id, update_url: true -%}
+
   <div>
     {%- for media in product.media -%}
       
       {%- comment-%}
+        TODO:
         Add "lazyload" for images that aren't visible on the first screen
+        Check if the following algorithm is appropriate for the design
       {%- endcomment -%}
       {%- liquid 
         assign media_loading = 'lazy'
@@ -43,7 +47,7 @@
       {%- else -%}
 
         {%- comment-%}
-          Set the correct "sizes" argument according to the design
+          TODO: Set the correct "sizes" argument according to the design
         {%- endcomment -%}
         <image-loader>
           {{- media.preview_image 
@@ -55,26 +59,31 @@
     {%- endfor -%}
   </div>
 
-  <div>
+  <style type="text/css">
+    /**
+     * TODO: 
+     * This "style" block is to demonstrate 
+     * how the "data-product-section-loading" attribute works
+     * 
+     * Remove this on production site 
+     * and replace the "my-loading-class" with appropriate one
+     */
+    .my-loading-class:after {
+      content: 'Loading'
+    }
+  </style>
+  <div data-product-section-loading="my-loading-class">
+
+    <div data-product-section-error hidden>
+      {{ 'products.product_section_component.error' | t }}
+    </div>
 
     <h1>{{ product.title | escape }}</h1>
     <div data-product-section-area>
-      {%- if current_variant -%}
-        {% if current_variant.compare_at_price > 0 %}
-          <s>
-            {{- current_variant.compare_at_price | money -}}
-          </s>
-        {% endif %}
-        <span>
-          {{- current_variant.price | money -}}
-        </span>
-      {%- else -%}
-        {{- product.price | money -}}
-        {%- if product.price_varies -%}
-          <span> — </span>
-          {{- product.price_max | money -}}
-        {%- endif -%}
-      {%- endif -%}
+      {%- render 'price', product: product, variant: current_variant -%}
+    </div>
+    <div>
+      {{ form | payment_terms }}
     </div>
 
     <div>
@@ -82,32 +91,32 @@
     </div>
 
     {%- unless product.has_only_default_variant -%}
-      <div>
+      <div class="no-js-hidden">
         {%- for option in product.options_with_values -%}
-          <product-option data-product-option-name="{{ option.name | escape }}">
-            {% comment%} todo: add condition if current_variant exists, then show the selected_value string after the option.name {% endcomment %}
+          <product-radio-option data-product-radio-option-name="{{ option.name | escape }}">
             <div>{{ option.name | escape }}</div>
             {%- for value in option.values -%}
               <label>
                 <input 
                   type="radio"
-                  name="{{ option.name | escape }}" {% comment %} todo: create a safe name {% endcomment %}
+                  name="{{ option.name | escape }}" {% comment %} TODO: create a safe name {% endcomment %}
                   value="{{ value | escape }}"
                   {% if current_variant and option.selected_value == value %}checked{% endif %}>
                 <span>{{ value | escape }}</span>
               </label>
             {%- endfor -%}
-          </product-option>
+          </product-radio-option>
         {%- endfor -%}
       </div>
-      <div>
+
+      <div class="no-js-block">
         <details data-product-section-area>
           <summary>
             {%- liquid 
               if current_variant
-                echo 'Variant: ' | append: current_variant.title | escape
+                echo current_variant.title | escape
               else 
-                echo 'Choose a variant'
+                echo 'products.product.choose_options' | t
               endif
             -%}
           </summary>
@@ -129,6 +138,33 @@
     {%- form: 'product', product, id: product_form_id -%}
 
       <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+      <quantity-input class="quantity">
+        <button 
+          class="no-js-hidden" 
+          name="minus" 
+          type="button"
+          aria-label="{{- 'products.product.quantity.increase' | t: product: product.title | escape -}}"
+        >
+          &nbsp;
+        </button>
+        <input
+          type="number"
+          name="quantity"
+          min="1"
+          value="1"
+          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+        >
+        <button 
+          class="no-js-hidden" 
+          name="plus" 
+          type="button"
+          aria-label="{{ 'products.product.quantity.increase' | t: product: product.title | escape }}" 
+        >
+          &nbsp;
+        </button>
+      </quantity-input>
+
       <div>
         <button
           type="submit"
@@ -137,16 +173,15 @@
             disabled
           {% endif %}
           data-product-section-area="innerHTML,disabled"
+          data-product-section-doesnotexist="{{ 'products.product.unavailable' | t }}"
         >
           {%- liquid
-            if current_variant.available == false
-              echo 'Sold out'
-            elsif current_variant.available
-              echo 'Add to cart'
-            elsif product.available
-              echo 'Select an option'
-            else
-              echo 'Sold out'
+            if current_variant.available
+              echo 'products.product.add_to_cart' | t
+            elsif current_variant.available == false or product.available == false
+              echo 'products.product.sold_out' | t
+            else 
+              echo 'products.product.choose_options' | t
             endif
           -%}
         </button>
@@ -154,286 +189,9 @@
           {{ form | payment_button }}
         </div>
       </div>
-
-      <div>
-        {{ form | payment_terms }}
-      </div>
     {%- endform -%}
   </div>
 </product-section>
-
-
-{% comment %}
-<hr style="margin: 80px 0" />
-
-
-<div class="product">
-  <div class="container-max product-container">
-    <div class="product__gallery">
-      <div class="swiper product-thumbnails" data-thumbnail-images>
-        <div class="swiper-wrapper">
-          {%- for media in product.media -%}
-            <div class="swiper-slide product-thumbnails__item" data-thumbnail-item>
-              {% if media.media_type == 'video' %}
-                {{ media.preview_image | image_url: 1500 | image_tag: preload: true, loading: "lazy" }}
-                <span class="video-play">{%- render 'icon-play' -%}</span>
-              {% else %}
-                {{ media | image_url: width: 1500 | image_tag: preload: true, loading: "lazy" }}
-              {% endif %}
-            </div>
-          {%- endfor -%}
-        </div>
-      </div>
-      <div class="swiper product-images" data-main-images>
-        <div class="swiper-wrapper">
-          {%- for media in product.media -%}
-            <div class="swiper-slide product-images__item">
-              {% if media.media_type == 'video' %}
-                {{ media.preview_image | image_url: width: 1500 | image_tag: preload: true, loading: "lazy" }}
-                <span
-                  class="video-play"
-                  data-videosrc="{{ media.sources[1].url }}"
-                  data-videotype="{{ media.sources[1].mime_type }}"
-                >
-                  {%- render 'icon-play' -%}
-                </span>
-              {% else %}
-                <div class="swiper-zoom-container">
-                  <figure class="zoom lazyload" data-zoomimg="{{ media.src | img_url: 'x2024' }}">
-                    {%- liquid
-                      assign lazyload = "lazy"
-                      if forloop.first == true
-                        assign lazyload = "eager"
-                      endif
-                    -%}
-
-                    {{ media | image_url: width: 1500 | image_tag: preload: true, loading: lazyload, sizes: "(min-width: 540px) 100vw, 40vw" }}
-                  </figure>
-                </div>
-              {% endif %}
-            </div>
-          {%- endfor -%}
-        </div>
-        {%- if product.media.size > 1 -%}
-          <div class="swiper-button-next swiper-button" aria-label="{{ 'accessibility.previous_slide' | t }}">
-            {%- render 'icon-carousel-arrow' -%}
-          </div>
-          <div class="swiper-button-prev swiper-button" aria-label="{{ 'accessibility.next_slide' | t }}">
-            {%- render 'icon-carousel-arrow' -%}
-          </div>
-          <div class="swiper-pagination"></div>
-        {%- endif -%}
-      </div>
-    </div>
-
-    <div class="product__details">
-      <div class="product-details">
-        {%- form 'product', product, class: 'form', id: "product-form", novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-          {%- for block in section.blocks -%}
-            {%- case block.type -%}
-              {%- when '@app' -%}
-                {% render block %}
-              {%- when 'title' -%}
-                <h1 class="product-details__title h3">{{ product.title }}</h1>
-              {%- when 'price' -%}
-                <div class="product-details__price" data-price>
-                  <span class="price {% if current_variant.compare_at_price %}sale-price{% endif %}">
-                    {{- current_variant.price | money_without_trailing_zeros -}}
-                  </span>
-                  {% if current_variant.compare_at_price > 0 and block.settings.compare_price %}
-                    <span class="compare-at-price">
-                      {{- current_variant.compare_at_price | money_without_trailing_zeros -}}
-                    </span>
-                  {% endif %}
-                </div>
-              {%- when 'payment_terms' -%}
-                <div class="product-details__shopPay-terms">
-                  {{ form | payment_terms }}
-                </div>
-              {%- when 'variant_picker' -%}
-                {%- unless product.has_only_default_variant -%}
-                  {%- if block.settings.picker_type == 'button' -%}
-                    <variant-radios
-                      class="variant-button"
-                      data-section="{{ section.id }}"
-                      data-url="{{ product.url }}"
-                      {{ block.shopify_attributes }}
-                    >
-                      {%- for option in product.options_with_values -%}
-                        <fieldset class="variant-button__wrapper" data-option-position="{{option.position}}">
-                          <legend class="variant-button__label">{{ option.name }}</legend>
-                          {%- for value in option.values -%}
-                            <input
-                              type="radio"
-                              id="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}"
-                              name="{{ option.name }}"
-                              value="{{ value | escape }}"
-                              {% if current_variant and option.selected_value == value %}
-                                checked
-                              {% endif %}
-                            >
-                            <label for="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}">
-                              {{ value }}
-                            </label>
-                          {%- endfor -%}
-                        </fieldset>
-                      {%- endfor -%}
-                    </variant-radios>
-                  {%- else -%}
-                    <variant-selects
-                      class="variant-dropdown"
-                      data-section="{{ section.id }}"
-                      data-url="{{ product.url }}"
-                      {{ block.shopify_attributes }}
-                    >
-                      {%- for option in product.options_with_values -%}
-                        <div class="variant-dropdown__wrapper">
-                          <label class="variant-dropdown__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
-                            {{ option.name }}
-                          </label>
-                          <div class="select">
-                            <select
-                              id="Option-{{ section.id }}-{{ forloop.index0 }}"
-                              class="select__select"
-                              name="options[{{ option.name | escape }}]"
-                            >
-                              {%- for value in option.values -%}
-                                <option
-                                  value="{{ value | escape }}"
-                                  {% if option.selected_value == value %}
-                                    selected="selected"
-                                  {% endif %}
-                                >
-                                  {{ value }}
-                                </option>
-                              {%- endfor -%}
-                            </select>
-                            <svg
-                              aria-hidden="true"
-                              focusable="false"
-                              role="presentation"
-                              class="icon icon-caret"
-                              viewBox="0 0 10 6"
-                            >
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
-                              </path>
-                            </svg>
-                          </div>
-                        </div>
-                      {%- endfor -%}
-                    </variant-selects>
-                  {%- endif -%}
-                {%- endunless -%}
-
-                <noscript class="product-form__noscript-wrapper-{{ section.id }}">
-                  <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
-                    <label class="form__label" for="Variants-{{ section.id }}">Variants</label>
-                    <div class="select">
-                      <select name="id" id="Variants-{{ section.id }}" class="select__select" form="product-form">
-                        {%- for variant in product.variants -%}
-                          <option
-                            {% if variant == current_variant %}
-                              selected="selected"
-                            {% endif %}
-                            {% if variant.available == false %}
-                              disabled
-                            {% endif %}
-                            value="{{ variant.id }}"
-                          >
-                            {{ variant.title }}
-                            {%- if variant.available == false %} - Sold out{% endif %}
-                            - {{ variant.price | money | strip_html }}
-                          </option>
-                        {%- endfor -%}
-                      </select>
-                    </div>
-                  </div>
-                </noscript>
-              {%- when 'quantity_selector' -%}
-                <div class="product-details__quantityblock">
-                  <p class="quantity__title">Quantity</p>
-                  <quantity-input class="quantity">
-                    <button class="quantity__button no-js-hidden" name="minus" type="button">
-                      <span class="visually-hidden">Decrease</span>
-                      &#8212;
-                    </button>
-                    <input
-                      class="quantity__input"
-                      type="number"
-                      name="quantity"
-                      id="Quantity-{{ section.id }}"
-                      min="1"
-                      value="1"
-                      aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
-                    >
-                    <button class="quantity__button no-js-hidden" name="plus" type="button">
-                      <span class="visually-hidden">Increase</span>
-                      &#43;
-                    </button>
-                  </quantity-input>
-                </div>
-              {%- when 'buy_buttons' -%}
-                <product-form class="product-form">
-                  <div class="product-form__error-message-wrapper" role="alert">
-                    <div class="product-form__error-message" data-ajax-cart-messages="form"></div>
-                  </div>
-
-                  <input type="hidden" name="id" value="{{ current_variant.id }}">
-                  <div class="product-form__buttons">
-                    <button
-                      id="AddToCart"
-                      type="submit"
-                      name="add"
-                      class="product-form__submit primary-button"
-                      {% if current_variant == null or current_variant.available == false %}
-                        disabled
-                      {% endif %}
-                    >
-                      {%- liquid
-                        if current_variant.available == false
-                          echo 'Sold out'
-                        elsif current_variant.available
-                          echo 'Add to cart'
-                        else
-                          echo 'Select an option'
-                        endif
-                      -%}
-                    </button>
-                    {%- if block.settings.show_dynamic_checkout -%}
-                      {{ form | payment_button }}
-                    {%- endif -%}
-                  </div>
-                </product-form>
-              {%- when 'description' -%}
-                <div class="product-details__description">
-                  {{ product.description }}
-                </div>
-            {%- endcase -%}
-          {%- endfor -%}
-
-          <script type="application/json" data-product-json-variants>
-            {{ product.variants | json }}
-          </script>
-        {%- endform -%}
-
-        {% assign accordion_items = section.blocks | where: "type", "collapsible_tab" %}
-        <!-- [TODO] <details><summary></summary></details> - html tags can replace this -->
-        {%- for item in accordion_items -%}
-          <accordion-block class="product-details__description">
-            <details>
-              <summary>{{ item.settings.heading | default: item.settings.page.title }}</summary>
-              <div>
-                {{ item.settings.content }}
-                {{ item.settings.page.content }}
-              </div>
-            </details>
-          </accordion-block>
-        {%- endfor -%}
-      </div>
-    </div>
-  </div>
-</div>
-{% endcomment %}
 
 {% schema %}
 {
