@@ -3,6 +3,7 @@ const fsAsync = require("fs/promises");
 
 const COMPONENTS_PATH = __dirname + "/src/scripts/components";
 const SNIPPETS_PATH = __dirname + "/snippets";
+const FILE_PATH = `${SNIPPETS_PATH}/component-loader.liquid`;
 const mode = process.env.NODE_ENV || "development";
 
 populateComponents();
@@ -24,7 +25,7 @@ async function populateComponents() {
     components[file] = getAssetUrl(file);
   });
 
-  writeSnippet(components);
+  await writeSnippet(components);
 
   return components;
 }
@@ -38,13 +39,12 @@ function getAssetUrl(name) {
   return `{{ 'js-component-${name}.min.js' | asset_url }}`;
 }
 
-function writeSnippet(components) {
-  const file = `
-<script type="text/javascript">
-  window.components = ${JSON.stringify(components, null, 2)}
-</script>
-  `;
-  fs.writeFile(`${SNIPPETS_PATH}/components.liquid`, file, (err) => {
+async function writeSnippet(components) {
+  let content = await (await fsAsync.readFile(FILE_PATH, "utf8")).toString();
+  
+  const file = `window.components = ${JSON.stringify(components, null, 2)}`;
+  content = content.replace(new RegExp(/<script>(.|\n)*?<\/script>/), `<script>\n\t${file}\n</script>`)
+  fs.writeFile(FILE_PATH, content, (err) => {
     if (err) console.log(err);
     else console.log("Components list is generated!");
   });
