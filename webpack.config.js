@@ -7,7 +7,7 @@ const mode = process.env.NODE_ENV || "development";
 console.log(process.env.NODE_ENV);
 const files = {
   // templates_scssPath: "./src/scss/templates/*.scss",
-  blocks_scssPath: "./src/scss/components/*.scss",
+  blocks_scssPath: "./src/scss/blocks/*.scss",
   critical_scssPath: "./src/scss/critical.scss",
   common_scssPath: "./src/scss/common.scss",
   // vendor_scssPath: "./src/scss/vendor.scss",

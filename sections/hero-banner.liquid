@@ -1,67 +1,105 @@
 {%- render 'stylesheet', name: 'hero-banner' -%}
-<section></section>
-<div class="container-max">
+{%- render 'script', name: 'hero-banner' -%}
+
+{%- liquid
+
+  #This is a sample shopify section. 
+  #Feel free to modify it and add styling.
+
+  assign hero_video = section.settings.hero_video
+  assign hero_img_desktop = section.settings.hero_img
+  assign hero_img_mobile = section.settings.hero_img_mob
+
+  assign image_loading = 'lazy'
+  if section.settings.optimize_first_screen
+    assign image_loading = 'eager'
+  endif
+
+  assign hero_cover_color = section.settings.hero_cover_color
+  assign hero_cover_opacity = section.settings.hero_cover_opacity
+  assign vertical_alignment = section.settings.vertical_alignment
+  assign horizontal_alignment = section.settings.horizontal_alignment
+  assign text_alignment = section.settings.text_align
+  assign hero_text_color = section.settings.hero_text_color
+
+  assign hero_pre_title = section.settings.hero_pre_title | escape
+  assign hero_title = section.settings.hero_title | escape
+  assign hero_text = section.settings.hero_text
+  assign hero_button_text = section.settings.hero_b_text | escape
+  assign hero_button_url = section.settings.hero_b_url
+-%}
+
+<section class="hero-banner">
   <div class="hero-banner__bg">
-    {%- if section.settings.hero_video != blank -%}
+    {%- if hero_video != blank -%}
       <video
-        class="video"
+        class="hero-banner__bg-video"
         crossorigin="anonymous"
         autoplay
         playsinline
         muted
         loop
-        poster="{{ section.settings.hero_img | img_url: 'master' }}"
+        poster="{{ hero_img_desktop | image_url: width: hero_img_desktop.width }}"
         preload="none"
         type="video/mp4"
-        src="{{ section.settings.hero_video }}"
+        src="{{ hero_video }}"
       ></video>
     {%- else -%}
-      {% if section.settings.hero_img %}
-        <div class="desktop">
-          {{ section.settings.hero_img | image_url: width: section.settings.hero_img.width | image_tag: preload: true, class: 'cover', sizes: "(min-width: 540px) 100vw, 50vw" }}
+      {% if hero_img_desktop %}
+        <div class="hero-banner__bg-desktop">
+          {{
+            hero_img_desktop
+            | image_url: width: hero_img_desktop.width
+            | image_tag: loading: image_loading, sizes: '(min-width: 540px) 100vw, 50vw'
+          }}
         </div>
       {% endif %}
-      {% if section.settings.hero_img_mob %}
-        <div class="mobile">
-          {{ section.settings.hero_img_mob | image_url: width: section.settings.hero_img.width | image_tag: preload: true, class: 'cover', sizes: "(min-width: 540px) 100vw, 50vw" }}
+      {% if hero_img_mobile %}
+        <div class="hero-banner__bg-mobile">
+          {{
+            hero_img_mobile
+            | image_url: width: hero_img_mobile.width
+            | image_tag: loading: image_loading, sizes: '(min-width: 540px) 100vw, 50vw'
+          }}
         </div>
       {% endif %}
     {%- endif -%}
   </div>
-  <div
-    class="hero-banner__cover"
-    style="opacity: {{ section.settings.hero_cover_opacity }}%; background-color: {{ section.settings.hero_cover_color }};"
-  ></div>
+  {%- if hero_cover_color != blank -%}
+    <div
+      class="hero-banner__cover"
+      style="opacity: {{ hero_cover_opacity }}%; background-color: {{ hero_cover_color }};"
+    ></div>
+  {%- endif -%}
   <div
     class="hero-banner__content"
-    style="align-items: {{ section.settings.vertical_alignment }}; text-align: {{ section.settings.text_align }}; justify-content: {{ section.settings.horizontal_alignment }}"
+    style="align-items: {{ vertical_alignment }}; text-align: {{ text_alignment }}; justify-content: {{ horizontal_alignment }}"
   >
-    <div class="hero-banner__body" style="color: {{ section.settings.hero_text_color }};">
-      {% if section.settings.hero_pre_title != blank -%}
-        <span class="hero-banner__pretitle h5">{{ section.settings.hero_pre_title }}</span>
+    <div style="color: {{ hero_text_color }};">
+      {% if hero_pre_title != blank -%}
+        <span class="hero-banner__content-pretitle">{{- hero_pre_title -}}</span>
       {%- endif %}
-      {% if section.settings.hero_title != blank -%}
-        <h2 class="hero-banner__title h1" style="-webkit-text-stroke: 1px {{ section.settings.hero_text_color }};">
-          {{ section.settings.hero_title }}
+      {% if hero_title != blank -%}
+        <h2 class="hero-banner__content-title" style="-webkit-text-stroke: 1px {{ hero_text_color }};">
+          {{- hero_title -}}
         </h2>
       {%- endif %}
-      {% if section.settings.hero_text != blank -%}
-        <div class="hero-banner__text">{{ section.settings.hero_text }}</div>
+      {% if hero_text != blank -%}
+        <div class="hero-banner__content-text">{{- hero_text -}}</div>
       {%- endif %}
-      {% if section.settings.hero_b_text != blank -%}
+      {% if hero_button_text != blank -%}
         <div>
           <a
-            href="{{ section.settings.hero_b_url }}"
-            class="hero-banner__link"
-            style="--sec-color: {% if  section.settings.hero_text_color != blank %}{{ section.settings.hero_text_color }}{% else %}#fff{% endif %}"
+            href="{{ hero_button_url }}"
+            class="hero-banner__content-link"
           >
-            {{- section.settings.hero_b_text -}}
+            {{- hero_button_text -}}
           </a>
         </div>
       {%- endif %}
     </div>
   </div>
-</div>
+</section>
 
 {% schema %}
 {
@@ -70,6 +108,11 @@
     {
       "type": "header",
       "content": "Background Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "optimize_first_screen",
+      "label": "Optimize for first screen"
     },
     {
       "type": "image_picker",
@@ -206,7 +249,7 @@
   ],
   "presets": [
     {
-      "name": "Hero",
+      "name": "Hero Banner",
       "category": "Home Page"
     }
   ]
