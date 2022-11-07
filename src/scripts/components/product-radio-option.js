@@ -1,5 +1,6 @@
 const attributes = {
-  availabilityStatus: "data-product-option-availability",
+  name: "data-product-radio-option-name",
+  availabilityStatus: "data-product-radio-option-availability",
 };
 
 const availabilityStatuses = {
@@ -9,7 +10,7 @@ const availabilityStatuses = {
   DOES_NOT_EXIST: "does-not-exist",
 };
 
-class ProductOption extends HTMLElement {
+class ProductRadioOption extends HTMLElement {
   #$productSection;
   #optionName;
 
@@ -18,7 +19,7 @@ class ProductOption extends HTMLElement {
   }
 
   connectedCallback() {
-    this.#optionName = this.dataset.productOptionName;
+    this.#optionName = this.getAttribute(attributes.name);
     if (this.#optionName === undefined || this.#optionName === "")
       throw new Error("Product option name is not set");
 
@@ -74,4 +75,4 @@ class ProductOption extends HTMLElement {
     }
   }
 }
-customElements.define("product-option", ProductOption);
+customElements.define("product-radio-option", ProductRadioOption);
