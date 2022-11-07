@@ -35,7 +35,7 @@
     {%- endform -%}
   </div>
   <br>
-  <div page-viewer-block="login">
+  <div data-page-viewer-block="login">
     <h2>Login</h2>
     {%- if recover_success == true -%}
       Success
@@ -77,7 +77,7 @@
           <label for="CustomerPassword"> Password </label>
         </div>
 
-        <a href="#recover" data-viewer-action="recover"> Forgot password </a>
+        <a href="#recover" data-page-viewer-action="recover"> Forgot password </a>
       {%- endif -%}
 
       <button>Sign in</button>
