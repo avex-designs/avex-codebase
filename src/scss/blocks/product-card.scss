@@ -1,0 +1,41 @@
+.product-card {
+  position: relative;
+}
+
+.product-card__title {
+  font-size: rem(16px);
+  @include media($bp-m) {
+    font-size: rem(18px);
+  }
+}
+
+.product-card__button {
+  font-size: rem(16px);
+  @include media($bp-m) {
+    font-size: rem(18px);
+  }
+}
+
+.product-card__button--alert {
+  color: red;
+}
+
+.product-card__image {
+  position: relative;
+
+  &--secondary {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.15s;
+  }
+
+  &:hover {
+    &--secondary {
+      opacity: 1;
+    }
+  }
+}
