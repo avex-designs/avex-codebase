@@ -1,73 +1,58 @@
-{% comment %} <div class="container">
-  <div class="grid-container">
-    <div class="grid-item">
-      <nav class="footer__navigation" role="navigation">
-        <ul class="footer-nav__menu">
-          {% for link in section.settings.footer_linklist.links %}
-            <li class="footer-nav__item">
-              <a href="{{ link.url }}" class="footer-nav__link">{{ link.title }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </nav>
+<footer>
+  {%- if section.settings.menu != blank and section.settings.menu.links.size > 0 -%}
+    <div>
+      {%- for link in section.settings.menu.links -%}
+        {%- if link.links.size > 0 -%}
+          <div>
+            <div>{{ link.title | escape }}</div>
+            <ul>
+              {%- for child_link in link.links -%}
+                <li>
+                  <a
+                    href="{{ child_link.url }}"
+                    {% if child_link.current %}
+                      aria-current="true"
+                    {% endif %}
+                  >
+                    {{- child_link.title | escape -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
     </div>
-    <div class="grid-item">
-      {%- if section.settings.newsletter_element != blank -%}
-        <div class="newsletter">
-          <span>{{ section.settings.newsletter_title }}</span>
-          {{- section.settings.newsletter_element -}}
-        </div>
-      {%- endif -%}
-      {%- if section.settings.footer_socials != blank and linklists[section.settings.footer_socials] -%}
-        <div class="socials">
-          {%- render 'social-links', socials: linklists[section.settings.footer_socials] -%}
-        </div>
-      {%- endif -%}
+  {%- endif -%}
+  {%- if newsletter_code != blank -%}
+    {{- newsletter_code -}}
+  {%- endif -%}
+  {%- if section.settings.social_menu != blank -%}
+    <div>
+      {%- render 'social-links', socials: linklists[section.settings.social_menu] -%}
     </div>
-  </div>
-  <div class="footer__copyrights">
-    <small>&copy; {{ 'now' | date: "%Y" }}, {{ section.settings.copyrights }}</small>
-  </div>
-</div> {% endcomment %}
+  {%- endif -%}
+  <div>&copy; {{ 'now' | date: '%Y' }}</div>
+</footer>
 
 {% schema %}
 {
   "name": "Footer",
-  "tag": "footer",
-  "class": "footer",
   "settings": [
     {
-      "type": "header",
-      "content": "Main Settings"
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu"
     },
     {
       "type": "link_list",
-      "id": "footer_linklist",
-      "label": "Menu",
-      "default": "footer"
+      "id": "social_menu",
+      "label": "Social Menu"
     },
     {
-      "type": "text",
-      "id": "copyrights",
-      "label": "Copyrights",
-      "default": "Company"
-    },
-    {
-      "type": "text",
-      "id": "newsletter_title",
-      "label": "Newsletter Title",
-      "default": "Newsletter"
-    },
-    {
-      "type": "text",
-      "id": "newsletter_element",
-      "label": "Newsletter Snippet",
-      "default": "<div class='klaviyo-form-SJLAFx'></div>"
-    },
-    {
-      "type": "link_list",
-      "id": "footer_socials",
-      "label": "Social links"
+      "type": "liquid",
+      "id": "newsletter_code",
+      "label": "Newsletter code"
     }
   ]
 }

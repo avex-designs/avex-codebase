@@ -1,190 +1,191 @@
-{% comment %} {%- style -%}
-  {%- render "css-header.css" -%}
-{%- endstyle -%}
+{% comment %}
+   {%- style -%}
+    {%- render "css-header.css" -%}
+  {%- endstyle -%}
 
-<header class="header">
-  <div
-    class="header_infobar"
-    style="background-color: {{ section.settings.infobar_bg }}; color: {{ section.settings.infobar_textcolor }}"
-  >
-    {{ section.settings.infobar }}
-  </div>
+  <header class="header">
+    <div
+      class="header_infobar"
+      style="background-color: {{ section.settings.infobar_bg }}; color: {{ section.settings.infobar_textcolor }}"
+    >
+      {{ section.settings.infobar }}
+    </div>
 
-  <div class="header__desktop">
-    <div class="container">
-      <div class="grid-container">
+    <div class="header__desktop">
+      <div class="container">
+        <div class="grid-container">
+          <div class="grid-item">
+            <div class="header__main-logo">
+              {%- render 'site-logo', logo_image: section.settings.main_logo, logo_text: section.settings.main_logo_text, width: 200, height: 200 -%}
+            </div>
+          </div>
+          <div class="grid-item text-center">
+            <nav class="header__nav" role="navigation">
+              <ul>
+                {% for block in section.blocks %}
+                  {% assign menuItem = linklists[block.settings.menuitem].links[0] %}
+                  <li
+                    class="header__nav-item"
+                    menu
+                    {% if menuItem.links != blank %}
+                      data-mainmenu-hassub
+                    {% endif %}
+                  >
+                    <a class="header__nav-link" href="{{ menuItem.url }}">{{ menuItem.title }}</a>
+                    {% if menuItem.links != blank %}
+                      {% if block.settings.f_image %}
+                        {% render 'menu-item-mega', block: block, menuItem: menuItem %}
+                      {% else %}
+                        {% render 'menu-item-simple', block: block, menuItem: menuItem %}
+                      {% endif %}
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </nav>
+          </div>
+          <div class="grid-item text-right">
+            <div class="header__quickaccess">
+              {% if section.settings.search_icon %}
+                <div class="header__quickaccess-item">
+                  <a href="/search" class="searchlink"></a>
+                </div>
+              {% endif %}
+              {% if section.settings.user_icon %}
+                <a
+                  href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+                  class="header__quickaccess-item"
+                >
+
+                </a>
+              {% endif %}
+              {% if template != 'cart' %}
+                {% if section.settings.cart_icon %}
+                  <button
+                    class="header__quickaccess-item miniCart"
+                    data-ajax-cart-toggle-class-button="js-ajax-cart-opened"
+                  >
+                  </button>
+                  <span class="cart-total" data-ajax-cart-bind-state="cart.item_count">{{ cart.item_count }}</span>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header__mobile">
+      <div class="grid-container mob-main">
         <div class="grid-item">
-          <div class="header__main-logo">
+          <button class="mob-main__hamburger" data-open-drawer aria-label="{{ 'accessibility.menu' | t }}">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line y1="4.5" x2="16" y2="4.5" stroke="#fff"/>
+              <line y1="8.5" x2="16" y2="8.5" stroke="#fff"/>
+              <line y1="12.5" x2="16" y2="12.5" stroke="#fff"/>
+            </svg>
+          </button>
+        </div>
+        <div class="grid-item text-center">
+          <div class="mob-main__logo">
             {%- render 'site-logo', logo_image: section.settings.main_logo, logo_text: section.settings.main_logo_text, width: 200, height: 200 -%}
           </div>
         </div>
-        <div class="grid-item text-center">
-          <nav class="header__nav" role="navigation">
-            <ul>
+        <div class="grid-item text-right">
+          <button class="mob-main__cart-button miniCart" data-ajax-cart-toggle-class-button="js-ajax-cart-opened">
+
+            <span class="cart-total" data-ajax-cart-bind-state="cart.item_count">{{ cart.item_count }}</span>
+          </button>
+        </div>
+      </div>
+      <div class="header__mob-drawer" data-drawer>
+        <div class="mob-drawer__top">
+          <ul class="mobtop">
+            <li class="mobtop__item">
+              {% if section.settings.nav_show %}
+                <div class="mobtop__link">
+                  {%- render 'site-logo', logo_image: section.settings.main_logo, logo_text: section.settings.main_logo_text, width: 150, height: 150, neverH1: true -%}
+                </div>
+              {% endif %}
+            </li>
+
+            <li class="mobtop__item">
+              <button class="close-button" data-close-drawer aria-label="{{ 'accessibility.close' | t }}">
+
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="mob-drawer__menu" data-drawer-menuwrap>
+          <nav>
+            <ul class="mobmenu ul" data-drawer-menu>
               {% for block in section.blocks %}
-                {% assign menuItem = linklists[block.settings.menuitem].links[0] %}
-                <li
-                  class="header__nav-item"
-                  menu
-                  {% if menuItem.links != blank %}
-                    data-mainmenu-hassub
+                {% assign menuItemMob = linklists[block.settings.menuitem].links[0] %}
+                <li class="mobmenu__item {% if menuItemMob.links != blank %}hasSub{% endif %}">
+                  {% if menuItemMob.links != blank %}
+                    <div class="mobmenu__hasSubCover">
+                      <a href="{{ menuItemMob.url }}" class="mobmenu__link mainmenu-item">{{ menuItemMob.title }}</a>
+                      <button
+                        data-drawer-itemtoggle
+                        class="mobmenu__openSubButton"
+                        aria-label="{{ 'accessibility.open_sub' | t }}"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M7 12L11 8.00003L7 4.00003" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </button>
+                    </div>
+                  {% else %}
+                    <a class="mobmenu__link mainmenu-item" href="{{ menuItemMob.url }}">{{ menuItemMob.title }}</a>
                   {% endif %}
-                >
-                  <a class="header__nav-link" href="{{ menuItem.url }}">{{ menuItem.title }}</a>
-                  {% if menuItem.links != blank %}
-                    {% if block.settings.f_image %}
-                      {% render 'menu-item-mega', block: block, menuItem: menuItem %}
-                    {% else %}
-                      {% render 'menu-item-simple', block: block, menuItem: menuItem %}
-                    {% endif %}
+
+                  {% if menuItemMob.links != blank %}
+                    <div class="mobmenu__child" data-drawer-child>
+                      <ul class="mobmenu__child-menu">
+                        {% for child in menuItemMob.links %}
+                          <li class="mobmenu__child-item {% if child.links != blank %}hasGrandSub{% endif %}">
+                            <a class="mobmenu__child-link" href="{{ child.url }}">{{ child.title }}</a>
+                            {% if child.links != blank %}
+                              <ul class="mobmenu__grandChild">
+                                {% for grandChild in child.links %}
+                                  <li class="mobmenu__grandChild-item">
+                                    <a class="mobmenu__grandChild-link" href="{{ grandChild.url }}">
+                                      {{- grandChild.title -}}
+                                    </a>
+                                  </li>
+                                {% endfor %}
+                              </ul>
+                            {% endif %}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
                   {% endif %}
                 </li>
               {% endfor %}
             </ul>
           </nav>
         </div>
-        <div class="grid-item text-right">
-          <div class="header__quickaccess">
-            {% if section.settings.search_icon %}
-              <div class="header__quickaccess-item">
-                <a href="/search" class="searchlink"></a>
-              </div>
-            {% endif %}
-            {% if section.settings.user_icon %}
-              <a
-                href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
-                class="header__quickaccess-item"
-              >
-               
-              </a>
-            {% endif %}
-            {% if template != 'cart' %}
-              {% if section.settings.cart_icon %}
-                <button
-                  class="header__quickaccess-item miniCart"
-                  data-ajax-cart-toggle-class-button="js-ajax-cart-opened"
-                >
-                </button>
-                <span class="cart-total" data-ajax-cart-bind-state="cart.item_count">{{ cart.item_count }}</span>
-              {% endif %}
-            {% endif %}
-          </div>
-        </div>
       </div>
     </div>
-  </div>
+  </header>
 
-  <div class="header__mobile">
-    <div class="grid-container mob-main">
-      <div class="grid-item">
-        <button class="mob-main__hamburger" data-open-drawer aria-label="{{ 'accessibility.menu' | t }}">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line y1="4.5" x2="16" y2="4.5" stroke="#fff"/>
-            <line y1="8.5" x2="16" y2="8.5" stroke="#fff"/>
-            <line y1="12.5" x2="16" y2="12.5" stroke="#fff"/>
-          </svg>
-        </button>
-      </div>
-      <div class="grid-item text-center">
-        <div class="mob-main__logo">
-          {%- render 'site-logo', logo_image: section.settings.main_logo, logo_text: section.settings.main_logo_text, width: 200, height: 200 -%}
-        </div>
-      </div>
-      <div class="grid-item text-right">
-        <button class="mob-main__cart-button miniCart" data-ajax-cart-toggle-class-button="js-ajax-cart-opened">
-          
-          <span class="cart-total" data-ajax-cart-bind-state="cart.item_count">{{ cart.item_count }}</span>
-        </button>
-      </div>
-    </div>
-    <div class="header__mob-drawer" data-drawer>
-      <div class="mob-drawer__top">
-        <ul class="mobtop">
-          <li class="mobtop__item">
-            {% if section.settings.nav_show %}
-              <div class="mobtop__link">
-                {%- render 'site-logo', logo_image: section.settings.main_logo, logo_text: section.settings.main_logo_text, width: 150, height: 150, neverH1: true -%}
-              </div>
-            {% endif %}
-          </li>
-
-          <li class="mobtop__item">
-            <button class="close-button" data-close-drawer aria-label="{{ 'accessibility.close' | t }}">
-        
-            </button>
-          </li>
-        </ul>
-      </div>
-      <div class="mob-drawer__menu" data-drawer-menuwrap>
-        <nav>
-          <ul class="mobmenu ul" data-drawer-menu>
-            {% for block in section.blocks %}
-              {% assign menuItemMob = linklists[block.settings.menuitem].links[0] %}
-              <li class="mobmenu__item {% if menuItemMob.links != blank %}hasSub{% endif %}">
-                {% if menuItemMob.links != blank %}
-                  <div class="mobmenu__hasSubCover">
-                    <a href="{{ menuItemMob.url }}" class="mobmenu__link mainmenu-item">{{ menuItemMob.title }}</a>
-                    <button
-                      data-drawer-itemtoggle
-                      class="mobmenu__openSubButton"
-                      aria-label="{{ 'accessibility.open_sub' | t }}"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7 12L11 8.00003L7 4.00003" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                {% else %}
-                  <a class="mobmenu__link mainmenu-item" href="{{ menuItemMob.url }}">{{ menuItemMob.title }}</a>
-                {% endif %}
-
-                {% if menuItemMob.links != blank %}
-                  <div class="mobmenu__child" data-drawer-child>
-                    <ul class="mobmenu__child-menu">
-                      {% for child in menuItemMob.links %}
-                        <li class="mobmenu__child-item {% if child.links != blank %}hasGrandSub{% endif %}">
-                          <a class="mobmenu__child-link" href="{{ child.url }}">{{ child.title }}</a>
-                          {% if child.links != blank %}
-                            <ul class="mobmenu__grandChild">
-                              {% for grandChild in child.links %}
-                                <li class="mobmenu__grandChild-item">
-                                  <a class="mobmenu__grandChild-link" href="{{ grandChild.url }}">
-                                    {{- grandChild.title -}}
-                                  </a>
-                                </li>
-                              {% endfor %}
-                            </ul>
-                          {% endif %}
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  </div>
-                {% endif %}
-              </li>
-            {% endfor %}
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </div>
-</header>
-
-{% if request.page_type == 'index' %}
-  {% assign potential_action_target = shop.url | append: routes.search_url | append: "?q={search_term_string}" %}
-  <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "WebSite",
-      "name": {{ shop.name | json }},
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {{ potential_action_target | json }},
-        "query-input": "required name=search_term_string"
-      },
-      "url": {{ shop.url | append: page.url | json }}
-    }
-  </script>
-{% endif %}
+  {% if request.page_type == 'index' %}
+    {% assign potential_action_target = shop.url | append: routes.search_url | append: "?q={search_term_string}" %}
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": {{ shop.name | json }},
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {{ potential_action_target | json }},
+          "query-input": "required name=search_term_string"
+        },
+        "url": {{ shop.url | append: page.url | json }}
+      }
+    </script>
+  {% endif %}
 {% endcomment %}
 {% schema %}
 {
@@ -328,4 +329,4 @@
     }
   ]
 }
-{% endschema %} 
+{% endschema %}
