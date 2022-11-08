@@ -1,6 +1,6 @@
 {%- render 'stylesheet', name: 'account' -%}
-<page-viewer data-viewer-default="login">
-  <div data-viewer-block="recover">
+<page-viewer data-page-viewer-default="login">
+  <div data-page-viewer-block="recover">
     <h2>Forgot password</h2>
     {%- form 'recover_customer_password', class: 'form form--recovery' -%}
       {% assign recover_success = form.posted_successfully? %}
@@ -31,11 +31,11 @@
 
       <button>Submit</button>
 
-      <a href="#login" data-viewer-action="login"> Cancel </a>
+      <a href="#login" data-page-viewer-action="login"> Cancel </a>
     {%- endform -%}
   </div>
   <br>
-  <div data-viewer-block="login">
+  <div data-page-viewer-block="login">
     <h2>Login</h2>
     {%- if recover_success == true -%}
       Success
@@ -77,7 +77,7 @@
           <label for="CustomerPassword"> Password </label>
         </div>
 
-        <a href="#recover" data-viewer-action="recover"> Forgot password </a>
+        <a href="#recover" data-page-viewer-action="recover"> Forgot password </a>
       {%- endif -%}
 
       <button>Sign in</button>

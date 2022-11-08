@@ -1,31 +1,48 @@
+/**
+ * Usage:
+ * 1. Sample html structure (real example shown on main-addresses.liquid):
+ * <country-province-selector>
+ *  <select name="address[country]" data-default="{{ form.country }}" data-form-id="{{ form.id }}" autocomplete="country">
+ *   {{- all_country_option_tags -}}
+ *  </select>
+ *  <div data-province-container>
+ *    <select name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1"></select>
+ *  </div>
+ * </country-province-selector>
+ *
+ *
+ * Actions:
+ * 1. For new address form it will show the countries and province select will be added based on selection.
+ * 2. For existing addresses it will preselect country and province.
+ *
+ */
 class CountryProvinceSelector extends HTMLElement {
   constructor() {
     super();
-    this.country_selector = this.querySelector("select[name*='country']");
-    this.province_selector = this.querySelector("select[name*='province']");
-    this.province_container = this.querySelector("[data-province-container]");
+    this.$countrySelector = this.querySelector("select[name*='country']");
+    this.$provinceSelector = this.querySelector("select[name*='province']");
+    this.$provinceContainer = this.querySelector("[data-province-container]");
 
-    this.selected_country = this.country_selector.getAttribute("data-default");
-    this.selected_province =
-      this.province_selector.getAttribute("data-default");
+    this.selectedCountry = this.$countrySelector.getAttribute("data-default");
+    this.selectedProvince = this.$provinceSelector.getAttribute("data-default");
 
-    if (!this.selected_province || this.selected_province === "") {
-      this.province_container.style.display = "none";
+    if (!this.selectedProvince || this.selectedProvince === "") {
+      this.$provinceContainer.style.display = "none";
     }
-    this.setDefaultSelected(this.country_selector, this.selected_country);
+    this.setDefaultSelected(this.$countrySelector, this.selectedCountry);
     this.generateProvinces(
-      this.country_selector,
-      this.province_selector,
-      this.province_container
+      this.$countrySelector,
+      this.$provinceSelector,
+      this.$provinceContainer
     );
-    this.setDefaultSelected(this.province_selector, this.selected_province);
+    this.setDefaultSelected(this.$provinceSelector, this.selectedProvince);
   }
   connectedCallback() {
-    this.country_selector.addEventListener("change", () => {
+    this.$countrySelector.addEventListener("change", () => {
       this.generateProvinces(
-        this.country_selector,
-        this.province_selector,
-        this.province_container
+        this.$countrySelector,
+        this.$provinceSelector,
+        this.$provinceContainer
       );
     });
   }
@@ -51,19 +68,19 @@ class CountryProvinceSelector extends HTMLElement {
     }
   }
 
-  generateProvinces(country_selector, province_selector, province_container) {
-    const selected_option =
-      country_selector.options[country_selector.selectedIndex];
-    const raw_provinces = selected_option.getAttribute("data-provinces");
-    const parsed_provinces = JSON.parse(raw_provinces);
+  generateProvinces($countrySelector, $provinceSelector, $provinceContainer) {
+    const selectedOption =
+      $countrySelector.options[$countrySelector.selectedIndex];
+    const rawProvinces = selectedOption.getAttribute("data-provinces");
+    const parsedProvinces = JSON.parse(rawProvinces);
 
-    this.clearOptions(province_selector);
+    this.clearOptions($provinceSelector);
 
-    if (!parsed_provinces?.length) {
-      province_container.style.display = "none";
+    if (!parsedProvinces?.length) {
+      $provinceContainer.style.display = "none";
     } else {
-      this.setOptions(province_selector, parsed_provinces);
-      province_container.style.display = "";
+      this.setOptions($provinceSelector, parsedProvinces);
+      $provinceContainer.style.display = "";
     }
   }
 }
