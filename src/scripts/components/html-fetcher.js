@@ -18,7 +18,6 @@ customElements.define(
       this.#intersectionObserver = new IntersectionObserver(
         (entries, observer) => {
           if (!entries[0].isIntersecting) return;
-          console.log("visible");
           observer.unobserve(this);
           this.updateHTML();
         },
