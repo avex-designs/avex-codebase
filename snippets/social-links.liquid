@@ -1,6 +1,6 @@
-<ul class="socials__links">
+<ul>
   {%- for link in socials.links -%}
-    <li class="social-links__link">
+    <li>
       <a
         href="{{ link.url }}"
         target="_blank"
@@ -9,7 +9,7 @@
         rel="noopener"
       >
         {%- assign icon_name = link.title | downcase -%}
-        {%- render 'social-icons' icon: icon_name -%}
+        {%- render 'social-icons', icon: icon_name -%}
       </a>
     </li>
   {%- endfor %}

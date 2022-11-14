@@ -2,12 +2,16 @@
   Renders a product card
   Accepts:
   - product: {Object} Shopify Product object
-  - withous_css: {Boolean} Don't include the stylesheet links
 
   Usage:
-  {%- render 'product-card', product: product, without_css: true -%}
+  {%- render 'product-card', product: product -%}
 {% endcomment %}
 
+<div>
+  {{ product.title | escape }}
+</div>
+
+{% comment %}
 {%- liquid
   unless without_css
     render 'stylesheet', name: 'product-card'
@@ -119,3 +123,4 @@
     </script>
   {% endform %}
 </div>
+{% endcomment %}

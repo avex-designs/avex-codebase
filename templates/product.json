@@ -8,10 +8,6 @@
     "product-recommendations": {
       "type": "product-recommendations",
       "settings": {
-        "recc_title": "You may also like",
-        "recc_coll_lm": 15,
-        "recc_desk": 4,
-        "recc_mob": 2
       }
     }
   },
