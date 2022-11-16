@@ -7,6 +7,69 @@
 <header>
   <div>
     <div>{{ logo_html }}</div>
+
+    {% comment %} Simple menu {% endcomment %}
+
+    {%- if section.settings.menu != blank -%}
+      <nav>
+        <ul role="list">
+          {%- for link in section.settings.menu.links -%}
+            <li>
+              {%- if link.links != blank -%}
+                <a class="{% if link.child_active %} active-class{% endif %}">
+                  {{ link.title | escape }}
+                </a>
+                <ul style="margin-left: 1rem" role="list" tabindex="-1">
+                  {%- for childlink in link.links -%}
+                    <li>
+                      {%- if childlink.links == blank -%}
+                        <a
+                          href="{{ childlink.url }}"
+                          class="{% if childlink.current %} active-class{% endif %}"
+                          {% if childlink.current %}
+                            aria-current="page"
+                          {% endif %}
+                        >
+                          {{ childlink.title | escape }}
+                        </a>
+                      {%- else -%}
+                        <ul style="margin-left: 1rem" role="list" tabindex="-1">
+                          {%- for grandchildlink in childlink.links -%}
+                            <li>
+                              <a
+                                href="{{ grandchildlink.url }}"
+                                class="{% if grandchildlink.current %} active-class{% endif %}"
+                                {% if grandchildlink.current %}
+                                  aria-current="page"
+                                {% endif %}
+                              >
+                                {{ grandchildlink.title | escape }}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <a
+                  href="{{ link.url }}"
+                  class="{% if link.current %} active-class{% endif %}"
+                  {% if link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{ link.title | escape }}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    {% comment %} Mega menu {% endcomment %}
     {%- assign menu_blocks = section.settings.blocks | where: 'type', 'menu_item' | map: 'settings' -%}
     {%- if menu_blocks.size > 0 -%}
       <nav>
@@ -22,11 +85,30 @@
         </ul>
       </nav>
     {%- endif -%}
+
+    {%- if shop.customer_accounts_enabled -%}
+      <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}">
+        Account
+      </a>
+    {%- endif -%}
+
+    <div>
+      <a href="{{ routes.cart_url }}" data-ajax-cart-toggle-class-button="js-ajax-cart-opened">
+        Cart
+        {%- if cart != empty -%}
+          <div>
+            {%- if cart.item_count < 100 -%}
+              <span aria-hidden="true">{{ cart.item_count }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </a>
+    </div>
   </div>
 </header>
 
 {%- if request.page_type == 'index' -%}
-  {%- assign potential_action_target = shop.url | append: routes.search_url | append: '?q={search_term_string}' -%}
+  {% assign potential_action_target = request.origin | append: routes.search_url | append: '?q={search_term_string}' %}
   <script type="application/ld+json">
     {
       "@context": "http://schema.org",
@@ -37,7 +119,7 @@
         "target": {{ potential_action_target | json }},
         "query-input": "required name=search_term_string"
       },
-      "url": {{ shop.url | append: page.url | json }}
+      "url": {{ request.origin | append: page.url | json }}
     }
   </script>
 {%- endif -%}
@@ -56,6 +138,12 @@
       "id": "logo_svg",
       "label": "Logo SVG",
       "info": "Will be used in case Logo Image is not set"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Simple menu"
     }
   ],
   "blocks": [
