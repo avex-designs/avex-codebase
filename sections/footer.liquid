@@ -1,7 +1,16 @@
+{%- liquid
+  assign footer_menu = section.settings.menu
+  assign newsletter_code = section.settings.newsletter_code
+  assign social_links = section.settings.social_menu
+  assign copyrights = section.settings.copyrights
+  assign payment_enable = section.settings.payment_enable
+  assign enable_country_selector = section.settings.enable_country_selector
+-%}
+
 <footer>
-  {%- if section.settings.menu != blank and section.settings.menu.links.size > 0 -%}
+  {%- if footer_menu != blank and footer_menu.links.size > 0 -%}
     <div>
-      {%- for link in section.settings.menu.links -%}
+      {%- for link in footer_menu.links -%}
         {%- if link.links.size > 0 -%}
           <div>
             <div>{{ link.title | escape }}</div>
@@ -27,12 +36,73 @@
   {%- if newsletter_code != blank -%}
     {{- newsletter_code -}}
   {%- endif -%}
-  {%- if section.settings.social_menu != blank -%}
+  {%- if social_links != blank -%}
     <div>
-      {%- render 'social-links', socials: linklists[section.settings.social_menu] -%}
+      {%- render 'social-links', socials: linklists[social_links] -%}
     </div>
   {%- endif -%}
-  <div>&copy; {{ 'now' | date: '%Y' }}</div>
+  <div>
+    {%- assign current_year = 'now' | date: '%Y' | prepend: '©' -%}
+    {%- if copyrights != blank -%}
+      {{- copyrights | replace: '[Y]', current_year | link_to: routes.root_url -}}
+    {%- else -%}
+      © {{ current_year }}
+    {%- endif -%}
+  </div>
+
+  <div class="footer__column footer__localization isolate">
+    {%- if enable_country_selector and localization.available_countries.size > 1 -%}
+      {%- form 'localization', id: 'FooterCountryFormNoScript', class: 'localization-form' -%}
+        <div class="localization-form__select">
+          <select class="localization-selector link" name="country_code" onchange="this.form.submit()">
+            {%- for country in localization.available_countries -%}
+              <option
+                value="{{ country.iso_code }}"
+                {%- if country.iso_code == localization.country.iso_code %}
+                  selected
+                {% endif %}
+              >
+                {{ country.name }} ({{ country.currency.iso_code }}
+                {{ country.currency.symbol }})
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endform -%}
+    {%- endif -%}
+
+    {%- if enable_country_selector and localization.available_languages.size > 1 -%}
+      {%- form 'localization', id: 'FooterLanguageFormNoScript', class: 'localization-form' -%}
+        <div class="localization-form__select">
+          <select class="localization-selector link" name="locale_code" onchange="this.form.submit()">
+            {%- for language in localization.available_languages -%}
+              <option
+                value="{{ language.iso_code }}"
+                lang="{{ language.iso_code }}"
+                {%- if language.iso_code == localization.language.iso_code %}
+                  selected
+                {% endif %}
+              >
+                {{ language.endonym_name | capitalize }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endform -%}
+    {%- endif -%}
+  </div>
+
+  {%- if payment_enable -%}
+    <div>
+      <ul role="list">
+        {%- for type in shop.enabled_payment_types -%}
+          <li>
+            {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
 </footer>
 
 {% schema %}
@@ -53,6 +123,30 @@
       "type": "liquid",
       "id": "newsletter_code",
       "label": "Newsletter code"
+    },
+    {
+      "type": "text",
+      "id": "copyrights",
+      "label": "Copyrights text",
+      "default": "[Y] My company"
+    },
+    {
+      "type": "checkbox",
+      "id": "payment_enable",
+      "default": true,
+      "label": "Enable payments label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "default": true,
+      "label": "Enable country selector"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_selector",
+      "default": true,
+      "label": "Enable language selector"
     }
   ]
 }

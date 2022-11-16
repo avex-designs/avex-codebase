@@ -136,9 +136,9 @@
 
     {%- if template contains 'product' -%}
       <!-- Product Structured Data -->
-      {% render 'product-structured-data' %}
+      {%- render 'product-structured-data' -%}
       <!-- Klaviyo Product Tracker code -->
-      {% render 'klaviyo-product-tracker' %}
+      {%- render 'klaviyo-product-tracker' -%}
     {%- endif -%}
   </body>
 </html>
