@@ -33,3 +33,5 @@
 !composer.json
 
 avextheme.zip
+assets/js-*.min.js
+assets/css-*.min.css
