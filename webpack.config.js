@@ -3,8 +3,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const glob = require("glob");
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
 const WebpackHookPlugin = require("webpack-hook-plugin");
-const mode = process.env.NODE_ENV || "development";
-console.log(process.env.NODE_ENV);
+// const mode = process.env.NODE_ENV || "development";
+// console.log(process.env.NODE_ENV);
 const files = {
   // templates_scssPath: "./src/scss/templates/*.scss",
   blocks_scssPath: "./src/scss/blocks/*.scss",
@@ -107,6 +107,7 @@ for (let file of glob.sync(files.blocks_scssPath)) {
 }
 
 module.exports = () => {
+  mode = argv.mode || "development";
   const config = {
     mode: mode,
     devtool: false, //disable sourcemap for js
