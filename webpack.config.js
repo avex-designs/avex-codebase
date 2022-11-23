@@ -106,7 +106,7 @@ for (let file of glob.sync(files.blocks_scssPath)) {
   criticalEntries[`css-${fileName}.css`] = file;
 }
 
-module.exports = () => {
+module.exports = (env, argv) => {
   mode = argv.mode || "development";
   const config = {
     mode: mode,
