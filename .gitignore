@@ -35,5 +35,5 @@
 !composer.json
 
 .zip
-assets/js-*.min.js
-assets/css-*.min.css
+/js-*.min.js
+/css-*.min.css
