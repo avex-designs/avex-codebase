@@ -20,3 +20,7 @@ Usage:
 [data-page-viewer-visible] {
   display: block;
 }
+
+.test {
+  color: red;
+}
