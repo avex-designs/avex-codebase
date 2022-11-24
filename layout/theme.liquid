@@ -19,31 +19,7 @@
     {% comment %} {%- render 'favicon' -%} {% endcomment %}
 
     <!-- Title -->
-    <title>
-      {%- liquid
-        if template.name == 'gift_card'
-          assign formatted_initial_value = gift_card.initial_value | money_without_trailing_zeros | strip_html
-          echo 'gift_cards.issued.title' | t: value: formatted_initial_value, shop: shop.name
-        elsif template.name == 'password'
-          echo shop.name
-        else
-          echo page_title
-          if current_tags
-            assign current_tags_joined = current_tags | join: ', '
-            echo ' &ndash; '
-            echo 'general.title.tags' | t: tags: current_tags_joined
-          endif
-          if current_page != 1
-            echo ' &ndash; '
-            echo 'general.title.page' | t: page: current_page
-          endif
-          unless page_title contains shop.name
-            echo ' &ndash; '
-            echo shop.name
-          endunless
-        endif
-      -%}
-    </title>
+    <title>{%- render 'title' -%}</title>
 
     <!-- Meta Desc -->
     {%- if template.name == 'gift_card' -%}
@@ -72,7 +48,7 @@
     class="{% if customer %}customer-logged-in {% endif %}template-{{ request.page_type | handle }} template-{{ template.name }}"
   >
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
-      {{- 'accessibility.skip_to_text' | t -}}
+      {{- 'general.accessibility.skip_to_text' | t -}}
     </a>
 
     {%- section 'header' -%}
@@ -94,8 +70,8 @@
     </script>
     <script type="application/json" data-ajax-cart-configuration>
       {
-        "requestErrorText": "{{ 'sections.cart.cart_error' | t }}",
-        "lineItemQuantityErrorText": "{{ 'sections.cart.cart_quantity_error' | t }}"
+        "requestErrorText": "{{ 'cart.cart_error' | t }}",
+        "lineItemQuantityErrorText": "{{ 'cart.cart_quantity_error' | t }}"
       }
     </script>
 
@@ -113,31 +89,10 @@
       };
     </script>
 
-    {%- if settings.klaviyo_id != blank -%}
-      {% comment %}theme-check-disable{% endcomment %}
-      <script
-        async
-        type="text/javascript"
-        src="//static.klaviyo.com/onsite/js/klaviyo.js?company_id={{ settings.klaviyo_id }}"
-      ></script>
-      <script>
-        var _learnq = _learnq || [];
-        if ('{{ customer.email }}') {
-          _learnq.push([
-            'identify',
-            {
-              $email: '{{ customer.email }}',
-            },
-          ]);
-        }
-      </script>
-      {% comment %}theme-check-enable{% endcomment %}
-    {%- endif -%}
+    {%- render 'klaviyo-main-script' -%}
 
     {%- if template contains 'product' -%}
-      <!-- Product Structured Data -->
       {%- render 'product-structured-data' -%}
-      <!-- Klaviyo Product Tracker code -->
       {%- render 'klaviyo-product-tracker' -%}
     {%- endif -%}
   </body>

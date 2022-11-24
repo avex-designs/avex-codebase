@@ -1,0 +1,20 @@
+{%- if settings.klaviyo_id != blank -%}
+  {% comment %}theme-check-disable{% endcomment %}
+  <script
+    async
+    type="text/javascript"
+    src="//static.klaviyo.com/onsite/js/klaviyo.js?company_id={{ settings.klaviyo_id }}"
+  ></script>
+  <script>
+    var _learnq = _learnq || [];
+    if ('{{ customer.email }}') {
+      _learnq.push([
+        'identify',
+        {
+          $email: '{{ customer.email }}',
+        },
+      ]);
+    }
+  </script>
+  {% comment %}theme-check-enable{% endcomment %}
+{%- endif -%}

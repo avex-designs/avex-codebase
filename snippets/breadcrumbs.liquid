@@ -1,88 +1,83 @@
-{% comment %} {% comment %}
-  TODO: improve logic for hide/show in specific pages
+{% comment %} 
+  Usage:
+  {%- render 'breadcrumbs', excluded_templates: "page,cart", class: "custom_classnames" -%} 
 {% endcomment %}
 
-{%- unless template == 'index' or template == 'list-collections' or template == '404' -%}
-  {% render 'stylesheet', name: 'breadcrumbs' %}
-  {% assign t = template | split: '.' | first %}
-  <nav class="breadcrumbs-wrap container" role="navigation">
-    <ul class="breadcrumbs ">
+{%- liquid
+  assign default_excluded_templates = 'index,list-collections,404'
+  assign excluded = default_excluded_templates | split: ','
+
+  if excluded_templates and excluded_templates != blank
+    assign excluded = excluded_templates | append: ',' | append: default_excluded_templates | split: ','
+  endif
+-%}
+{%- unless excluded contains template.name -%}
+  {%- liquid
+    style
+      render 'css-breadcrumbs.css'
+    endstyle
+
+    assign accessibility_home = 'general.accessibility.home' | t
+    assign t = template | split: '.' | first
+  -%}
+  <nav class="breadcrumbs {{ class }}" aria-label="Breadcrumb">
+    <ul>
       <li>
-        <a href="{{ routes.root_url }}" title="{{- 'general.breadcrumbs.home' | t -}}">
-          {{- 'general.breadcrumbs.home' | t -}}
+        <a href="{{ routes.root_url }}" title="{{ accessibility_home }}">
+          {{- accessibility_home -}}
         </a>
       </li>
-    >
-      {% case t %}
-        {% when 'page' %}
+      {%- case t -%}
+        {%- when 'page' -%}
           <li>
             <a href="{{ page.url }}" aria-current="page">{{ page.title }}</a>
           </li>
-        {% when 'product' %}
-          {% if collection.url %}
-            <li>{{ collection.title | link_to: collection.url }}</li>
-          >
-          {% endif %}
+        {%- when 'search' -%}
+          {%- liquid
+            assign search_breadcrumbs_string = 'general.search.breadcrumbs.no_terms'
+            if search.terms != blank
+              assign search_breadcrumbs_string = 'general.search.breadcrumbs.terms'
+            endif
+          -%}
+          <li>
+            <span>{{ search_breadcrumbs_string | t: terms: search.terms }}</span>
+          </li>
+        {%- when 'product' -%}
+          {%- if collection.url -%}
+            <li>{{ collection.title | split: '|' | last | link_to: collection.url }}</li>
+          {%- endif -%}
           <li>
             <a href="{{ collection.url }}{{ product.url }}" class="current" aria-current="page">{{ product.title }}</a>
           </li>
-        >
-        {% when 'collection' and collection.handle %}
-          {% if current_tags %}
-            <li>{{ collection.title | link_to: collection.url }}</li>
-           >
-            <li>
-              {% capture tag_url %}{{ collection.url }}/{{ current_tags | join: "+" }}{% endcapture %}
-              <a href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + " }}</a>
-            </li>
-          {% else %}
-            <li>
-              <a href="{{ collection.url }}" class="current" aria-current="page">{{ collection.title }}</a>
-            </li>
-          {% endif %}
-        {% when 'blog' %}
-          {% if current_tags %}
+        {%- when 'blog' -%}
+          {%- if current_tags -%}
             <li>{{ blog.title | link_to: blog.url }}</li>
-           >
             <li>
-              {% capture tag_url %}{{ blog.url }}/tagged/{{ current_tags | join: "+" }}{% endcapture %}
-              <a href="{{ tag_url }}" class="current" aria-current="page">{{ current_tags | join: " + " }}</a>
+              {%- capture tag_url -%}{{ blog.url }}/tagged/{{ current_tags | join: '+' }}{%- endcapture -%}
+              <a href="{{ tag_url }}" class="current" aria-current="page">{{ current_tags | join: ' + ' }}</a>
             </li>
-          {% else %}
+          {%- else -%}
             <li>
               <a href="{{ blog.url }}" class="current" aria-current="page">{{ blog.title }}</a>
             </li>
-          {% endif %}
-        {% when 'article' %}
+          {%- endif -%}
+        {%- when 'article' -%}
           <li>{{ blog.title | link_to: blog.url }}</li>
-        >
           <li>
             <a href="{{ article.url }}" class="current" aria-current="page">{{ article.title }}</a>
           </li>
-        {% else %}
+        {% comment %} 
+        Custom cart page breadcrumb only if needed. Most of the cases we can use page_title and adjust the text in shopify translations Checkout & systems -> Page titles -> Shopping cart 
+        {%- when 'cart' -%}
           <li aria-current="page">
-            <a href="{{ request.path }}" class="current" aria-current="page">
-              {%- liquid
-                case request.page_type
-                  when 'search'
-                    echo 'general.breadcrumbs.search_result' | t
-                  when 'policy'
-                    for policy in shop.policies
-                      if policy.url == request.path
-                        echo policy.title
-                      endif
-                    endfor
-                  else
-                    if request.path contains 'sitemap'
-                      echo 'general.breadcrumbs.sitemap' | t
-                    else
-                      echo template.name | replace: '_', ' '  | capitalize
-                    endif
-                endcase
-              -%}
-            </a>
+            <a href="{{ routes.cart_url }}" class="current" aria-current="page">{{ page_title }}</a>
           </li>
-      {% endcase %}
+        {% endcomment %}
+        {%- else -%}
+          <li aria-current="page">
+            <a href="{{ request.path }}" class="current" aria-current="page">{{ page_title }}</a>
+          </li>
+      {%- endcase -%}
     </ul>
   </nav>
-{%- endunless -%} {% endcomment %}
+{%- endunless -%}
