@@ -39,3 +39,17 @@
     }
   }
 }
+
+[data-klaviyo-backinstock-notify-button] {
+  display: none;
+}
+
+form[data-klaviyo-backinstock-notify] {
+  button {
+    display: none;
+  }
+
+  button[data-klaviyo-backinstock-notify-button] {
+    display: block;
+  }
+}

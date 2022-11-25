@@ -7,11 +7,11 @@
   {%- render 'product-card', product: product -%}
 {% endcomment %}
 
+{% comment %}
 <div>
   {{ product.title | escape }}
 </div>
-
-{% comment %}
+{% endcomment %}
 {%- liquid
   unless without_css
     render 'stylesheet', name: 'product-card'
@@ -26,19 +26,19 @@
   assign variant = product.selected_or_first_available_variant
 
   if variant.inventory_quantity != 0 and variant.inventory_quantity < 5
-      assign label = 'products.labels.almostgone' | t
+      assign label = "almost gone"
   endif
   if  product.tags contains 'label:back-in-stock'
-      assign label = 'products.labels.backinstock' | t
+      assign label = "backinstock"
   endif
   if  product.tags contains 'label:new'
-      assign label = 'products.labels.new' | t
+      assign label = "new"
   endif
   if variant.inventory_quantity == 0 and variant.available == false
-      assign label = 'products.labels.soldout' | t
+      assign label = "soldout"
   endif
   if variant.inventory_quantity == 0 and  product.tags contains 'notifyme'
-      assign label = 'products.labels.getnotified' | t
+      assign label = "getnotified"
   endif
   if variant.inventory_quantity == 0 and variant.available == false
       unless  product.tags contains 'notifyme'
@@ -46,9 +46,18 @@
       endunless
   endif
   if  product.tags contains 'label:comingsoon'
-      assign label = 'products.labels.comingsoon' | t
+      assign label = "comingsoonƒ"
   endif
 -%}
+<style>
+  .product-card{
+  display: inline-block;
+  }
+  .product-card__image img{
+    width: 100px;
+    height: 100px
+  }
+</style>
 <div class="product-card">
   {% form "product", product, class: 'quickShop product-card__form' %}
     <div class="product-card__image">
@@ -97,11 +106,12 @@
               </option>
             {%- endfor -%}
           </select>
-          {% unless product.tags contains "comingsoon" %}
-            <button class="secondary-button" type="submit">{{ 'products.product.quickadd' | t }}</button>
+          {% if product.available %}
+            <button class="secondary-button" type="submit">quickadd</button>
           {% else %}
-            <button class="disabled" type="button">{{ 'products.labels.comingsoon' | t }}</button>
-          {% endunless %}
+            <button disabled type="button">sold out</button>
+          {% endif %}
+          <button type="button" data-klaviyo-backinstock-notify-button>notify me</button>
         </div>
       {% endunless %}
     </div>
@@ -123,4 +133,3 @@
     </script>
   {% endform %}
 </div>
-{% endcomment %}

@@ -13,6 +13,11 @@
     "accessibility": {
       "skip_to_text" : "Skip to main content",
       "home": "Home"
+    },
+    "backinstock": {
+      "button_text": "Notify me",
+      "success_text": "Success",
+      "email_placeholder": "Email"
     }
   },
   "cart": {
