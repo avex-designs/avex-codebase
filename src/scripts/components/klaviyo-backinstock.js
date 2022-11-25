@@ -129,6 +129,7 @@ class KlaviyoBIS extends HTMLElement {
     const $productVariantsJSON = $productForm.querySelector(
       "[data-product-json-variants]"
     );
+
     const parsedProductVariants =
       $productVariantsJSON &&
       $productVariantsJSON.textContent !== "" &&
