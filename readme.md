@@ -1,4 +1,4 @@
-# Avex Shopify Theme Boilerplate 🌠
+# Avex Shopify Theme Boilerplate 
 
 ## DEV STORE
 
@@ -6,7 +6,7 @@ https://onlinestore2-test.myshopify.com/
 
 Password: **avex**
 
-## Getting started
+## Getting started!!!
 
 1. Clone the repo -
 
