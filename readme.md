@@ -82,7 +82,7 @@ In order to generate css snippet from scss, you need to add .snippet at the and 
 	
 	
 
-## Linters and formatters
+## Linters and formatters!
 We connected css, js and **liquid**(it uses experimental [formatter](http://https://shopify.dev/themes/tools/liquid-prettier-plugin "formatter") from Shopify) formatters and linters using prettier, eslint and stylelint. The root directory consist of config files and you are free to update them for your needs.
 
 Whenever you commit to a git, all linters and formatters will run to fix and beatify you code, but, you can use VSCode features to highlight warnings and errors.
