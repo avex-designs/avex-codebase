@@ -123,7 +123,7 @@ Add your user token to Shopify secrets.
 
 ##### Ideal flow:
 
-1. Connect your main branch to shopify via admin.
+1. Connect your main branch to shopify via admin.a
 2. Work on development branch and make any changes you want.
 3. Once you are ready to push to main branch, create PR to main branch and merge it.
 4. It will merge all files and immmideatly creates a github action which will build your webpack files using your webpack config and pushes it to corresponding folders (configured in your webpack settings).
