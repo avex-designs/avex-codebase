@@ -34,6 +34,6 @@
 !CHANGELOG.md
 !composer.json
 
--*.min.js
+assets/js-*.min.js
 assets/css-*.min.css
-*.css.liquid
+snippets/css-*.css.liquid
