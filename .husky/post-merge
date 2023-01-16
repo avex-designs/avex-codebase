@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+if [[ $(grep -L "assets/js-" .gitignore) ]]; then 
+  echo "" >> .gitignore 
+  echo "assets/js-*.min.js"  >> .gitignore
+fi
+
+if [[ $(grep -L "assets/css-" .gitignore) ]]; then 
+  echo "" >> .gitignore 
+  echo "assets/css-*.min.css"  >> .gitignore
+fi
+
+if [[ $(grep -L "snippets/css-" .gitignore) ]]; then 
+  echo "" >> .gitignore 
+  echo "snippets/css-*.css.liquid"  >> .gitignore
+fi

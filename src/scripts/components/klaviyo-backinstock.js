@@ -27,10 +27,6 @@ class KlaviyoBIS extends HTMLElement {
 
     $klaviyoForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      //   const $successBlock = this.querySelector(
-      //     "[data-klaviyo-backinstock-success]"
-      //   );
-      //   const $submit = this.querySelector('button[type="submit"]');
 
       const formData = new FormData(event.currentTarget);
       const url =
@@ -70,7 +66,7 @@ class KlaviyoBIS extends HTMLElement {
 
   init() {
     const $allAddToCartForms = document.querySelectorAll(
-      'form[action="/cart/add"]'
+      "form[action='/cart/add']"
     );
     if (!$allAddToCartForms || !$allAddToCartForms.length)
       return console.error("[KlaviyoBIS]: No forms detected");
@@ -107,7 +103,7 @@ class KlaviyoBIS extends HTMLElement {
 
           if ($notifyButton) {
             const $productForm = $notifyButton.closest(
-              'form[action="/cart/add"]'
+              "form[action='/cart/add']"
             );
             if ($productForm) {
               const productData = this.getProductData($productForm);
@@ -129,10 +125,11 @@ class KlaviyoBIS extends HTMLElement {
   }
 
   getProductData($productForm) {
-    const selectedVariantID = $productForm.querySelector('[name="id"]')?.value;
+    const selectedVariantID = $productForm.querySelector("[name='id']")?.value;
     const $productVariantsJSON = $productForm.querySelector(
       "[data-product-json-variants]"
     );
+
     const parsedProductVariants =
       $productVariantsJSON &&
       $productVariantsJSON.textContent !== "" &&
