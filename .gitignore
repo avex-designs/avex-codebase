@@ -34,4 +34,6 @@
 !CHANGELOG.md
 !composer.json
 
-avextheme.zip
+assets/js-*.min.js
+assets/css-*.min.css
+snippets/css-*.css.liquid
