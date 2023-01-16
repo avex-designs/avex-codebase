@@ -36,8 +36,8 @@
 
 avextheme.zip
 
-assets/js-*.min.js
+/js-*.min.js
 
-assets/css-*.min.css
+/css-*.min.css
 
 snippets/css-*.css.liquid
