@@ -35,6 +35,3 @@
 !composer.json
 
 avextheme.zip
-/js-*.min.js
-/css-*.min.css
-snippets/css-*.css.liquid
