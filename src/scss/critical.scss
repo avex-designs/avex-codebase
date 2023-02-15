@@ -1,14 +1,6 @@
 /**
 Critical.scss: 
 You can insert here any critical styles, these will be loaded first as inline style (tag).
-Allowed: 
-  - normalize/reset css
-  - layout shifting styles
-  - root variables
-Restricted: 
-  - Lorem ipsum
-  - Lorem ipsum
-  - Lorem ipsum
 */
 @import "./reset.scss";
 
@@ -34,6 +26,7 @@ html {
 
 body {
   min-height: 100vh;
+  background-color: red;
   line-height: 1.5;
   scroll-behavior: smooth;
   text-rendering: optimizespeed;

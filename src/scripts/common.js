@@ -6,7 +6,7 @@ import "liquid-ajax-cart";
  */
 // move to theme.liquid refer to Kit&ace
 // configureCart("addToCartCssClass", "js-ajax-cart-opened");
-
+console.log("HEEEY");
 /**
  * Configure Swiper Modules
  */
