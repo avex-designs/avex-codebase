@@ -3,36 +3,19 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const glob = require("glob");
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
 const WebpackHookPlugin = require("webpack-hook-plugin");
-// const mode = process.env.NODE_ENV || "development";
-// console.log(process.env.NODE_ENV);
+
 const files = {
-  // templates_scssPath: "./src/scss/templates/*.scss",
   blocks_scssPath: "./src/scss/blocks/*.scss",
   critical_scssPath: "./src/scss/critical.scss",
   common_scssPath: "./src/scss/common.scss",
-  // vendor_scssPath: "./src/scss/vendor.scss",
-  // layout_scssPath: "./src/scss/layouts/*.scss",
-
-  // templates_jsPath: "./src/scripts/templates/*.js",
   sections_jsPath: "./src/scripts/sections/*.js",
   components_jsPath: "./src/scripts/components/*.js",
-  // critical_jsPath: "./src/scripts/critical.js",
   common_jsPath: "./src/scripts/common.js",
-
-  // vendor_jsPath: "./src/scripts/vendor.js",
-
   assetsDir: __dirname + "/assets",
   snippetsDir: __dirname + "/snippets",
   resources: __dirname + "/src/scss/resources.scss",
 };
 
-function mergePaths(arr) {
-  let result = [];
-  for (let i = 0; i < arr.length; i++) {
-    result.push(...glob.sync(arr[i]));
-  }
-  return result;
-}
 
 function getFileName(path) {
   let isSnippet = false;
@@ -90,7 +73,6 @@ function templatesEntry(arr) {
 const entries = {
   "css-common.min": [files.common_scssPath],
   "js-common.min": [files.common_jsPath],
-  // vendor: mergePaths([files.vendor_scssPath, files.vendor_jsPath]),
   ...templatesEntry([files.blocks_scssPath]),
   ...templatesEntry([files.sections_jsPath]),
   ...templatesEntry([files.components_jsPath]),
