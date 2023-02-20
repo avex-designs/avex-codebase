@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 git add .
-git commit --amend --allow-empty --no-verify
+git commit --amend HEAD --no-verify
 echo "YAHH"

@@ -3,5 +3,3 @@
 
 npx lint-staged
 npx webpack --mode=production
-# git add .
-# git commit --amend  --no-verify
