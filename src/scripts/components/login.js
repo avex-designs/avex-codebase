@@ -2,6 +2,7 @@ class LoginComp extends HTMLElement {
   constructor() {
     super();
     console.log("Started!!!!aa");
+    console.log("Some edits for test");
   }
 
   // setReady() {

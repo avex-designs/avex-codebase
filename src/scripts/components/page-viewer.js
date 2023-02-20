@@ -82,6 +82,7 @@ class PageViewer extends HTMLElement {
    */
   connectedCallback() {
     const _self = this;
+    console.log("Page viewer initiated");
     this.$actions.forEach((action) => {
       const actionTarget = action.getAttribute(this.DATA_SETS.action);
       if (!actionTarget) return;

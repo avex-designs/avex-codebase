@@ -2,9 +2,8 @@
 {%- render 'script', name: 'hero-banner' -%}
 
 {%- liquid
-
-  #This is a sample shopify section. 
-  #Feel free to modify it and add styling.
+  # This is a sample shopify section.
+  # Feel free to modify it and add styling.
 
   assign hero_video = section.settings.hero_video
   assign hero_img_desktop = section.settings.hero_img
@@ -22,10 +21,10 @@
   assign text_alignment = section.settings.text_align
   assign hero_text_color = section.settings.hero_text_color
 
-  assign hero_pre_title = section.settings.hero_pre_title | escape
-  assign hero_title = section.settings.hero_title | escape
+  assign hero_pre_title = section.settings.hero_pre_title
+  assign hero_title = section.settings.hero_title
   assign hero_text = section.settings.hero_text
-  assign hero_button_text = section.settings.hero_b_text | escape
+  assign hero_button_text = section.settings.hero_b_text
   assign hero_button_url = section.settings.hero_b_url
 -%}
 
@@ -77,15 +76,15 @@
   >
     <div style="color: {{ hero_text_color }};">
       {% if hero_pre_title != blank -%}
-        <span class="hero-banner__content-pretitle">{{- hero_pre_title -}}</span>
+        <span class="hero-banner__content-pretitle">{{- hero_pre_title | escape -}}</span>
       {%- endif %}
       {% if hero_title != blank -%}
         <h2 class="hero-banner__content-title" style="-webkit-text-stroke: 1px {{ hero_text_color }};">
-          {{- hero_title -}}
+          {{- hero_title | escape -}}
         </h2>
       {%- endif %}
       {% if hero_text != blank -%}
-        <div class="hero-banner__content-text">{{- hero_text -}}</div>
+        <div class="hero-banner__content-text">{{- hero_text | escape -}}</div>
       {%- endif %}
       {% if hero_button_text != blank -%}
         <div>
