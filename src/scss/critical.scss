@@ -10,7 +10,6 @@ You can insert here any critical styles, these will be loaded first as inline st
   // Colors
   --color-blue: $color-blue;
   --color-brown: $color-brown;
-  --color-black: $color-brown;
 
   // Font family
   --font-main: $font-main;
@@ -27,7 +26,6 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: red;
   line-height: 1.5;
   scroll-behavior: smooth;
   text-rendering: optimizespeed;
