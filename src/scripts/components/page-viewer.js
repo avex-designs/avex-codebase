@@ -82,7 +82,7 @@ class PageViewer extends HTMLElement {
    */
   connectedCallback() {
     const _self = this;
-    this.actions.forEach((action) => {
+    this.$actions.forEach((action) => {
       const actionTarget = action.getAttribute(this.DATA_SETS.action);
       if (!actionTarget) return;
       action.addEventListener("click", (e) => {
