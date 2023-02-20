@@ -2,6 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 echo "YAHH111"
 git add .
-git commit --amend --no-verify --no-edit
+# git commit --amend --no-verify --no-edit
 echo "YAHH"
 exit
