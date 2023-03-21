@@ -1,4 +1,6 @@
 /**
+ * Page-viewer component is needed to show/hide sections or pages via JS, simulating pages via JS. Similar to Forgot password page in Login.
+ *
  * Usage:
  * 1. Sample html structure
  * <page-viewer data-page-viewer-default="login">

@@ -5,3 +5,16 @@
 [data-page-viewer-visible] {
   display: block;
 }
+
+form {
+  [aria-invalid="true"] {
+    border: 1px solid red;
+  }
+}
+
+form[data-invalid="true"] {
+  button {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}

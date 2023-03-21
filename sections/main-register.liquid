@@ -1,4 +1,6 @@
+{%- render 'stylesheet', name: 'account' -%}
 <h1>Register</h1>
+<smart-form>
 {%- form 'create_customer', novalidate: 'novalidate', class: 'form' -%}
   {%- if form.errors -%}
     {{ form.errors | default_errors }}
@@ -13,6 +15,8 @@
       {% endif %}
       autocomplete="given-name"
       placeholder="First name"
+      aria-required="true"
+      required
     >
     <label for="RegisterForm-FirstName"> First name </label>
   </div>
@@ -46,6 +50,8 @@
         aria-describedby="RegisterForm-email-error"
       {% endif %}
       placeholder="Email"
+      aria-required="true"
+      required
     >
     <label for="RegisterForm-email"> Email </label>
   </div>
@@ -66,6 +72,8 @@
         aria-describedby="RegisterForm-password-error"
       {% endif %}
       placeholder="Password"
+      aria-required="true"
+      required
     >
     <label for="RegisterForm-password"> Password </label>
     {% comment %} ## Individual error: {% endcomment %}
@@ -74,8 +82,9 @@
       {{ form.errors.messages.password }}.
     {%- endif -%}
   </div>
-  <button>Submit</button>
+  <button type="submit">Submit</button>
 {%- endform -%}
+</smart-form>
 
 {% schema %}
 {
