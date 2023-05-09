@@ -3,7 +3,11 @@
     <div>{{- section.settings.title | escape -}}</div>
   {%- endif -%}
 
-  <html-fetcher href="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=6" loading="lazy">
+  <html-fetcher
+    href="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=6"
+    loading="lazy"
+    id="html-fetcher-{{ section.id }}"
+  >
 
     {%- if recommendations.performed? == false -%}
 

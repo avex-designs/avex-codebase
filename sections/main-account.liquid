@@ -2,17 +2,18 @@
 <a href="{{ routes.account_logout_url }}"> Logout</a>
 
 <div>
-  <a href="{{ routes.account_addresses_url }}">Addresses</a><br/>
-  <hr/>
+  <a href="{{ routes.account_addresses_url }}">Addresses</a><br />
+  <hr />
   <h2>Orders history</h2>
 
-  {% paginate customer.orders by 20 %}
-    {%- if customer.orders.size > 0 -%}
-      <table role="table">
-        <caption class="visually-hidden">
-          Orders history
-        </caption>
-        <thead role="rowgroup">
+  <html-fetcher id="html-fetcher-orders-pagination-{{ section.id }}">
+    {% paginate customer.orders by 5 %}
+      {%- if customer.orders.size > 0 -%}
+        <table role="table">
+          <caption class="visually-hidden">
+            Orders history
+          </caption>
+          <thead role="rowgroup">
           <tr role="row">
             <th id="ColumnOrder" scope="col" role="columnheader">Order number</th>
             <th id="ColumnDate" scope="col" role="columnheader">Order date</th>
@@ -20,8 +21,8 @@
             <th id="ColumnFulfillment" scope="col" role="columnheader">Fulfillment Status</th>
             <th id="ColumnTotal" scope="col" role="columnheader">Total</th>
           </tr>
-        </thead>
-        <tbody role="rowgroup">
+          </thead>
+          <tbody role="rowgroup">
           {%- for order in customer.orders -%}
             <tr role="row">
               <td
@@ -59,50 +60,64 @@
               </td>
             </tr>
           {%- endfor -%}
-        </tbody>
-      </table>
-    {%- else -%}
-      <p>No orders</p>
-    {%- endif -%}
-    <br>
-    {%- if paginate.pages > 1 -%}
-      {%- if paginate.parts.size > 0 -%}
-        <nav role="navigation" aria-label="Pagination">
-          <ul role="list">
-            {%- if paginate.previous -%}
-              <li>
-                <a href="{{ paginate.previous.url }}" aria-label="Previous page">Previous</a>
-              </li>
-            {%- endif -%}
-
-            {%- for part in paginate.parts -%}
-              <li>
-                {%- if part.is_link -%}
-                  <a href="{{ part.url }}" aria-label="Page number {{ part.title }}">
-                    {{- part.title -}}
+          </tbody>
+        </table>
+      {%- else -%}
+        <p>No orders</p>
+      {%- endif -%}
+      <br>
+      {%- if paginate.pages > 1 -%}
+        {%- if paginate.parts.size > 0 -%}
+          <nav role="navigation" aria-label="Pagination">
+            <ul role="list">
+              {%- if paginate.previous -%}
+                <li>
+                  <a
+                    href="{{ paginate.previous.url }}"
+                    data-html-fetcher-link="{{ paginate.previous.url }}&section_id={{ section.id }}"
+                    aria-label="Previous page">
+                    Previous
                   </a>
-                {%- else -%}
-                  {%- if part.title == paginate.current_page -%}
-                    <span aria-current="page" aria-label="Page number {{ part.title }}">
+                </li>
+              {%- endif -%}
+
+              {%- for part in paginate.parts -%}
+                <li>
+                  {%- if part.is_link -%}
+                    <a
+                      href="{{ part.url }}"
+                      data-html-fetcher-link="{{ part.url }}&section_id={{ section.id }}"
+                      aria-label="Page number {{ part.title }}">
+                      {{- part.title -}}
+                    </a>
+                  {%- else -%}
+                    {%- if part.title == paginate.current_page -%}
+                      <span aria-current="page" aria-label="Page number {{ part.title }}">
                       {{- part.title -}}
                     </span>
-                  {%- else -%}
-                    <span>{{ part.title }}</span>
+                    {%- else -%}
+                      <span>{{ part.title }}</span>
+                    {%- endif -%}
                   {%- endif -%}
-                {%- endif -%}
-              </li>
-            {%- endfor -%}
+                </li>
+              {%- endfor -%}
 
-            {%- if paginate.next -%}
-              <li>
-                <a href="{{ paginate.next.url }}" aria-label="Next page">Next</a>
-              </li>
-            {%- endif -%}
-          </ul>
-        </nav>
+              {%- if paginate.next -%}
+                <li>
+                  <a
+                    href="{{ paginate.next.url }}"
+                    data-html-fetcher-link="{{ paginate.next.url }}&section_id={{ section.id }}"
+                    aria-label="Next page">
+                    Next
+                  </a>
+                </li>
+              {%- endif -%}
+            </ul>
+          </nav>
+        {%- endif -%}
       {%- endif -%}
-    {%- endif -%}
-  {% endpaginate %}
+    {% endpaginate %}
+  </html-fetcher>
 </div>
 
 <div>

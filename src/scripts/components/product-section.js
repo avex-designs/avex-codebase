@@ -230,7 +230,7 @@ class ProductSection extends HTMLElement {
       $input.setAttribute("value", this.#variantId || "");
     });
 
-    this.#setLoadingClasses(false);
+    this.#showLoadingClasses(false);
     this.#showErrorMessages(false);
 
     if (!event.detail.isVariantChanged || this.#isHydration) return;
@@ -270,7 +270,7 @@ class ProductSection extends HTMLElement {
       $button.disabled = true;
     });
 
-    this.#setLoadingClasses(true);
+    this.#showLoadingClasses(true);
 
     try {
       const response = await fetch(url, {
@@ -281,18 +281,18 @@ class ProductSection extends HTMLElement {
 
       const html = await response.text();
       this.#changeHTML(html);
-      this.#setLoadingClasses(false);
+      this.#showLoadingClasses(false);
     } catch (error) {
       if (error.name !== "AbortError") {
         this.#changeHTML(this.#latestHTML);
-        this.#setLoadingClasses(false);
+        this.#showLoadingClasses(false);
         this.#showErrorMessages(true);
         throw error;
       }
     }
   }
 
-  #setLoadingClasses(show) {
+  #showLoadingClasses(show) {
     this.querySelectorAll(`[${attributes.loadingClass}]`).forEach(
       ($element) => {
         const className = $element.getAttribute(attributes.loadingClass);
