@@ -68,14 +68,17 @@
               data-products-count="{{ totalProducts }} products"
             >
               {% paginate collection.products by 8 %}
-                <div class="collection-page__product-list">
-                  {% for product in collection.products %}
-                    {%- render 'product-card' product: product, hideHover: section.settings.show_secondary_image, withous_css: true -%}
-                  {% endfor %}
-                </div>
-                <div class="collection-page__product-list-pagination">
-                  {{ paginate | default_pagination }}
-                </div>
+                <load-more-pagination>
+                  {%- render 'load-more-pagination', type: 'load-prev', paginate: paginate -%}
+                  <div data-load-more-pagination-container="content" data-load-more-pagination-loading-class="my-js-loading">
+                    <component-loader>
+                      {% for product in collection.products %}
+                        {%- render 'product-card', product: product, hideHover: section.settings.show_secondary_image, withous_css: true -%}
+                      {% endfor %}
+                    </component-loader>
+                  </div>
+                  {%- render 'load-more-pagination', type: 'load-more', paginate: paginate -%}
+                </load-more-pagination>
               {% endpaginate %}
             </div>
           {%- endif -%}

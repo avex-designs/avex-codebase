@@ -18,6 +18,11 @@
       "button_text": "Notify me",
       "success_text": "Success",
       "email_placeholder": "Email"
+    },
+    "load_more_pagination": {
+      "load_prev": "Load previous",
+      "load_more": "Load more",
+      "current_state": "{{ current }} of {{ total }}"
     }
   },
   "cart": {

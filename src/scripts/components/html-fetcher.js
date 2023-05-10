@@ -142,7 +142,7 @@ class HTMLFetcher extends HTMLElement {
     }
     this.#abortController = new AbortController();
     try {
-      this.#showLoadingClasses(true);
+      this.#addLoadingClasses(true);
       const response = await fetch(this.#url, {
         signal: this.#abortController.signal,
       });
@@ -171,15 +171,15 @@ class HTMLFetcher extends HTMLElement {
         throw error;
       }
     }
-    this.#showLoadingClasses(false);
+    this.#addLoadingClasses(false);
   }
 
-  #showLoadingClasses(show) {
+  #addLoadingClasses(add) {
     this.querySelectorAll(`[${attributes.loadingClass}]`).forEach(
       ($element) => {
         const className = $element.getAttribute(attributes.loadingClass);
         if (className) {
-          if (show) $element.classList.add(className);
+          if (add) $element.classList.add(className);
           else $element.classList.remove(className);
         }
       }
