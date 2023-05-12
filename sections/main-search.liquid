@@ -75,7 +75,7 @@
           {% paginate search.results by 8 %}
             <load-more-pagination>
               {%- render 'load-more-pagination', type: 'load-prev', paginate: paginate -%}
-              <div data-load-more-pagination-container="content"
+              <div data-load-more-pagination-content
                    data-load-more-pagination-loading-class="my-js-loading">
                 <component-loader>
                   {%- for item in search.results -%}

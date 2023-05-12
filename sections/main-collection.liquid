@@ -70,7 +70,7 @@
               {% paginate collection.products by 8 %}
                 <load-more-pagination>
                   {%- render 'load-more-pagination', type: 'load-prev', paginate: paginate -%}
-                  <div data-load-more-pagination-container="content" data-load-more-pagination-loading-class="my-js-loading">
+                  <div data-load-more-pagination-content data-load-more-pagination-loading-class="my-js-loading">
                     <component-loader>
                       {% for product in collection.products %}
                         {%- render 'product-card', product: product, hideHover: section.settings.show_secondary_image, withous_css: true -%}

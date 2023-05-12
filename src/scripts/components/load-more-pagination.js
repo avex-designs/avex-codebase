@@ -1,10 +1,10 @@
 const ELEMENT_NAME = "load-more-pagination";
 const SHOPIFY_SECTION_PREFIX = "shopify-section-";
-const LOAD_MORE_CONTAINER_TYPE = "load-more";
-const LOAD_PREV_CONTAINER_TYPE = "load-prev";
-const CONTENT_CONTAINER_TYPE = "content";
+const LOAD_MORE_TYPE = "load-more";
+const LOAD_PREV_TYPE = "load-prev";
 
 const attributes = {
+  content: `data-${ELEMENT_NAME}-content`,
   container: `data-${ELEMENT_NAME}-container`,
   loadingClass: `data-${ELEMENT_NAME}-loading-class`,
   link: `data-${ELEMENT_NAME}-link`,
@@ -18,22 +18,22 @@ class LoadMorePagination extends HTMLElement {
   }
 
   #addEventListeners() {
-    const loadMoreLinkQuery = `[${attributes.container}="${LOAD_MORE_CONTAINER_TYPE}"] [${attributes.link}]`;
-    const loadPrevLinkQuery = `[${attributes.container}="${LOAD_PREV_CONTAINER_TYPE}"] [${attributes.link}]`;
+    const loadMoreLinkQuery = `[${attributes.container}="${LOAD_MORE_TYPE}"] [${attributes.link}]`;
+    const loadPrevLinkQuery = `[${attributes.container}="${LOAD_PREV_TYPE}"] [${attributes.link}]`;
     this.querySelectorAll(`${loadPrevLinkQuery}, ${loadMoreLinkQuery}`).forEach(
       ($link) => {
-        const containerType = $link
+        const linkContainerType = $link
           .closest(`[${attributes.container}`)
           .getAttribute(attributes.container);
         $link.addEventListener("click", (event) => {
           event.preventDefault();
-          this.#fetch($link.href, containerType);
+          this.#fetch($link.href, linkContainerType);
         });
       }
     );
   }
 
-  #fetch(url, linkContainerType) {
+  #fetch(url, requestType) {
     if (this.#isLoading) return;
     const requestURL = new URL(url, window.location.origin);
     const $section = this.closest(`[id^="${SHOPIFY_SECTION_PREFIX}"]`);
@@ -43,7 +43,7 @@ class LoadMorePagination extends HTMLElement {
       );
     const sectionId = $section.id.replace(SHOPIFY_SECTION_PREFIX, "");
 
-    if (linkContainerType === LOAD_MORE_CONTAINER_TYPE) {
+    if (requestType === LOAD_MORE_TYPE) {
       window.history.pushState(
         Object.fromEntries(requestURL.searchParams),
         "",
@@ -53,19 +53,19 @@ class LoadMorePagination extends HTMLElement {
     requestURL.search = requestURL.search + `&section_id=${sectionId}`;
 
     this.#isLoading = true;
-    this.#addLoadingClasses(this.#isLoading, linkContainerType);
+    this.#addLoadingClasses(this.#isLoading, requestType);
     fetch(requestURL)
       .then((response) => response.text())
       .then((html) => {
-        this.#render(html, linkContainerType);
+        this.#render(html, requestType);
       })
       .finally(() => {
         this.#isLoading = false;
-        this.#addLoadingClasses(this.#isLoading, linkContainerType);
+        this.#addLoadingClasses(this.#isLoading, requestType);
       });
   }
 
-  #addLoadingClasses(add, linkContainerType) {
+  #addLoadingClasses(add, requestType) {
     this.querySelectorAll(`[${attributes.loadingClass}]`).forEach(
       ($element) => {
         let elementLoadingType = "";
@@ -82,7 +82,7 @@ class LoadMorePagination extends HTMLElement {
         if (className) {
           if (
             add &&
-            (!elementLoadingType || elementLoadingType === linkContainerType)
+            (!elementLoadingType || elementLoadingType === requestType)
           )
             $element.classList.add(className);
           else $element.classList.remove(className);
@@ -93,35 +93,39 @@ class LoadMorePagination extends HTMLElement {
 
   #render(html, linkContainerType) {
     const receivedDOM = new DOMParser().parseFromString(html, "text/html");
-    document
-      .querySelectorAll(`[${attributes.container}]`)
-      .forEach(($container) => {
-        const containerType = $container.getAttribute(attributes.container);
-        if (!containerType) return;
-        const $receivedContainer = receivedDOM.querySelector(
-          `[${attributes.container}="${containerType}"]`
-        );
-        if (!$receivedContainer) return;
+    this.querySelectorAll(`[${attributes.container}]`).forEach(($container) => {
+      const containerType = $container.getAttribute(attributes.container);
+      if (!containerType) return;
+      const $receivedContainer = receivedDOM.querySelector(
+        `[${attributes.container}="${containerType}"]`
+      );
+      if (!$receivedContainer) return;
 
-        if (
-          (linkContainerType === LOAD_MORE_CONTAINER_TYPE &&
-            containerType === LOAD_MORE_CONTAINER_TYPE) ||
-          (linkContainerType === LOAD_PREV_CONTAINER_TYPE &&
-            containerType === LOAD_PREV_CONTAINER_TYPE)
-        ) {
-          $container.innerHTML = $receivedContainer.innerHTML;
-          return;
-        }
+      if (
+        (linkContainerType === LOAD_MORE_TYPE &&
+          containerType === LOAD_MORE_TYPE) ||
+        (linkContainerType === LOAD_PREV_TYPE &&
+          containerType === LOAD_PREV_TYPE)
+      ) {
+        $container.innerHTML = $receivedContainer.innerHTML;
+      }
+    });
 
-        if (containerType === CONTENT_CONTAINER_TYPE) {
-          $container.insertAdjacentHTML(
-            linkContainerType === LOAD_PREV_CONTAINER_TYPE
-              ? "afterbegin"
-              : "beforeend",
-            $receivedContainer.innerHTML
-          );
-        }
-      });
+    const $content = this.querySelector(`[${attributes.content}]`);
+    const $receivedContent = receivedDOM.querySelector(
+      `[${attributes.content}]`
+    );
+    if ($content && $receivedContent) {
+      $content.insertAdjacentHTML(
+        linkContainerType === LOAD_PREV_TYPE ? "afterbegin" : "beforeend",
+        $receivedContent.innerHTML
+      );
+    } else {
+      console.warn(
+        `[load-more-pagination] [The ${attributes.content} isn't found on the page or in the ajax response]`
+      );
+    }
+
     this.#addEventListeners();
   }
 }
