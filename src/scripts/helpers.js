@@ -1,10 +1,20 @@
-export function findAncestor(el, sel) {
-  while (
-    (el = el.parentElement) &&
-    !(el.matches || el.matchesSelector).call(el, sel)
-  );
-  return el;
-}
+export const getShopifySection = ($element) => {
+  const sectionPrefix = "shopify-section-";
+  const $section = $element.closest(`[id^="${sectionPrefix}"]`);
+  if (!$section) return [null, null];
+  const sectionId = $section.id.replace(sectionPrefix, "");
+  return [sectionId, $section];
+};
+
+export const toggleClassFromAttribute = ($context, attributeName, on) => {
+  $context.querySelectorAll(`[${attributeName}]`).forEach(($element) => {
+    const className = $element.getAttribute(attributeName);
+    if (className) {
+      if (on) $element.classList.add(className);
+      else $element.classList.remove(className);
+    }
+  });
+};
 
 export const isInViewport = (elem) => {
   const bounding = elem && elem.getBoundingClientRect();

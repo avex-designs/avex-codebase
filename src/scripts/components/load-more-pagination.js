@@ -1,5 +1,6 @@
+import { getShopifySection } from "../helpers";
+
 const ELEMENT_NAME = "load-more-pagination";
-const SHOPIFY_SECTION_PREFIX = "shopify-section-";
 const LOAD_MORE_TYPE = "load-more";
 const LOAD_PREV_TYPE = "load-prev";
 
@@ -36,12 +37,11 @@ class LoadMorePagination extends HTMLElement {
   #fetch(url, requestType) {
     if (this.#isLoading) return;
     const requestURL = new URL(url, window.location.origin);
-    const $section = this.closest(`[id^="${SHOPIFY_SECTION_PREFIX}"]`);
-    if (!$section)
+    const [sectionId] = getShopifySection(this);
+    if (!sectionId)
       throw new Error(
         "[load-more-pagination] [The component must be within a Shopify section]"
       );
-    const sectionId = $section.id.replace(SHOPIFY_SECTION_PREFIX, "");
 
     if (requestType === LOAD_MORE_TYPE) {
       window.history.pushState(

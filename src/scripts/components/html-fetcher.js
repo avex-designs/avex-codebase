@@ -64,6 +64,8 @@
 //   });
 // </script>
 
+import { toggleClassFromAttribute } from "../helpers";
+
 const elementName = "html-fetcher";
 const loadingTypes = {
   EAGER: "eager",
@@ -142,7 +144,7 @@ class HTMLFetcher extends HTMLElement {
     }
     this.#abortController = new AbortController();
     try {
-      this.#addLoadingClasses(true);
+      this.#toggleLoadingClasses(true);
       const response = await fetch(this.#url, {
         signal: this.#abortController.signal,
       });
@@ -171,19 +173,11 @@ class HTMLFetcher extends HTMLElement {
         throw error;
       }
     }
-    this.#addLoadingClasses(false);
+    this.#toggleLoadingClasses(false);
   }
 
-  #addLoadingClasses(add) {
-    this.querySelectorAll(`[${attributes.loadingClass}]`).forEach(
-      ($element) => {
-        const className = $element.getAttribute(attributes.loadingClass);
-        if (className) {
-          if (add) $element.classList.add(className);
-          else $element.classList.remove(className);
-        }
-      }
-    );
+  #toggleLoadingClasses(on) {
+    toggleClassFromAttribute(this, attributes.loadingClass, on);
   }
 }
 

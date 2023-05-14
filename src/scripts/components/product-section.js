@@ -1,3 +1,5 @@
+import { toggleClassFromAttribute } from "../helpers";
+
 const attributes = {
   json: "data-product-section-json",
   area: "data-product-section-area",
@@ -230,7 +232,7 @@ class ProductSection extends HTMLElement {
       $input.setAttribute("value", this.#variantId || "");
     });
 
-    this.#showLoadingClasses(false);
+    this.#toggleLoadingClasses(false);
     this.#showErrorMessages(false);
 
     if (!event.detail.isVariantChanged || this.#isHydration) return;
@@ -270,7 +272,7 @@ class ProductSection extends HTMLElement {
       $button.disabled = true;
     });
 
-    this.#showLoadingClasses(true);
+    this.#toggleLoadingClasses(true);
 
     try {
       const response = await fetch(url, {
@@ -281,27 +283,19 @@ class ProductSection extends HTMLElement {
 
       const html = await response.text();
       this.#changeHTML(html);
-      this.#showLoadingClasses(false);
+      this.#toggleLoadingClasses(false);
     } catch (error) {
       if (error.name !== "AbortError") {
         this.#changeHTML(this.#latestHTML);
-        this.#showLoadingClasses(false);
+        this.#toggleLoadingClasses(false);
         this.#showErrorMessages(true);
         throw error;
       }
     }
   }
 
-  #showLoadingClasses(show) {
-    this.querySelectorAll(`[${attributes.loadingClass}]`).forEach(
-      ($element) => {
-        const className = $element.getAttribute(attributes.loadingClass);
-        if (className) {
-          if (show) $element.classList.add(className);
-          else $element.classList.remove(className);
-        }
-      }
-    );
+  #toggleLoadingClasses(on) {
+    toggleClassFromAttribute(this, attributes.loadingClass, on);
   }
 
   #showErrorMessages(show) {

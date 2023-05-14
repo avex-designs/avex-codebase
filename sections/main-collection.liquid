@@ -12,6 +12,8 @@
   endif
 -%}
 
+{%- render 'facets' -%}
+
 <div class="collection-page">
   <section class="collection-page__header">
     <div class="container" style="color: {{ section.settings.collection_text_color }};">
@@ -33,7 +35,7 @@
           {%- if section.settings.enable_sorting -%}
             <div class="collection-page__sort-imitator">
               <label for="SortBy-imitator">Sort by: </label>
-              <select id="SortBy-imitator">
+              <select id="SortBy-imitator" form="test" data-facets-form-input>
                 {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
                 {% for option in collection.sort_options %}
                   <option
@@ -51,7 +53,7 @@
         </div>
       </div>
       <div class="collection-page__products">
-        {%- render 'collection-filter' -%}
+
         <div id="ProductsList" data-id="{{ section.id }}">
           {%- if collection.products.size == 0 -%}
             <div

@@ -1,0 +1,115 @@
+<facets-form>
+  <form>
+    {%- for filter in collection.filters -%}
+      {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+      {% case filter.type %}
+        {% when 'list' %}
+          <div>
+            <div>
+              <div>
+                {{ filter.label | escape }}
+                {% if filter.active_values.size > 0 %}({{ filter.active_values.size }}){% endif %}
+              </div>
+              {% if filter.active_values.size > 0 -%}
+                <filter-reset class="reset"><a href="{{ filter.url_to_remove }}">clear</a></filter-reset>
+              {%- endif %}
+            </div>
+            <div data-facets-form-content="filter-block-desktop-{{ forloop.index }}">
+              <ul>
+                {%- for value in filter.values -%}
+                  <li>
+                    <input
+                      type="checkbox"
+                      name="{{ value.param_name }}"
+                      data-facets-form-input
+                      value="{{ value.value }}"
+                      id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                      {% if value.active %}
+                        checked
+                      {% endif %}
+                      {% if value.count == 0 and value.active == false %}
+                        disabled
+                      {% endif %}
+                    >
+                    <label
+                      for="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                    >
+                      {{ value.label | escape }} ({{ value.count }})
+                    </label>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          </div>
+        {% when 'price_range' %}
+          {% liquid
+            assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+            assign uses_comma_decimals = false
+            if currencies_using_comma_decimals contains cart.currency.iso_code
+              assign uses_comma_decimals = true
+            endif
+          %}
+          <div>
+            <div class="summary">
+              <div class="title">{{ filter.label | escape }}</div>
+              {% if filter.active -%}
+                <filter-reset class="reset"><a href="{{ filter.url_to_remove }}">clear</a></filter-reset>
+              {%- endif %}
+            </div>
+            <div data-facets-form-content="filter-block-desktop-{{ forloop.index }}">
+              <div>
+                <div>
+                  <input
+                    name="{{ filter.min_value.param_name }}"
+                    data-facets-form-input
+                    id="Filter-{{ filter.label | escape }}-GTE"
+                    {%- if filter.min_value.value -%}
+                      {%- if uses_comma_decimals -%}
+                        value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                      {%- else -%}
+                        value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                      {%- endif %}
+                    {%- endif -%}
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                    {%- if uses_comma_decimals -%}
+                      max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                    {%- else -%}
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                    {% endif %}
+                  >
+                  <label for="Filter-{{ filter.label | escape }}-GTE">from:</label>
+                </div>
+                <span class="range-sign">-</span>
+                <div class="form__field">
+                  <input
+                    name="{{ filter.max_value.param_name }}"
+                    data-facets-form-input
+                    id="Filter-{{ filter.label | escape }}-LTE"
+                    {%- if filter.max_value.value -%}
+                      {%- if uses_comma_decimals -%}
+                        value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                      {%- else -%}
+                        value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                      {%- endif %}
+                    {%- endif -%}
+                    type="number"
+                    min="0"
+                    {%- if uses_comma_decimals -%}
+                      placeholder="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                      max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                    {%- else -%}
+                      placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                    {% endif %}
+                  >
+                  <label for="Filter-{{ filter.label | escape }}-LTE">to:</label>
+                </div>
+              </div>
+            </div>
+          </div>
+      {% endcase %}
+    {%- endfor -%}
+  </form>
+</facets-form>

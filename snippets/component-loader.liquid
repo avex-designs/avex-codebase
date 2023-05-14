@@ -3,6 +3,7 @@
 	window.components = {
   "accordion-block": "{{ 'js-component-accordion-block.min.js' | asset_url }}",
   "country-province-selector": "{{ 'js-component-country-province-selector.min.js' | asset_url }}",
+  "facets-form": "{{ 'js-component-facets-form.min.js' | asset_url }}",
   "filter-and-sort-form": "{{ 'js-component-filter-and-sort-form.min.js' | asset_url }}",
   "filter-reset": "{{ 'js-component-filter-reset.min.js' | asset_url }}",
   "html-fetcher": "{{ 'js-component-html-fetcher.min.js' | asset_url }}",
@@ -53,5 +54,8 @@
       });
     }
   }
+  customElements.define('component-loader', ComponentLoader);
+</script>
+}
   customElements.define('component-loader', ComponentLoader);
 </script>
