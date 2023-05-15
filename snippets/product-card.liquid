@@ -12,6 +12,7 @@
   {{ product.title | escape }}
 </div>
 {% endcomment %}
+
 {%- liquid
   unless without_css
     render 'stylesheet', name: 'product-card'

@@ -5,7 +5,8 @@
         <a
           href="{{ paginate.previous.url }}"
           data-load-more-pagination-link
-          data-load-more-pagination-loading-class="{{ type }}|my-js-loading">
+          data-load-more-pagination-loading-class="my-button-disabled-class"
+          data-load-more-pagination-loading-prev-class="my-button-loading-class">
           {{ 'general.load_more_pagination.load_prev' | t }}
         </a>
       </div>
@@ -18,7 +19,8 @@
         <a
           href="{{ paginate.next.url }}"
           data-load-more-pagination-link
-          data-load-more-pagination-loading-class="{{ type }}|my-js-loading">
+          data-load-more-pagination-loading-class="my-button-disabled-class"
+          data-load-more-pagination-loading-more-class="my-button-loading-class">
           {{ 'general.load_more_pagination.load_more' | t }}
         </a>
       </div>

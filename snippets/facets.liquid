@@ -1,20 +1,38 @@
+{%- liquid
+  if results.url
+    assign results_url = results.url
+  else
+    assign terms = results.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+-%}
+
 <facets-form>
   <form>
-    {%- for filter in collection.filters -%}
-      {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+    {%- if results.terms -%}
+      <input type="hidden" name="q" value="{{ results.terms | escape }}">
+      <input name="options[prefix]" type="hidden" value="last">
+    {%- endif -%}
+
+    {% if results.current_vendor or results.current_type %}
+      <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+    {% endif %}
+
+    {%- for filter in results.filters -%}
+      <hr />
       {% case filter.type %}
-        {% when 'list' %}
+        {% when 'boolean', 'list' %}
           <div>
             <div>
-              <div>
-                {{ filter.label | escape }}
-                {% if filter.active_values.size > 0 %}({{ filter.active_values.size }}){% endif %}
-              </div>
-              {% if filter.active_values.size > 0 -%}
-                <filter-reset class="reset"><a href="{{ filter.url_to_remove }}">clear</a></filter-reset>
-              {%- endif %}
+              {{ filter.label | escape }}
             </div>
-            <div data-facets-form-content="filter-block-desktop-{{ forloop.index }}">
+            <div data-facets-form-content="filter-block-{{ forloop.index }}">
+              <div>
+                {{ filter.active_values.size }} selected
+                {% if filter.active_values.size > 0 -%}
+                  <a href="{{ filter.url_to_remove }}" data-facets-form-link>clear</a>
+                {%- endif %}
+              </div>
               <ul>
                 {%- for value in filter.values -%}
                   <li>
@@ -23,7 +41,7 @@
                       name="{{ value.param_name }}"
                       data-facets-form-input
                       value="{{ value.value }}"
-                      id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                      id="filter-{{ filter.label | escape }}-{{ forloop.index }}"
                       {% if value.active %}
                         checked
                       {% endif %}
@@ -32,7 +50,7 @@
                       {% endif %}
                     >
                     <label
-                      for="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                      for="filter-{{ filter.label | escape }}-{{ forloop.index }}"
                     >
                       {{ value.label | escape }} ({{ value.count }})
                     </label>
@@ -51,18 +69,19 @@
           %}
           <div>
             <div class="summary">
-              <div class="title">{{ filter.label | escape }}</div>
-              {% if filter.active -%}
-                <filter-reset class="reset"><a href="{{ filter.url_to_remove }}">clear</a></filter-reset>
-              {%- endif %}
+              {{ filter.label | escape }}
             </div>
-            <div data-facets-form-content="filter-block-desktop-{{ forloop.index }}">
+            <div data-facets-form-content="filter-block-{{ forloop.index }}">
+              {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                <a href="{{ filter.url_to_remove }}" data-facets-form-link>clear</a>
+              {%- endif -%}
               <div>
                 <div>
+                  <label for="filter-{{ filter.label | escape }}-gte">From:</label>
                   <input
                     name="{{ filter.min_value.param_name }}"
                     data-facets-form-input
-                    id="Filter-{{ filter.label | escape }}-GTE"
+                    id="filter-{{ filter.label | escape }}-gte"
                     {%- if filter.min_value.value -%}
                       {%- if uses_comma_decimals -%}
                         value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
@@ -79,14 +98,13 @@
                       max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                     {% endif %}
                   >
-                  <label for="Filter-{{ filter.label | escape }}-GTE">from:</label>
                 </div>
-                <span class="range-sign">-</span>
-                <div class="form__field">
+                <div>
+                  <label for="filter-{{ filter.label | escape }}-lte">To:</label>
                   <input
                     name="{{ filter.max_value.param_name }}"
                     data-facets-form-input
-                    id="Filter-{{ filter.label | escape }}-LTE"
+                    id="filter-{{ filter.label | escape }}-lte"
                     {%- if filter.max_value.value -%}
                       {%- if uses_comma_decimals -%}
                         value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
@@ -104,12 +122,48 @@
                       max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                     {% endif %}
                   >
-                  <label for="Filter-{{ filter.label | escape }}-LTE">to:</label>
                 </div>
               </div>
             </div>
           </div>
       {% endcase %}
     {%- endfor -%}
+    <hr />
   </form>
 </facets-form>
+
+{%- capture active_filters_html -%}
+  {%- for filter in results.filters -%}
+    {%- for value in filter.active_values -%}
+      <a href="{{ value.url_to_remove }}" data-facets-form-link>
+        {{ filter.label }}: {{ value.label | escape }}
+      </a>
+    {%- endfor -%}
+    {% if filter.type == 'price_range' %}
+      {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+        <a href="{{ filter.url_to_remove }}" data-facets-form-link>
+          {%- if filter.min_value.value -%}
+            {{ filter.min_value.value | money }}
+          {%- else -%}
+            {{ 0 | money }}
+          {%- endif -%}
+          —
+          {%- if filter.max_value.value -%}
+            {{ filter.max_value.value | money }}
+          {%- else -%}
+            {{ filter.range_max | money }}
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+    {% endif %}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign active_filters_html = active_filters_html | strip -%}
+<div data-facets-form-content="active-filters">
+  {%- if active_filters_html != '' -%}
+    {{ active_filters_html }}
+    <a href="{{ results_url }}" data-facets-form-link>
+      Clear All
+    </a>
+  {%- endif -%}
+</div>

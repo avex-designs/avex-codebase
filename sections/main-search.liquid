@@ -70,51 +70,38 @@
         {%- endif -%}
       {% endcomment %}
 
-      {%- unless search.results.size == 0 and search.filters != empty -%}
-        <section class="search__results">
-          {% paginate search.results by 8 %}
-            <load-more-pagination>
-              {%- render 'load-more-pagination', type: 'load-prev', paginate: paginate -%}
-              <div data-load-more-pagination-content
-                   data-load-more-pagination-loading-class="my-js-loading">
-                <component-loader>
-                  {%- for item in search.results -%}
-                    <div class="search-result-list__item {{ item.object_type }}">
-                      {%- case item.object_type -%}
-                        {%- when 'product' -%}
-                          <div class="card-badge">
-                            <span class="badge">{{ 'templates.search.product' | t }}</span>
-                          </div>
-                          {%- render 'product-card', product: item -%}
-                        {%- when 'article' -%}
-                          <div class="card-badge">
-                            <span class="badge">{{ 'templates.search.article' | t }}</span>
-                          </div>
-                          {%- render 'article-card', article: item, show_image: true, show_date: section.settings.article_show_date, show_author: section.settings.article_show_author -%}
-                        {%- when 'page' -%}
-                          <div class="card-badge">
-                            <span class="badge">{{ 'templates.search.page' | t }}</span>
-                          </div>
-                          <a href="{{ item.url }}" class="page-card">
-                            <div class="page-card__card">
-                              <div class="page-card__inner card">
-                                <div class="card__content">
-                                  <h2 class="card__title h3">{{ item.title | escape }}</h2>
-                                  <p class="card__text">{{ item.content | strip_html | truncatewords: 30 }}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                      {%- endcase -%}
-                    </div>
-                  {%- endfor -%}
-                </component-loader>
-              </div>
-              {%- render 'load-more-pagination', type: 'load-more', paginate: paginate -%}
-            </load-more-pagination>
-          {% endpaginate %}
-        </section>
-      {%- endunless -%}
+      <div data-facets-form-content="product-list">
+        {%- unless search.results.size == 0 and search.filters != empty -%}
+          <div>
+            {% paginate search.results by 8 %}
+              <load-more-pagination>
+                {%- render 'load-more-pagination', type: 'load-prev', paginate: paginate -%}
+                <div data-load-more-pagination-content
+                     data-load-more-pagination-loading-class="my-js-loading">
+                  <component-loader>
+                    {%- for item in search.results -%}
+                      <div class="search-result-list__item {{ item.object_type }}">
+                        {%- case item.object_type -%}
+                          {%- when 'product' -%}
+                            {%- render 'product-card', product: item -%}
+                          {%- when 'article' -%}
+                            {%- render 'article-card', article: item -%}
+                          {%- when 'page' -%}
+                            <a href="{{ item.url }}">
+                              <div>{{ item.title | escape }}</div>
+                              <div>{{ item.content | strip_html | truncatewords: 30 }}</div>
+                            </a>
+                        {%- endcase -%}
+                      </div>
+                    {%- endfor -%}
+                  </component-loader>
+                </div>
+                {%- render 'load-more-pagination', type: 'load-more', paginate: paginate -%}
+              </load-more-pagination>
+            {% endpaginate %}
+          </div>
+        {%- endunless -%}
+      </div>
     {%- endif -%}
   </div>
 </div>

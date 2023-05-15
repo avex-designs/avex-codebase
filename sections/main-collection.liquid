@@ -1,157 +1,58 @@
-{%- style -%}
-  {%- render "css-collection.css" -%}
-{%- endstyle -%}
+{%- comment -%}
+Render product card styles in advance in order to avoid flickering when the content gets updated via ajax.
+TODO: consider using inline stylesheet if the first screen rendering is blocked by product card styles
+{%- endcomment -%}
 {%- render 'stylesheet', name: 'product-card' -%}
 
-<script src="{{ 'js-collection.min.js' | asset_url }}" defer="defer"></script>
-
 {%- liquid
-  assign totalProducts = collection.all_products_count
-  if collection.all_products_count > collection.products_count
-    assign totalProducts = collection.products_count
-  endif
+  assign collection_description = collection.description | strip | default: ''
 -%}
 
-{%- render 'facets' -%}
+<div>
+  <h1 class="title">{{- collection.title | escape -}}</h1>
+  {%- if collection_description != '' -%}
+    <div>{{ collection_description }}</div>
+  {%- endif -%}
+  {%- if collection.image -%}
+    <image-loader>
+      {{- collection.image | image_url: width: collection.image.width | image_tag -}}
+    </image-loader>
+  {%- endif -%}
+</div>
 
-<div class="collection-page">
-  <section class="collection-page__header">
-    <div class="container" style="color: {{ section.settings.collection_text_color }};">
-      <h1 class="title">{{- collection.title | escape -}}</h1>
-      {%- if section.settings.show_collection_description -%}
-        <div class="description">{{ collection.description }}</div>
-      {%- endif -%}
-      <span class="total-products" id="ProductsCount"> {{ totalProducts }} products </span>
-    </div>
-  </section>
+<div>
+  {%- render 'facets', results: collection -%}
+</div>
 
-  <section class="collection-page__body">
-    <div class="container">
-      <div class="filters-panel grid-container">
-        <div class="grid-item">
-          <button class="filter-toggle-button" data-filters-toggler>+ Filters</button>
-        </div>
-        <div class="grid-item">
-          {%- if section.settings.enable_sorting -%}
-            <div class="collection-page__sort-imitator">
-              <label for="SortBy-imitator">Sort by: </label>
-              <select id="SortBy-imitator" form="test" data-facets-form-input>
-                {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
-                {% for option in collection.sort_options %}
-                  <option
-                    value="{{ option.value | escape }}"
-                    {% if option.value == sort_by %}
-                      selected="selected"
-                    {% endif %}
-                  >
-                    {{ option.name | escape }}
-                  </option>
+<div data-facets-form-content="products-list">
+  <component-loader>
+    {%- if collection.products.size == 0 -%}
+      <div>
+        NO PRODUCTS
+      </div>
+    {%- else -%}
+      <div>
+        {% paginate collection.products by 8 %}
+          <load-more-pagination>
+            {%- render 'load-more-pagination', type: 'load-prev', paginate: paginate -%}
+            <div data-load-more-pagination-content data-load-more-pagination-loading-class="my-loading-class">
+              <component-loader>
+                {% for product in collection.products %}
+                  {%- render 'product-card', product: product, withous_css: true -%}
                 {% endfor %}
-              </select>
+              </component-loader>
             </div>
-          {%- endif -%}
-        </div>
+            {%- render 'load-more-pagination', type: 'load-more', paginate: paginate -%}
+          </load-more-pagination>
+        {% endpaginate %}
       </div>
-      <div class="collection-page__products">
-
-        <div id="ProductsList" data-id="{{ section.id }}">
-          {%- if collection.products.size == 0 -%}
-            <div
-              class="products-list no-products"
-              data-products-list
-              data-products-count="{{ totalProducts }} products"
-            >
-              NO PRODUCTS
-            </div>
-          {%- else -%}
-            <div
-              class="collection-page__product-list-wrapper"
-              data-products-list
-              data-products-count="{{ totalProducts }} products"
-            >
-              {% paginate collection.products by 8 %}
-                <load-more-pagination>
-                  {%- render 'load-more-pagination', type: 'load-prev', paginate: paginate -%}
-                  <div data-load-more-pagination-content data-load-more-pagination-loading-class="my-js-loading">
-                    <component-loader>
-                      {% for product in collection.products %}
-                        {%- render 'product-card', product: product, hideHover: section.settings.show_secondary_image, withous_css: true -%}
-                      {% endfor %}
-                    </component-loader>
-                  </div>
-                  {%- render 'load-more-pagination', type: 'load-more', paginate: paginate -%}
-                </load-more-pagination>
-              {% endpaginate %}
-            </div>
-          {%- endif -%}
-        </div>
-      </div>
-    </div>
-  </section>
+    {%- endif -%}
+  </component-loader>
 </div>
 
 {% schema %}
 {
-  "name": "Product Collection",
-  "settings": [
-    {
-      "type": "range",
-      "id": "products_per_page",
-      "min": 8,
-      "max": 24,
-      "step": 4,
-      "default": 16,
-      "label": "Products per page"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_collection_description",
-      "default": false,
-      "label": "Show Collection Description"
-    },
-    {
-      "type": "color",
-      "id": "collection_text_color",
-      "label": "Text Color",
-      "default": "#000"
-    },
-    {
-      "type": "header",
-      "content": "Product details"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_secondary_image",
-      "default": false,
-      "label": "Show hover image"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_vendor",
-      "default": false,
-      "label": "Show vendor"
-    },
-    {
-      "type": "header",
-      "content": "Filter and Sorting"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_filtering",
-      "default": true,
-      "label": "Enable Filters"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_sorting",
-      "default": true,
-      "label": "Enable Sorting"
-    },
-    {
-      "type": "link_list",
-      "id": "tag_filters",
-      "label": "Tag Filters"
-    }
-  ]
+  "name": "Collection",
+  "settings": []
 }
 {% endschema %}

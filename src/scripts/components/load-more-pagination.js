@@ -1,4 +1,4 @@
-import { getShopifySection } from "../helpers";
+import { getShopifySection, toggleClassFromAttribute } from "../helpers";
 
 const ELEMENT_NAME = "load-more-pagination";
 const LOAD_MORE_TYPE = "load-more";
@@ -8,6 +8,8 @@ const attributes = {
   content: `data-${ELEMENT_NAME}-content`,
   container: `data-${ELEMENT_NAME}-container`,
   loadingClass: `data-${ELEMENT_NAME}-loading-class`,
+  loadingPrevClass: `data-${ELEMENT_NAME}-loading-prev-class`,
+  loadingMoreClass: `data-${ELEMENT_NAME}-loading-more-class`,
   link: `data-${ELEMENT_NAME}-link`,
 };
 
@@ -65,29 +67,17 @@ class LoadMorePagination extends HTMLElement {
       });
   }
 
-  #addLoadingClasses(add, requestType) {
-    this.querySelectorAll(`[${attributes.loadingClass}]`).forEach(
-      ($element) => {
-        let elementLoadingType = "";
-        let className = "";
-        const attrArr = (
-          $element.getAttribute(attributes.loadingClass) || ""
-        ).split("|");
-        if (attrArr.length > 1) {
-          elementLoadingType = attrArr[0];
-          className = attrArr[1];
-        } else {
-          className = attrArr[0];
-        }
-        if (className) {
-          if (
-            add &&
-            (!elementLoadingType || elementLoadingType === requestType)
-          )
-            $element.classList.add(className);
-          else $element.classList.remove(className);
-        }
-      }
+  #addLoadingClasses(on, requestType) {
+    toggleClassFromAttribute(this, attributes.loadingClass, on);
+    toggleClassFromAttribute(
+      this,
+      attributes.loadingPrevClass,
+      on && requestType === LOAD_PREV_TYPE
+    );
+    toggleClassFromAttribute(
+      this,
+      attributes.loadingMoreClass,
+      on && requestType === LOAD_MORE_TYPE
     );
   }
 

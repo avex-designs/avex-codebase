@@ -11,6 +11,7 @@ const ELEMENT_NAME = "facets-form";
 const attributes = {
   ajaxInput: `data-${ELEMENT_NAME}-input`,
   content: `data-${ELEMENT_NAME}-content`,
+  link: `data-${ELEMENT_NAME}-link`,
 };
 
 let responseCache = []; // [{url, html}, {url, html}]
@@ -24,6 +25,15 @@ window.addEventListener("popstate", (event) => {
     : searchParamsInitial;
   if (searchParams === searchParamsPrev) return;
   facetsChangeHandler(searchParams, false);
+});
+
+document.addEventListener("click", (event) => {
+  const $link = event.target.closest(`[${attributes.link}]`);
+  if (!$link) return;
+  const url = $link.href;
+  if (!url) return;
+  facetsChangeHandler(new URL(url).searchParams.toString());
+  event.preventDefault();
 });
 
 function facetsChangeHandler(searchParams, updateURLHash = true) {
@@ -59,6 +69,7 @@ function facetsChangeHandler(searchParams, updateURLHash = true) {
     else {
       abortController = new AbortController();
       toggleLoadingClasses(true);
+      disableTextInputs(true);
       fetch(url, { signal: abortController.signal })
         .then((response) => response.json())
         .then((data) => {
@@ -69,11 +80,17 @@ function facetsChangeHandler(searchParams, updateURLHash = true) {
           responseCache.push({ url, html });
           renderPage(html);
         })
-        .catch((e) => {
-          console.error(`[${ELEMENT_NAME}] [Section API request error]`, e);
-          window.location.href = `?${searchParams}`;
+        .catch((error) => {
+          if (error.name !== "AbortError") {
+            console.error(
+              `[${ELEMENT_NAME}] [Section API request error]`,
+              error
+            );
+            window.location.href = `?${searchParams}`;
+          }
         })
         .finally(() => {
+          disableTextInputs(false);
           toggleLoadingClasses(false);
         });
     }
@@ -88,6 +105,16 @@ function facetsChangeHandler(searchParams, updateURLHash = true) {
     console.error(e);
     window.location.href = `?${searchParams}`;
   }
+}
+
+function disableTextInputs(disable) {
+  document
+    .querySelectorAll(
+      `[${attributes.ajaxInput}][type="number"], [${attributes.ajaxInput}][type="number"]`
+    )
+    .forEach(($input) => {
+      $input.readOnly = disable;
+    });
 }
 
 function toggleLoadingClasses(on) {
