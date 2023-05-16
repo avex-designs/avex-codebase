@@ -28,22 +28,25 @@ TODO: consider using inline stylesheet if the first screen rendering is blocked 
   <component-loader>
     {%- if collection.products.size == 0 -%}
       <div>
-        NO PRODUCTS
+        [No products]
       </div>
     {%- else -%}
       <div>
         {% paginate collection.products by 8 %}
-          <load-more-pagination>
-            {%- render 'load-more-pagination', type: 'load-prev', paginate: paginate -%}
-            <div data-load-more-pagination-content data-load-more-pagination-loading-class="my-loading-class">
+          <infinite-paginate>
+            {%- render 'infinite-paginate', type: 'load-prev', paginate: paginate -%}
+            <div data-infinite-paginate-content data-infinite-paginate-loading-class="my-loading-class">
               <component-loader>
                 {% for product in collection.products %}
-                  {%- render 'product-card', product: product, withous_css: true -%}
+                  <hr />
+                  <div>
+                    {%- render 'product-card', product: product, without_css: true -%}
+                  </div>
                 {% endfor %}
               </component-loader>
             </div>
-            {%- render 'load-more-pagination', type: 'load-more', paginate: paginate -%}
-          </load-more-pagination>
+            {%- render 'infinite-paginate', type: 'load-more', paginate: paginate -%}
+          </infinite-paginate>
         {% endpaginate %}
       </div>
     {%- endif -%}

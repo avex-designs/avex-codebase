@@ -74,10 +74,10 @@
         {%- unless search.results.size == 0 and search.filters != empty -%}
           <div>
             {% paginate search.results by 8 %}
-              <load-more-pagination>
-                {%- render 'load-more-pagination', type: 'load-prev', paginate: paginate -%}
-                <div data-load-more-pagination-content
-                     data-load-more-pagination-loading-class="my-js-loading">
+              <infinite-paginate>
+                {%- render 'infinite-paginate', type: 'load-prev', paginate: paginate -%}
+                <div data-infinite-paginate-content
+                     data-infinite-paginate-loading-class="my-js-loading">
                   <component-loader>
                     {%- for item in search.results -%}
                       <div class="search-result-list__item {{ item.object_type }}">
@@ -96,8 +96,8 @@
                     {%- endfor -%}
                   </component-loader>
                 </div>
-                {%- render 'load-more-pagination', type: 'load-more', paginate: paginate -%}
-              </load-more-pagination>
+                {%- render 'infinite-paginate', type: 'load-more', paginate: paginate -%}
+              </infinite-paginate>
             {% endpaginate %}
           </div>
         {%- endunless -%}

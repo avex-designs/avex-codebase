@@ -1,26 +1,27 @@
 {%- render 'stylesheet', name: 'product' -%}
 
-{%- liquid 
-
-  assign current_variant = nil
+{%- comment -%}
+  Calculation the current_variant variable
+  TODO:
+  If you don't want to preselect a first available variant,
+  replace the line [assign current_variant = product.selected_or_first_available_variant]
+  with the following line: [assign current_variant = product.selected_variant]
+{%- endcomment -%}
+{%- liquid
+assign current_variant = nil
   if product.has_only_default_variant
     assign current_variant = product.variants[0]
   else
-    # TODO:
-    # What should happen if the variant ID is not passed in URL:
-    #
-    # 1. Automatically select the first available variant
-    # assign current_variant = product.selected_or_first_available_variant
-    #
-    # 2. Don't preselect any variant and let the user choose
-    assign current_variant = product.selected_variant
+    assign current_variant = product.selected_or_first_available_variant
   endif
-
-  # Use the unique product form ID to link input fields that are outside of the form
-  assign product_form_id = 'product-form-' | append: section.id
 -%}
 
-<product-section>
+{%- comment -%}
+  Use the unique product form ID to attach input fields that are outside the form
+{%- endcomment -%}
+{%- assign product_form_id = 'product-form-' | append: section.id -%}
+
+<product-section id="{{ section.id }}-{{ product.id }}-main">
   {%- render 'product-section-json', product: product, variant_id: current_variant.id, section_id: section.id, update_url: true -%}
 
   <div>
@@ -61,9 +62,9 @@
 
   <style type="text/css">
     /**
-     * TODO: 
+     * TODO:
      * This "style" block is to demonstrate 
-     * how the "data-product-section-loading" attribute works
+     * how the "data-product-section-loading-class" attribute works
      * 
      * Remove this on production site 
      * and replace the "my-loading-class" with appropriate one
@@ -72,7 +73,7 @@
       content: 'Loading'
     }
   </style>
-  <div data-product-section-loading="my-loading-class">
+  <div data-product-section-loading-class="my-loading-class">
 
     <div data-product-section-error hidden>
       {{ 'products.product_section_component.error' | t }}
@@ -99,7 +100,7 @@
               <label>
                 <input 
                   type="radio"
-                  name="{{ option.name | escape }}" {% comment %} TODO: create a safe name {% endcomment %}
+                  name="{{ section.id }}-{{ product.id }}-{{ option.name | escape }}"
                   value="{{ value | escape }}"
                   {% if current_variant and option.selected_value == value %}checked{% endif %}>
                 <span>{{ value | escape }}</span>
@@ -109,7 +110,7 @@
         {%- endfor -%}
       </div>
 
-      <div class="no-js-block">
+      <div class="no-js-show">
         <details data-product-section-area>
           <summary>
             {%- liquid 
@@ -135,7 +136,7 @@
     {%- endunless -%}
 
 
-    {%- form: 'product', product, id: product_form_id -%}
+    {%- form 'product', product, id: product_form_id -%}
 
       <input type="hidden" name="id" value="{{ current_variant.id }}">
 

@@ -110,7 +110,7 @@ function facetsChangeHandler(searchParams, updateURLHash = true) {
 function disableTextInputs(disable) {
   document
     .querySelectorAll(
-      `[${attributes.ajaxInput}][type="number"], [${attributes.ajaxInput}][type="number"]`
+      `[${attributes.ajaxInput}][type="number"], [${attributes.ajaxInput}][type="text"]`
     )
     .forEach(($input) => {
       $input.readOnly = disable;
@@ -126,17 +126,16 @@ function renderPage(html) {
   document.querySelectorAll(`[${attributes.content}]`).forEach(($content) => {
     const contentId = $content.getAttribute(attributes.content);
     if (!contentId)
-      console.error(
+      throw new Error(
         `[${ELEMENT_NAME}] [A "${attributes.content}" element doesn't have unique value]`
       );
     const $receivedContent = $receivedDocument.querySelector(
       `[${attributes.content}="${contentId}"]`
     );
     if (!$receivedContent) {
-      console.error(
+      throw new Error(
         `[${ELEMENT_NAME}] [A "${attributes.content}" element with "${contentId}" value isn't found in the section API response]`
       );
-      return;
     }
     $content.innerHTML = $receivedContent.innerHTML;
   });

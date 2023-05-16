@@ -1,6 +1,6 @@
 import { getShopifySection, toggleClassFromAttribute } from "../helpers";
 
-const ELEMENT_NAME = "load-more-pagination";
+const ELEMENT_NAME = "infinite-paginate";
 const LOAD_MORE_TYPE = "load-more";
 const LOAD_PREV_TYPE = "load-prev";
 
@@ -13,7 +13,7 @@ const attributes = {
   link: `data-${ELEMENT_NAME}-link`,
 };
 
-class LoadMorePagination extends HTMLElement {
+class InfinitePaginate extends HTMLElement {
   #isLoading = false;
 
   connectedCallback() {
@@ -42,7 +42,7 @@ class LoadMorePagination extends HTMLElement {
     const [sectionId] = getShopifySection(this);
     if (!sectionId)
       throw new Error(
-        "[load-more-pagination] [The component must be within a Shopify section]"
+        `[${ELEMENT_NAME}] [The component must be within a Shopify section]`
       );
 
     if (requestType === LOAD_MORE_TYPE) {
@@ -85,11 +85,17 @@ class LoadMorePagination extends HTMLElement {
     const receivedDOM = new DOMParser().parseFromString(html, "text/html");
     this.querySelectorAll(`[${attributes.container}]`).forEach(($container) => {
       const containerType = $container.getAttribute(attributes.container);
-      if (!containerType) return;
+      if (!containerType)
+        throw new Error(
+          `[${ELEMENT_NAME}] [A "${attributes.container}" element doesn't have an attribute value]`
+        );
       const $receivedContainer = receivedDOM.querySelector(
         `[${attributes.container}="${containerType}"]`
       );
-      if (!$receivedContainer) return;
+      if (!$receivedContainer)
+        throw new Error(
+          `[${ELEMENT_NAME}] [Corresponding element for [${attributes.container}="${containerType}"] isn't received in the AJAX response]`
+        );
 
       if (
         (linkContainerType === LOAD_MORE_TYPE &&
@@ -112,7 +118,7 @@ class LoadMorePagination extends HTMLElement {
       );
     } else {
       console.warn(
-        `[load-more-pagination] [The ${attributes.content} isn't found on the page or in the ajax response]`
+        `[${ELEMENT_NAME}] [The ${attributes.content} isn't found on the page or in the ajax response]`
       );
     }
 
@@ -120,4 +126,4 @@ class LoadMorePagination extends HTMLElement {
   }
 }
 
-customElements.define(ELEMENT_NAME, LoadMorePagination);
+customElements.define(ELEMENT_NAME, InfinitePaginate);
