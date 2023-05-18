@@ -7,13 +7,7 @@ You can insert here any critical styles, these will be loaded first as inline st
 :root,
 ::before,
 ::after {
-  // Colors
-  --color-blue: $color-blue;
-  --color-brown: $color-brown;
-
-  // Font family
-  --font-main: $font-main;
-  --font-extended: $font-extended;
+  // TODO: put global CSS vars here
 }
 
 html {

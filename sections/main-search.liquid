@@ -1,110 +1,94 @@
-{% render 'stylesheet', name: 'search' %}
+{%- comment -%}
+Render product card styles in advance in order to avoid flickering when the content gets updated via ajax.
+TODO: consider using inline stylesheet if the first screen rendering is blocked by product card styles
+{%- endcomment -%}
+{%- render 'stylesheet', name: 'product-card' -%}
 
-<script src="{{ 'search-js.min.js' | asset_url }}" defer="defer"></script>
+<h1>
+  {%- if search.performed -%}
+    [Search results for “{{ search.terms | escape }}”]
+  {%- else -%}
+    [Search]
+  {%- endif -%}
+</h1>
 
-<div class="search {% unless search.performed and search.results_count > 0 %}search--empty{% endunless %}">
-  <div class="container">
-    <section class="search__header">
-      <h1 class="h3">{{ 'templates.search.title' | t }}</h1>
-      <predictive-search data-loading-text="{{ 'accessibility.loading' | t }}">
-        <form action="{{ routes.search_url }}" method="get" role="search" class="search form">
-          <div class="form__field">
-            <input
-              class="search__input"
-              id="Search-In-Template"
-              type="search"
-              name="q"
-              value="{{ search.terms | escape }}"
-              placeholder="{{ 'general.search.search' | t }}"
-              role="combobox"
-              aria-expanded="false"
-              aria-owns="predictive-search-results-list"
-              aria-controls="predictive-search-results-list"
-              aria-haspopup="listbox"
-              aria-autocomplete="list"
-              autocorrect="off"
-              autocomplete="off"
-              autocapitalize="off"
-              spellcheck="false"
-            >
-            <label for="Search-In-Template">{{ 'general.search.search' | t }}</label>
-            <input name="options[prefix]" type="hidden" value="last">
+<form action="{{ routes.search_url }}" method="get" role="search">
+  <input name="options[prefix]" type="hidden" value="last">
+  <div>
+    <label for="main-search-input">[Search]</label>
+    <input
+      id="main-search-input"
+      type="search"
+      name="q"
+      value="{{ search.terms | escape }}"
+      placeholder="[Search]"
+      {%- comment -%}
+        TODO: uncomment the following attributes in case of predictive search
+        role="combobox"
+        aria-expanded="false"
+        aria-owns="predictive-search-results"
+        aria-controls="predictive-search-results"
+        aria-haspopup="listbox"
+        aria-autocomplete="list"
+        autocorrect="off"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+      {%- endcomment -%}
+    >
+  </div>
+</form>
 
-            <div class="predictive-search predictive-search--search-template" tabindex="-1" data-predictive-search>
-              <div class="predictive-search__loading-state">
-                <div class="spinner">Loading</div>
-              </div>
-            </div>
-
-            <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
-
-            <button type="submit" class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
-              {%- render 'icon-search' -%}
-            </button>
-          </div>
-        </form>
-      </predictive-search>
-    </section>
-    {%- if search.performed -%}
-      {%- unless section.settings.enable_filtering or section.settings.enable_sorting -%}
-        {%- if search.results_count > 0 -%}
-          <p role="status">
-            {{ 'templates.search.results_with_count_and_term' | t: terms: search.terms, count: search.results_count }}
-          </p>
-        {%- endif -%}
-      {%- endunless -%}
-      {%- if search.results_count == 0 and search.filters == empty -%}
-        <p role="status">{{ 'templates.search.no_results' | t: terms: search.terms }}</p>
-      {%- endif -%}
+{%- if search.performed -%}
+  {%- unless section.settings.enable_filtering or section.settings.enable_sorting -%}
+    {%- if search.results_count > 0 -%}
+      <p role="status">
+        {{ 'templates.search.results_with_count_and_term' | t: terms: search.terms, count: search.results_count }}
+      </p>
     {%- endif -%}
+  {%- endunless -%}
+  {%- if search.results_count == 0 and search.filters == empty -%}
+    <p role="status">{{ 'templates.search.no_results' | t: terms: search.terms }}</p>
+  {%- endif -%}
+{%- endif -%}
 
-    {%- if search.performed -%}
-      {% comment %}
-        Filters can be added here.
-        {%- if search.filters != empty -%}
-            {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
-                <div class="search__filters">
-                    Filters
-                </div>
-            {%- endif -%}
-        {%- endif -%}
-      {% endcomment %}
+{%- if search.performed -%}
 
-      <div data-facets-form-content="product-list">
-        {%- unless search.results.size == 0 and search.filters != empty -%}
-          <div>
-            {% paginate search.results by 8 %}
-              <infinite-paginate>
-                {%- render 'infinite-paginate', type: 'load-prev', paginate: paginate -%}
-                <div data-infinite-paginate-content
-                     data-infinite-paginate-loading-class="my-js-loading">
-                  <component-loader>
-                    {%- for item in search.results -%}
-                      <div class="search-result-list__item {{ item.object_type }}">
-                        {%- case item.object_type -%}
-                          {%- when 'product' -%}
-                            {%- render 'product-card', product: item -%}
-                          {%- when 'article' -%}
-                            {%- render 'article-card', article: item -%}
-                          {%- when 'page' -%}
-                            <a href="{{ item.url }}">
-                              <div>{{ item.title | escape }}</div>
-                              <div>{{ item.content | strip_html | truncatewords: 30 }}</div>
-                            </a>
-                        {%- endcase -%}
-                      </div>
-                    {%- endfor -%}
-                  </component-loader>
-                </div>
-                {%- render 'infinite-paginate', type: 'load-more', paginate: paginate -%}
-              </infinite-paginate>
-            {% endpaginate %}
+  {%- render 'facets', results: search -%}
+
+  <div data-facets-form-content="product-list">
+    {%- if search.results.size == 0 and search.filters != empty -%}
+      [Nothing found for selected filters]
+    {%- else -%}
+      {%- paginate search.results by 8 -%}
+        <infinite-paginate>
+          {%- render 'infinite-paginate', type: 'load-prev', paginate: paginate -%}
+          <div data-infinite-paginate-content
+               data-infinite-paginate-loading-class="my-js-loading">
+            <component-loader>
+              {%- for item in search.results -%}
+                <hr/>
+                {%- case item.object_type -%}
+                  {%- when 'product' -%}
+                    {%- render 'product-card', product: item, without_css: true -%}
+                  {%- when 'article' -%}
+                    {%- render 'article-card', article: item -%}
+                  {%- when 'page' -%}
+                    <a href="{{ item.url }}">
+                      <div>{{ item.title | escape }}</div>
+                      <div>{{ item.content | strip_html | truncatewords: 30 }}</div>
+                    </a>
+                {%- endcase -%}
+              {%- endfor -%}
+            </component-loader>
           </div>
-        {%- endunless -%}
-      </div>
+          {%- render 'infinite-paginate', type: 'load-more', paginate: paginate -%}
+        </infinite-paginate>
+      {%- endpaginate -%}
     {%- endif -%}
   </div>
-</div>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "Search Page",

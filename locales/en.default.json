@@ -4,8 +4,8 @@
       "tags": "Tagged \"{{ tags }}\"",
       "page": "Page {{ page }}"
     },
-    "search": {
-      "breadcrumbs": {
+    "breadcrumbs": {
+      "search": {
         "terms": "Search results for “{{ terms }}”",
         "no_terms": "Search"
       }
@@ -24,10 +24,6 @@
       "load_more": "Load more",
       "current_state": "{{ current }} of {{ total }}"
     }
-  },
-  "cart": {
-    "cart_error": "Error adding to cart",
-    "cart_quantity_error": "Not enought quantity"
   },
   "products": {
     "product": {

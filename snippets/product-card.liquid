@@ -2,7 +2,6 @@
   Renders a product card
   Accepts:
   - product: {Object} Shopify Product object
-
 {% endcomment %}
 
 {%- liquid
@@ -65,7 +64,7 @@
         {%- render 'price', product: product, variant: current_variant -%}
       </div>
 
-      <style type="text/css">
+      <style>
           /**
            * TODO:
            * This "style" block is to demonstrate

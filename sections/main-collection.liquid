@@ -8,47 +8,37 @@ TODO: consider using inline stylesheet if the first screen rendering is blocked 
   assign collection_description = collection.description | strip | default: ''
 -%}
 
-<div>
-  <h1 class="title">{{- collection.title | escape -}}</h1>
-  {%- if collection_description != '' -%}
-    <div>{{ collection_description }}</div>
-  {%- endif -%}
-  {%- if collection.image -%}
-    <image-loader>
-      {{- collection.image | image_url: width: collection.image.width | image_tag -}}
-    </image-loader>
-  {%- endif -%}
-</div>
+<h1>{{- collection.title | escape -}}</h1>
+{%- if collection_description != '' -%}
+  <div>{{ collection_description }}</div>
+{%- endif -%}
+{%- if collection.image -%}
+  <image-loader>
+    {{- collection.image | image_url: width: collection.image.width | image_tag -}}
+  </image-loader>
+{%- endif -%}
 
-<div>
-  {%- render 'facets', results: collection -%}
-</div>
+{%- render 'facets', results: collection -%}
 
 <div data-facets-form-content="products-list">
   <component-loader>
     {%- if collection.products.size == 0 -%}
-      <div>
-        [No products]
-      </div>
+      [No products]
     {%- else -%}
-      <div>
-        {% paginate collection.products by 8 %}
-          <infinite-paginate>
-            {%- render 'infinite-paginate', type: 'load-prev', paginate: paginate -%}
-            <div data-infinite-paginate-content data-infinite-paginate-loading-class="my-loading-class">
-              <component-loader>
-                {% for product in collection.products %}
-                  <hr />
-                  <div>
-                    {%- render 'product-card', product: product, without_css: true -%}
-                  </div>
-                {% endfor %}
-              </component-loader>
-            </div>
-            {%- render 'infinite-paginate', type: 'load-more', paginate: paginate -%}
-          </infinite-paginate>
-        {% endpaginate %}
-      </div>
+      {%- paginate collection.products by 8 -%}
+        <infinite-paginate>
+          {%- render 'infinite-paginate', type: 'load-prev', paginate: paginate -%}
+          <div data-infinite-paginate-content data-infinite-paginate-loading-class="my-loading-class">
+            <component-loader>
+              {% for product in collection.products %}
+                <hr />
+                {%- render 'product-card', product: product, without_css: true -%}
+              {% endfor %}
+            </component-loader>
+          </div>
+          {%- render 'infinite-paginate', type: 'load-more', paginate: paginate -%}
+        </infinite-paginate>
+      {%- endpaginate -%}
     {%- endif -%}
   </component-loader>
 </div>

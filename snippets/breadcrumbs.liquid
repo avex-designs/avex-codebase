@@ -20,7 +20,7 @@
     assign accessibility_home = 'general.accessibility.home' | t
     assign t = template | split: '.' | first
   -%}
-  <nav class="breadcrumbs {{ class }}" aria-label="Breadcrumb">
+  <nav aria-label="Breadcrumb">
     <ul>
       <li>
         <a href="{{ routes.root_url }}" title="{{ accessibility_home }}">
@@ -30,13 +30,13 @@
       {%- case t -%}
         {%- when 'page' -%}
           <li>
-            <a href="{{ page.url }}" aria-current="page">{{ page.title }}</a>
+            <span>{{ page.title | escape }}</span>
           </li>
         {%- when 'search' -%}
           {%- liquid
-            assign search_breadcrumbs_string = 'general.search.breadcrumbs.no_terms'
+            assign search_breadcrumbs_string = 'general.breadcrumbs.search.no_terms'
             if search.terms != blank
-              assign search_breadcrumbs_string = 'general.search.breadcrumbs.terms'
+              assign search_breadcrumbs_string = 'general.breadcrumbs.search.terms'
             endif
           -%}
           <li>
@@ -44,27 +44,26 @@
           </li>
         {%- when 'product' -%}
           {%- if collection.url -%}
-            <li>{{ collection.title | split: '|' | last | link_to: collection.url }}</li>
+            <li>{{ collection.title | escape | link_to: collection.url }}</li>
           {%- endif -%}
           <li>
-            <a href="{{ collection.url }}{{ product.url }}" class="current" aria-current="page">{{ product.title }}</a>
+            <span>{{ product.title }}</span>
           </li>
         {%- when 'blog' -%}
           {%- if current_tags -%}
             <li>{{ blog.title | link_to: blog.url }}</li>
             <li>
-              {%- capture tag_url -%}{{ blog.url }}/tagged/{{ current_tags | join: '+' }}{%- endcapture -%}
-              <a href="{{ tag_url }}" class="current" aria-current="page">{{ current_tags | join: ' + ' }}</a>
+              <span>{{ current_tags | join: ' + ' }}</span>
             </li>
           {%- else -%}
             <li>
-              <a href="{{ blog.url }}" class="current" aria-current="page">{{ blog.title }}</a>
+              <span>{{ blog.title }}</span>
             </li>
           {%- endif -%}
         {%- when 'article' -%}
-          <li>{{ blog.title | link_to: blog.url }}</li>
+          <li>{{ blog.title | escape | link_to: blog.url }}</li>
           <li>
-            <a href="{{ article.url }}" class="current" aria-current="page">{{ article.title }}</a>
+            <span>{{ article.title | escape }}</span>
           </li>
         {% comment %} 
         Custom cart page breadcrumb only if needed. Most of the cases we can use page_title and adjust the text in shopify translations Checkout & systems -> Page titles -> Shopping cart 
@@ -74,8 +73,8 @@
           </li>
         {% endcomment %}
         {%- else -%}
-          <li aria-current="page">
-            <a href="{{ request.path }}" class="current" aria-current="page">{{ page_title }}</a>
+          <li>
+            <span>{{ page_title }}</span>
           </li>
       {%- endcase -%}
     </ul>
