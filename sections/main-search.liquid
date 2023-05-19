@@ -67,17 +67,17 @@ TODO: consider using inline stylesheet if the first screen rendering is blocked 
                data-infinite-paginate-loading-class="my-js-loading">
             <component-loader>
               {%- for item in search.results -%}
-                <hr/>
+                <hr />
                 {%- case item.object_type -%}
                   {%- when 'product' -%}
                     {%- render 'product-card', product: item, without_css: true -%}
                   {%- when 'article' -%}
                     {%- render 'article-card', article: item -%}
                   {%- when 'page' -%}
-                    <a href="{{ item.url }}">
-                      <div>{{ item.title | escape }}</div>
-                      <div>{{ item.content | strip_html | truncatewords: 30 }}</div>
-                    </a>
+                    <div>
+                      <a href="{{ item.url }}">{{ item.title | escape }}</a>
+                    </div>
+                    <div>{{ item.content | strip_html | truncatewords: 30 }}</div>
                 {%- endcase -%}
               {%- endfor -%}
             </component-loader>

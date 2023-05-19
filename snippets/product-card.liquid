@@ -1,5 +1,6 @@
 {% comment %}
   Renders a product card
+
   Accepts:
   - product: {Object} Shopify Product object
 {% endcomment %}
@@ -32,8 +33,8 @@
     TODO:
     if the product card doesn't have variant selectors
     and the feature to update the product card using Sections API isn't needed,
-    then remove the "product-section" component, the rendering of the "product-section-json" snippet
-    all all related attributes
+    then remove the "product-section" component, the "product-section-json" snippet render
+    and all related "data-product-section-*" attributes
   {%- endcomment -%}
   <product-section>
     {%- render 'product-section-json', product: product, variant_id: current_variant.id, section_id: 'product-card', update_url: false -%}
@@ -41,10 +42,10 @@
     <div>
       {%- if product.featured_media != blank -%}
         <a href="{{ product.url | within: collection }}">
-          {%- comment -%}
-            TODO: adjust the "loading" and the "sizes" attributes according to the design
-          {%- endcomment -%}
           <image-loader>
+            {%- comment -%}
+              TODO: adjust the "loading" and the "sizes" attributes according to the design
+            {%- endcomment -%}
             {{-
             product.featured_media.preview_image
             | image_url: width: product.featured_media.preview_image.width
@@ -65,17 +66,17 @@
       </div>
 
       <style>
-          /**
-           * TODO:
-           * This "style" block is to demonstrate
-           * how the "data-product-section-loading-class" attribute works
-           *
-           * Remove this on production site
-           * and replace the "my-loading-class" with appropriate one
-           */
-          .my-loading-class:after {
-              content: 'Loading'
-          }
+        /**
+         * TODO:
+         * This "style" block is to demonstrate
+         * how the "data-product-section-loading-class" attribute works
+         *
+         * Remove this on production site
+         * and replace the "my-loading-class" with appropriate one
+         */
+        .my-loading-class:after {
+            content: 'Loading'
+        }
       </style>
       <div class="no-js-hidden" data-product-section-loading-class="my-loading-class">
         {%- unless product.has_only_default_variant -%}
