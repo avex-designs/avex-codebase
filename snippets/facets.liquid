@@ -1,9 +1,15 @@
 {%- liquid
-  if results.url
-    assign results_url = results.url
+  assign reset_filters_url = results.url
+  if reset_filters_url
+    if results.sort_by != ""
+      assign reset_filters_url = reset_filters_url | append: '?sort_by=' | append: results.sort_by
+    endif
   else
     assign terms = results.terms | escape
-    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+    if results.types.size > 0
+      assign type = results.types | join: ','
+    endif
+    assign reset_filters_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: results.sort_by | append: '&type=' | append: type
   endif
 -%}
 
@@ -12,6 +18,9 @@
     {%- if results.terms -%}
       <input type="hidden" name="q" value="{{ results.terms | escape }}">
       <input name="options[prefix]" type="hidden" value="last">
+      {%- if results.types.size > 0 -%}
+        <input name="type" type="hidden" value="{{ results.types | join: ',' }}">
+      {%- endif -%}
     {%- endif -%}
 
     {% if results.current_vendor or results.current_type %}
@@ -129,6 +138,32 @@
       {% endcase %}
     {%- endfor -%}
     <hr />
+    <div>
+      <div>[Sort by]</div>
+      <div data-facets-form-content="sort-block">
+        {%- for option in results.sort_options -%}
+          <div>
+            <input
+              name="sort_by"
+              type="radio"
+              data-facets-form-input
+              id="sort-by-{{ option.value | escape }}"
+              value="{{ option.value | escape }}"
+              data-label="{{ option.name | escape }}"
+              {% if option.value == results.sort_by %}checked{% endif %}
+            />
+            <label for="sort-by-{{ option.value | escape }}">
+              {{ option.name | escape }}
+            </label>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+    <hr />
+    <button type="submit" class="no-js-show">
+      [Apply]
+    </button>
+    <hr />
   </form>
 </facets-form>
 
@@ -162,7 +197,7 @@
 <div data-facets-form-content="active-filters">
   {%- if active_filters_html != '' -%}
     {{ active_filters_html }}
-    <a href="{{ results_url }}" data-facets-form-link>
+    <a href="{{ reset_filters_url }}" data-facets-form-link>
       Clear All
     </a>
   {%- endif -%}
