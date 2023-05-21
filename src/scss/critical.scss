@@ -68,6 +68,25 @@ body {
   }
 }
 
+/* Image loader */
+
+image-loader {
+  display: block;
+}
+
+@supports selector(:defined) {
+  image-loader {
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    .no-js &,
+    &.no-js,
+    &[ready] {
+      opacity: 1;
+    }
+  }
+}
+
 /* CSS Animations */
 
 @keyframes loading-spinner {
