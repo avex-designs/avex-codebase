@@ -82,7 +82,10 @@
         {%- unless product.has_only_default_variant -%}
           <div>
             {%- for option in product.options_with_values -%}
-              <product-radio-option data-product-radio-option-name="{{ option.name | escape }}">
+              <product-radio-option
+                data-product-radio-option-name="{{ option.name | escape }}"
+                data-product-radio-option-class-prefix="my-class-prefix-"
+              >
                 <div>{{ option.name | escape }}</div>
                 {%- for value in option.values -%}
                   <label>

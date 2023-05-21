@@ -100,7 +100,10 @@
               The select element is for the rest
             {%- endcomment -%}
             {%- if forloop.index == 1 -%}
-              <product-radio-option data-product-radio-option-name="{{ option.name | escape }}">
+              <product-radio-option
+                data-product-radio-option-name="{{ option.name | escape }}"
+                data-product-radio-option-class-prefix="my-class-prefix-"
+              >
                 <div>
                   {{- option.name | escape -}}
                   {%- if current_variant -%}
@@ -121,7 +124,10 @@
                 {%- endfor -%}
               </product-radio-option>
             {%- else -%}
-              <product-select-option data-product-select-option-name="{{ option.name | escape }}">
+              <product-select-option
+                data-product-select-option-name="{{ option.name | escape }}"
+                data-product-select-option-class-prefix="my-class-prefix-"
+              >
                 <label
                   for="{{ section.id }}-{{ product.id }}-{{ option.name | escape }}">
                   {{- option.name | escape -}}

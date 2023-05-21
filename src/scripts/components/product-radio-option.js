@@ -33,11 +33,7 @@ class ProductRadioOption extends ProductOption {
     if (option) {
       this.querySelectorAll("input[type='radio']").forEach(($element) => {
         $element.checked = $element.value === option.value;
-
-        $element.setAttribute(
-          this.dataAttributes.availabilityStatus,
-          this.getValueAvailability($element.value)
-        );
+        this.addAvailabilityClass($element, $element.value);
       });
     }
   }

@@ -36,10 +36,7 @@ class ProductSelectOption extends ProductOption {
     if (option) {
       this.#$select.value = option.value || "";
       this.#$select.querySelectorAll("option").forEach(($element) => {
-        $element.setAttribute(
-          this.dataAttributes.availabilityStatus,
-          this.getValueAvailability($element.value)
-        );
+        this.addAvailabilityClass($element, $element.value);
       });
     }
   }

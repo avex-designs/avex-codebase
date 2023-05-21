@@ -4,7 +4,7 @@
     <script>
       document.documentElement.classList.remove('no-js');
       document.documentElement.classList.add('js');
-      if (Shopify.designMode) {
+      if (window.Shopify?.designMode) {
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>

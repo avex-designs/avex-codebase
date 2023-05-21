@@ -82,6 +82,13 @@ export function swiperArrows(_this, mobile_limit, desktop_limit) {
 export class ProductOption extends HTMLElement {
   #elementName;
   #valueLabelPlaceholder = "[[value]]";
+  #availabilityStatuses = {
+    undefined: "undefined",
+    available: "available",
+    not_available: "not-available",
+    does_not_exist: "does-not-exist",
+  };
+  #classPrefix = "js-product-option-";
 
   dataAttributes = {};
   optionName;
@@ -93,7 +100,7 @@ export class ProductOption extends HTMLElement {
     this.dataAttributes = {
       name: `data-${elementName}-name`,
       valueLabel: `data-${elementName}-value`,
-      availabilityStatus: `data-${elementName}-availability`,
+      classPrefix: `data-${elementName}-class-prefix`,
     };
   }
 
@@ -111,6 +118,9 @@ export class ProductOption extends HTMLElement {
           this.#elementName
         }] [A related product-section element is not found]`
       );
+
+    this.#classPrefix =
+      this.getAttribute(this.dataAttributes.classPrefix) || this.#classPrefix;
   }
 
   connectedCallbackEnd() {
@@ -126,24 +136,29 @@ export class ProductOption extends HTMLElement {
     );
   }
 
-  getValueAvailability(value) {
-    const availabilityStatuses = {
-      undefined: "undefined",
-      available: "available",
-      not_available: "not-available",
-      does_not_exist: "does-not-exist",
-    };
+  #getValueAvailability(value) {
     const availability =
       this.$productSection.state.optionsAvailability[this.optionName];
-    console.log(availability);
-    let status = availabilityStatuses.undefined;
+    let status = this.#availabilityStatuses.undefined;
     if (availability) {
       if (!(value in availability))
-        status = availabilityStatuses.does_not_exist;
-      else if (availability[value]) status = availabilityStatuses.available;
-      else status = availabilityStatuses.not_available;
+        status = this.#availabilityStatuses.does_not_exist;
+      else if (availability[value])
+        status = this.#availabilityStatuses.available;
+      else status = this.#availabilityStatuses.not_available;
     }
     return status;
+  }
+
+  addAvailabilityClass($element, value) {
+    $element.classList.remove(
+      ...Object.values(this.#availabilityStatuses).map(
+        (status) => this.#classPrefix + status
+      )
+    );
+    $element.classList.add(
+      this.#classPrefix + this.#getValueAvailability(value)
+    );
   }
 
   render() {
