@@ -41,7 +41,7 @@ class KlaviyoBIS extends HTMLElement {
           if (data.success) {
             this.setAttribute("success", "");
           } else {
-            this.removeAttribute("error");
+            this.setAttribute("error", "");
             console.error("[KlaviyoBIS]: ", data);
           }
           this.removeAttribute("loading");

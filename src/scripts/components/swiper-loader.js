@@ -1,5 +1,4 @@
 /**
- * 
  * Sample code:
  * 
   <swiper-loader modules="Navigation,Autoplay" loaded-class="announcement-bar-slide-inited">
