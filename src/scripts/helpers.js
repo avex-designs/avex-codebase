@@ -50,33 +50,23 @@ export function getCollectionUrl(url) {
   return url.match(regex)[0];
 }
 
-export function swiperArrows(_this, mobile_limit, desktop_limit) {
-  if (
-    _this.el.querySelector(".swiper-button-prev") &&
-    _this.el.querySelector(".swiper-button-next")
-  ) {
-    if (
-      window.matchMedia("(max-width: 767px)").matches &&
-      _this.slides.length <= mobile_limit
-    ) {
-      _this.allowSlidePrev = _this.allowSlideNext = false;
-      _this.el.querySelector(".swiper-button-prev").style.display = "none";
-      _this.el.querySelector(".swiper-button-next").style.display = "none";
-    } else if (
-      window.matchMedia("(min-width: 768px)").matches &&
-      _this.slides.length <= desktop_limit
-    ) {
-      _this.allowSlidePrev = _this.allowSlideNext = false;
-      _this.el.querySelector(".swiper-button-prev").style.display = "none";
-      _this.el.querySelector(".swiper-button-next").style.display = "none";
-    } else {
-      _this.allowSlidePrev = _this.allowSlideNext = true;
-      _this.el.querySelector(".swiper-button-prev").style.display =
-        "inline-flex";
-      _this.el.querySelector(".swiper-button-next").style.display =
-        "inline-flex";
-    }
-  }
+export async function loadJS(FILE_URL, cb) {
+  let $script = document.createElement("script");
+
+  $script.setAttribute("src", FILE_URL);
+  $script.setAttribute("type", "text/javascript");
+
+  document.body.appendChild($script);
+
+  cb && cb($script);
+  return new Promise((resolve, reject) => {
+    $script.addEventListener("load", () => {
+      resolve(true);
+    });
+    $script.addEventListener("error", () => {
+      reject(false);
+    });
+  });
 }
 
 export class ProductOption extends HTMLElement {

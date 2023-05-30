@@ -3,7 +3,53 @@
     render 'site-logo', logo_image: section.settings.logo_image, logo_text: section.settings.logo_svg
   endcapture
 -%}
+<style>
+  .loader {
+    width: 15px;
+    height: 15px;
+    border: 2px solid #000;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 0.5s linear infinite;
+  }
 
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .predictive-search-input-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  .predictive-search-loading {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    display: none;
+  }
+  predictive-search[loading='true'] .predictive-search-loading {
+    display: block;
+  }
+  predictive-search {
+    position: relative;
+  }
+  .predictive-search-dropdown {
+    position: absolute;
+    top: 100%;
+    background-color: #fff;
+    padding: 1rem;
+    display: none;
+  }
+  predictive-search[open='true'] .predictive-search-dropdown {
+    display: block;
+  }
+</style>
 <header>
   <div>
     <div>{{ logo_html }}</div>
@@ -104,6 +150,54 @@
         {%- endif -%}
       </a>
     </div>
+  </div>
+  <div style="background-color: #ccc; padding: 1rem">
+    <predictive-search>
+      <form action="{{ routes.search_url }}" method="get" role="search">
+        <div>
+          <label for="HeaderSearch">Search</label>
+          <br>
+          <div class="predictive-search-input-wrapper">
+            <input
+              type="search"
+              id="HeaderSearch"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="Search"
+              role="combobox"
+              aria-expanded="false"
+              aria-owns="predictive-search-results"
+              aria-controls="predictive-search-results"
+              aria-haspopup="listbox"
+              aria-autocomplete="list"
+              autocorrect="off"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            >
+            <div class="predictive-search-loading"><span class="loader"></span></div>
+          </div>
+
+          <input type="hidden" name="options[prefix]" value="last">
+          <button
+            type="reset"
+            class="{% if search.terms == blank %} hidden{% endif %}"
+            aria-label="Clear"
+          >
+            Clear
+          </button>
+          <button aria-label="Search">Search</button>
+        </div>
+
+        <div tabindex="-1" data-predictive-search class="predictive-search-results predictive-search-dropdown"></div>
+
+        <span
+          class="predictive-search-status visually-hidden"
+          role="status"
+          aria-hidden="true"
+        ></span>
+      </form>
+    </predictive-search>
   </div>
 </header>
 

@@ -51,9 +51,10 @@
       {{- 'general.accessibility.skip_to_text' | t -}}
     </a>
 
-    {%- section 'header' -%}
-    {%- render 'breadcrumbs' -%}
+   
     <component-loader>
+      {%- section 'header' -%}
+      {%- render 'breadcrumbs' -%}
       <main class="main-content" role="main" id="MainContent">
         {{ content_for_layout }}
       </main>
