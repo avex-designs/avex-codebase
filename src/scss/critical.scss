@@ -7,13 +7,7 @@ You can insert here any critical styles, these will be loaded first as inline st
 :root,
 ::before,
 ::after {
-  // Colors
-  --color-blue: $color-blue;
-  --color-brown: $color-brown;
-
-  // Font family
-  --font-main: $font-main;
-  --font-extended: $font-extended;
+  // TODO: put global CSS vars here
 }
 
 html {
@@ -66,11 +60,30 @@ body {
   display: none;
 }
 
-.no-js-block {
+.no-js-show {
   display: none;
 
   .no-js & {
     display: block;
+  }
+}
+
+/* Image loader */
+
+image-loader {
+  display: block;
+}
+
+@supports selector(:defined) {
+  image-loader {
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    .no-js &,
+    &.no-js,
+    &[ready] {
+      opacity: 1;
+    }
   }
 }
 

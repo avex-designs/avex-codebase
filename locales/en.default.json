@@ -4,8 +4,8 @@
       "tags": "Tagged \"{{ tags }}\"",
       "page": "Page {{ page }}"
     },
-    "search": {
-      "breadcrumbs": {
+    "breadcrumbs": {
+      "search": {
         "terms": "Search results for “{{ terms }}”",
         "no_terms": "Search"
       }
@@ -18,23 +18,25 @@
       "button_text": "Notify me",
       "success_text": "Success",
       "email_placeholder": "Email"
+    },
+    "load_more_pagination": {
+      "load_prev": "Load previous",
+      "load_more": "Load more",
+      "current_state": "{{ current }} of {{ total }}"
     }
-  },
-  "cart": {
-    "cart_error": "Error adding to cart",
-    "cart_quantity_error": "Not enought quantity"
   },
   "products": {
     "product": {
       "add_to_cart": "Add to cart",
-      "choose_options": "Choose options",
       "quantity": {
         "input_label": "Quantity for {{ product }}",
         "increase": "Increase quantity for {{ product }}",
         "decrease": "Decrease quantity for {{ product }}"
       },
       "sold_out": "Sold out",
-      "unavailable": "Unavailable"
+      "unavailable": "Unavailable",
+      "choose_options": "Choose options",
+      "choose_value": "Choose a value"
     },
     "product_section_component": {
       "error": "Error"
@@ -53,6 +55,14 @@
       "expired": "Expired",
       "copy_code_success": "Code copied successfully",
       "print_gift_card": "Print"
+    }
+  },
+  "blogs": {
+    "article": {
+      "comments_count": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      }
     }
   }
 }

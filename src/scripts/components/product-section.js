@@ -1,14 +1,16 @@
+import { toggleClassFromAttribute } from "../helpers";
+
+const ELEMENT_NAME = "product-section";
 const attributes = {
-  json: "data-product-section-json",
-  area: "data-product-section-area",
-  doesNotExistText: "data-product-section-doesnotexist",
-  loadingClass: "data-product-section-loading",
-  errorMessage: "data-product-section-error",
+  json: `data-${ELEMENT_NAME}-json`,
+  area: `data-${ELEMENT_NAME}-area`,
+  doesNotExistText: `data-${ELEMENT_NAME}-doesnotexist`,
+  loadingClass: `data-${ELEMENT_NAME}-loading-class`,
+  errorMessage: `data-${ELEMENT_NAME}-error`,
 };
 const Events = {
   STATECHANGE: "statechange",
 };
-const elementName = "product-section";
 
 class ProductSection extends HTMLElement {
   // if #variantId is undefinded, means the element is not initialized
@@ -87,7 +89,7 @@ class ProductSection extends HTMLElement {
       const $jsonScript = this.querySelector(`[${attributes.json}]`);
       if (!$jsonScript)
         throw new Error(
-          `The mandatory ${attributes.json} element is not found`
+          `[${ELEMENT_NAME}] [The mandatory ${attributes.json} element is not found]`
         );
       this.#data = JSON.parse($jsonScript.innerHTML);
 
@@ -100,7 +102,9 @@ class ProductSection extends HTMLElement {
         !("requestURL" in this.#data.section) ||
         !("sectionId" in this.#data.section)
       )
-        throw new Error(`Wrong ${attributes.json} data structure`);
+        throw new Error(
+          `[${ELEMENT_NAME}] [Wrong ${attributes.json} data structure]`
+        );
 
       this.#$variantInputs = this.querySelectorAll("input[name='id']");
 
@@ -128,7 +132,7 @@ class ProductSection extends HTMLElement {
       );
       if (!variant)
         throw new Error(
-          `The variant "${variantId}" is not found in the product data object`
+          `[${ELEMENT_NAME}] [The variant "${variantId}" is not found in the product data object]`
         );
 
       optionsValues = this.#data.product.options.map((name, index) => {
@@ -230,7 +234,7 @@ class ProductSection extends HTMLElement {
       $input.setAttribute("value", this.#variantId || "");
     });
 
-    this.#setLoadingClasses(false);
+    this.#toggleLoadingClasses(false);
     this.#showErrorMessages(false);
 
     if (!event.detail.isVariantChanged || this.#isHydration) return;
@@ -255,14 +259,16 @@ class ProductSection extends HTMLElement {
         {},
         "",
         `${this.#data.section.requestURL}${
-          this.#variantId > 0 ? `?variant=${this.#variantId}` : ""
-        }`
+          this.#data.section.requestURL.indexOf("?") > -1 ? "&" : "?"
+        }${this.#variantId > 0 ? `variant=${this.#variantId}` : ""}`
       );
     }
 
-    const url = `${this.#data.section.requestURL}?${
-      this.#variantId > 0 ? `variant=${this.#variantId}&` : ""
-    }section_id=${this.#data.section.sectionId}`;
+    const url = `${this.#data.section.requestURL}${
+      this.#data.section.requestURL.indexOf("?") > -1 ? "&" : "?"
+    }${this.#variantId > 0 ? `variant=${this.#variantId}&` : ""}section_id=${
+      this.#data.section.sectionId
+    }`;
 
     this.#abortController = new AbortController();
 
@@ -270,54 +276,51 @@ class ProductSection extends HTMLElement {
       $button.disabled = true;
     });
 
-    this.#setLoadingClasses(true);
+    this.#toggleLoadingClasses(true);
 
     try {
       const response = await fetch(url, {
         signal: this.#abortController.signal,
       });
       if (!response.ok)
-        throw new Error(`Response error from the "${response.url}" URL`);
+        throw new Error(
+          `[${ELEMENT_NAME}] [Response error from the "${response.url}" URL]`
+        );
 
       const html = await response.text();
       this.#changeHTML(html);
-      this.#setLoadingClasses(false);
+      this.#toggleLoadingClasses(false);
     } catch (error) {
       if (error.name !== "AbortError") {
         this.#changeHTML(this.#latestHTML);
-        this.#setLoadingClasses(false);
+        this.#toggleLoadingClasses(false);
         this.#showErrorMessages(true);
         throw error;
       }
     }
   }
 
-  #setLoadingClasses(show) {
-    this.querySelectorAll(`[${attributes.loadingClass}]`).forEach(
-      ($element) => {
-        const className = $element.getAttribute(attributes.loadingClass);
-        if (className) {
-          if (show) $element.classList.add(className);
-          else $element.classList.remove(className);
-        }
-      }
-    );
+  #toggleLoadingClasses(on) {
+    toggleClassFromAttribute(this, attributes.loadingClass, on);
   }
 
   #showErrorMessages(show) {
     this.querySelectorAll(`[${attributes.errorMessage}]`).forEach(
       ($element) => {
-        if (show) $element.hidden = false;
-        else $element.hidden = true;
+        $element.hidden = !show;
       }
     );
   }
 
   #changeHTML(html) {
-    const newdocument = new DOMParser().parseFromString(html, "text/html");
-    const $newElement = newdocument.querySelector(elementName);
+    const newDocument = new DOMParser().parseFromString(html, "text/html");
+    const $newElement = newDocument.querySelector(
+      `${ELEMENT_NAME}${this.id ? "#" + this.id : ""}`
+    );
     if (!$newElement)
-      throw new Error(`The "${elementName}" element is not found`);
+      throw new Error(
+        `[${ELEMENT_NAME}] [The "${ELEMENT_NAME}" element is not found]`
+      );
     this.#latestHTML = html;
 
     this.querySelector(`[${attributes.json}]`).innerHTML =
@@ -331,7 +334,7 @@ class ProductSection extends HTMLElement {
     let hasShopifyPaymentButton = false;
     if ($curAreas.length !== $newAreas.length) {
       console.warn(
-        `Previous "${attributes.area}" elements don't match the new received ones. The HTML of the component will be replaced completely.`
+        `[${ELEMENT_NAME}] [Previous "${attributes.area}" elements don't match the new received ones. The HTML of the component will be replaced completely.]`
       );
       this.innerHTML = $newElement.innerHTML;
       if ($newElement.querySelector("[data-shopify='payment-button']"))
@@ -433,4 +436,4 @@ class ProductSection extends HTMLElement {
     };
   }
 }
-customElements.define(elementName, ProductSection);
+customElements.define(ELEMENT_NAME, ProductSection);

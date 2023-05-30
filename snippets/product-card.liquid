@@ -1,135 +1,133 @@
 {% comment %}
   Renders a product card
+
   Accepts:
   - product: {Object} Shopify Product object
-
-  Usage:
-  {%- render 'product-card', product: product -%}
 {% endcomment %}
 
-{% comment %}
-<div>
-  {{ product.title | escape }}
-</div>
-{% endcomment %}
 {%- liquid
   unless without_css
     render 'stylesheet', name: 'product-card'
   endunless
+-%}
 
-  assign label = ''
-  assign generalClass = ''
-  assign showHover = true
-  if hideHover
-      assign showHover = false
-  endif
-  assign variant = product.selected_or_first_available_variant
-
-  if variant.inventory_quantity != 0 and variant.inventory_quantity < 5
-      assign label = "almost gone"
-  endif
-  if  product.tags contains 'label:back-in-stock'
-      assign label = "backinstock"
-  endif
-  if  product.tags contains 'label:new'
-      assign label = "new"
-  endif
-  if variant.inventory_quantity == 0 and variant.available == false
-      assign label = "soldout"
-  endif
-  if variant.inventory_quantity == 0 and  product.tags contains 'notifyme'
-      assign label = "getnotified"
-  endif
-  if variant.inventory_quantity == 0 and variant.available == false
-      unless  product.tags contains 'notifyme'
-          assign generalClass = 'product-card__description--soldout'
-      endunless
-  endif
-  if  product.tags contains 'label:comingsoon'
-      assign label = "comingsoonƒ"
+{%- comment -%}
+  Calculation the current_variant variable.
+  TODO:
+  If you don't want to preselect a first available variant,
+  replace the line [assign current_variant = product.selected_or_first_available_variant]
+  with the following line: [assign current_variant = product.selected_variant]
+{%- endcomment -%}
+{%- liquid
+  assign current_variant = nil
+  if product.has_only_default_variant
+    assign current_variant = product.variants[0]
+  else
+    assign current_variant = product.selected_or_first_available_variant
   endif
 -%}
-<style>
-  .product-card{
-  display: inline-block;
-  }
-  .product-card__image img{
-    width: 100px;
-    height: 100px
-  }
-</style>
+
 <div class="product-card">
-  {% form "product", product, class: 'quickShop product-card__form' %}
-    <div class="product-card__image">
-      <div class="images">
-        {%- if product.featured_media != blank -%}
-          <div class="main-image">
-            {{ product.featured_media | image_url: width: product.featured_media.width | image_tag: preload: true, class: 'cover', loading: "lazy", sizes: '(min-width: 990px) 30vw, 50vw' }}
-          </div>
-        {%- endif -%}
-        {%- if product.images[1] and showHover -%}
-          <div class="hover-image">
-            {{ product.images[1] | image_url: width: product.images[1].width | image_tag: preload: true, class: 'cover', loading: "lazy", sizes: '(min-width: 990px) 30vw, 50vw' }}
-          </div>
-        {%- endif -%}
+
+  {%- comment -%}
+    TODO:
+    if the product card doesn't have variant selectors
+    and the feature to update the product card using Sections API isn't needed,
+    then remove the "product-section" component, the "product-section-json" snippet render
+    and all related "data-product-section-*" attributes
+  {%- endcomment -%}
+  <product-section>
+    {%- render 'product-section-json', product: product, variant_id: current_variant.id, section_id: 'product-card', update_url: false -%}
+
+    <div>
+      {%- if product.featured_media != blank -%}
+        <a href="{{ product.url | within: collection }}">
+          <image-loader>
+            {%- comment -%}
+              TODO: adjust the "loading" and the "sizes" attributes according to the design
+            {%- endcomment -%}
+            {{-
+            product.featured_media.preview_image
+            | image_url: width: product.featured_media.preview_image.width
+            | image_tag: loading: "lazy", sizes: '(min-width: 768px) 30vw, 50vw'
+            -}}
+          </image-loader>
+        </a>
+      {%- endif -%}
+
+      <div>
+        <a href="{{ product.url | within: collection }}">
+          {{ product.title | escape }}
+        </a>
       </div>
 
-      <a
-        href="{{ variant.url }}"
-        class="product-card__link"
-        ><span class="visually-hidden">{{ product.title }}</span></a
-      >
+      <div data-product-section-area>
+        {%- render 'price', product: product, variant: current_variant -%}
+      </div>
 
-      {% if label != blank %}
-        <div class="product-card__label">
-          <span>{{ label }}</span>
-        </div>
-      {% endif %}
-
-      {% unless product.tags contains 'notifyme' and variant.inventory_quantity == 0 or variant.inventory_quantity == 0 %}
-        <input type="hidden" name="quantity" value="1" min="1">
-        <div class="product-card__actions {% if product.variants.size == 1 %}product-card__actions--only-one{% endif %}">
-          <select name="id" class="select-tag">
-            {%- for prodVariant in product.variants -%}
-              <option
-                data-price="{{ prodVariant.price }}"
-                value="{{ prodVariant.id }}"
-                class="select__list-item"
-                {% if allowDisabled == blank %}
-                  {%- unless prodVariant.available %}{% endunless %}
-                {% endif %}
-                {% if product.selected_or_first_available_variant.id == prodVariant.id %}
-                  selected
-                {% endif %}
+      <style>
+        /**
+         * TODO:
+         * This "style" block is to demonstrate
+         * how the "data-product-section-loading-class" attribute works
+         *
+         * Remove this on production site
+         * and replace the "my-loading-class" with appropriate one
+         */
+        .my-loading-class:after {
+            content: 'Loading'
+        }
+      </style>
+      <div class="no-js-hidden" data-product-section-loading-class="my-loading-class">
+        {%- unless product.has_only_default_variant -%}
+          <div>
+            {%- for option in product.options_with_values -%}
+              <product-radio-option
+                data-product-radio-option-name="{{ option.name | escape }}"
+                data-product-radio-option-class-prefix="my-class-prefix-"
               >
-                {{ prodVariant.title }}
-              </option>
+                <div>{{ option.name | escape }}</div>
+                {%- for value in option.values -%}
+                  <label>
+                    <input
+                      type="radio"
+                      name="{{ section.id }}-{{ product.id }}-{{ option.name | escape }}"
+                      value="{{ value | escape }}"
+                      {% if current_variant and option.selected_value == value %}checked{% endif %}>
+                    <span>{{ value | escape }}</span>
+                  </label>
+                {%- endfor -%}
+              </product-radio-option>
             {%- endfor -%}
-          </select>
-          {% if product.available %}
-            <button class="secondary-button" type="submit">quickadd</button>
-          {% else %}
-            <button disabled type="button">sold out</button>
-          {% endif %}
-          <button type="button" data-klaviyo-backinstock-notify-button>notify me</button>
-        </div>
-      {% endunless %}
-    </div>
-    <div class="product-card__description {{ generalClass }}">
-      <div class="product-card__titleblock">
-        <h2 class="h5 title">
-          <a href="{{ variant.url }}">{{ product.title }}</a>
-        </h2>
-      </div>
-      <div class="product-card__priceblock">
-        <span class="current-price">{{ variant.price | money_without_trailing_zeros }}</span>
-        <span class="old-price">{{ variant.compare_at_price | money_without_trailing_zeros }}</span>
-      </div>
-    </div>
+          </div>
+        {%- endunless -%}
 
-    <div class="product-card__error error-note" data-ajax-cart-messages="form"></div>
-    <script type="application/json" data-product-json-variants>
-      {{ product.variants | json }}
-    </script>
-  {% endform %}
+        {% form "product", product %}
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          <button
+            type="submit"
+            name="add"
+            {% if current_variant == nil or current_variant.available == false %}
+              disabled
+            {% endif %}
+            data-product-section-area="innerHTML,disabled"
+            data-product-section-doesnotexist="{{ 'products.product.unavailable' | t }}"
+          >
+            {%- liquid
+              if current_variant.available
+                echo 'products.product.add_to_cart' | t
+              elsif current_variant.available == false or product.available == false
+                echo 'products.product.sold_out' | t
+              else
+                echo 'products.product.choose_options' | t
+              endif
+            -%}
+          </button>
+          <div class="product-card__error error-note" data-ajax-cart-messages="form"></div>
+        {% endform %}
+
+      </div>
+
+    </div>
+  </product-section>
 </div>
