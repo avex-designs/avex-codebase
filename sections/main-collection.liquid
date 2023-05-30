@@ -1,8 +1,14 @@
 {%- comment -%}
-Render product card styles in advance in order to avoid flickering when the content gets updated via ajax.
-TODO: consider using inline stylesheet if the first screen rendering is blocked by product card styles
+  Render product card styles in advance in order to avoid flickering when the content gets updated via ajax.
+  TODO: consider using inline stylesheet if the first screen rendering is blocked by product card styles
 {%- endcomment -%}
 {%- render 'stylesheet', name: 'product-card' -%}
+<style>
+  .collection-image {
+    height: 200px;
+    object-fit: cover;
+  }
+</style>
 
 {%- liquid
   assign collection_description = collection.description | strip | default: ''
@@ -14,7 +20,7 @@ TODO: consider using inline stylesheet if the first screen rendering is blocked 
 {%- endif -%}
 {%- if collection.image -%}
   <image-loader>
-    {{- collection.image | image_url: width: collection.image.width | image_tag -}}
+    {{- collection.image | image_url: width: collection.image.width | image_tag: class: 'collection-image' -}}
   </image-loader>
 {%- endif -%}
 
@@ -31,7 +37,7 @@ TODO: consider using inline stylesheet if the first screen rendering is blocked 
           <div data-infinite-paginate-content data-infinite-paginate-loading-class="my-loading-class">
             <component-loader>
               {% for product in collection.products %}
-                <hr />
+                <hr>
                 {%- render 'product-card', product: product, without_css: true -%}
               {% endfor %}
             </component-loader>

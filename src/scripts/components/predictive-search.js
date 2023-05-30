@@ -1,15 +1,28 @@
 import { SearchForm } from "../base-components/search-form";
 
-const SECTION_ID = "predictive-search";
+const SHOPIFY_SECTION_ID = "predictive-search";
+const ELEMENT_NAME = "predictive-search";
 
+const attributes = {
+  predictiveSearchResults: "[data-predictive-search-results]",
+  predictiveSearchItem: "[data-predictive-search-item]",
+  activeSelectedAriaTag: "[aria-selected='true'] a",
+  activeSelectedAria: "[aria-selected='true']",
+  loading: "loading",
+  results: "results",
+  open: "open",
+  ariaExpanded: "aria-expanded",
+  ariaSelected: "aria-selected",
+  activeDescendantAria: "aria-activedescendant",
+};
 class PredictiveSearch extends SearchForm {
   constructor() {
     super();
     this.cachedResults = {};
     this.isOpen = false;
     this.searchTerm = "";
-    this.allInstances = document.querySelectorAll("predictive-search");
-    this.results = this.querySelector("[data-predictive-search]");
+    this.$allInstances = document.querySelectorAll(ELEMENT_NAME);
+    this.$results = this.querySelector(attributes.predictiveSearchResults);
     this.abortController = new AbortController();
 
     this.setEventListeners();
@@ -43,7 +56,7 @@ class PredictiveSearch extends SearchForm {
   onFormSubmit(event) {
     if (
       !this.getQuery().length ||
-      this.querySelector("[aria-selected='true'] a")
+      this.querySelector(attributes.activeSelectedAriaTag)
     )
       event.preventDefault();
   }
@@ -66,7 +79,7 @@ class PredictiveSearch extends SearchForm {
     if (this.searchTerm !== currentSearchTerm) {
       // Search term was changed from other search input, treat it as a user change
       this.onChange();
-    } else if (this.getAttribute("results") === "true") {
+    } else if (this.getAttribute(attributes.results) === "true") {
       this.open();
     } else {
       this.getSearchResults(this.searchTerm);
@@ -107,11 +120,11 @@ class PredictiveSearch extends SearchForm {
     if (!this.getAttribute("open")) return;
 
     const moveUp = direction === "up";
-    const selectedElement = this.querySelector("[aria-selected='true']");
+    const selectedElement = this.querySelector(attributes.activeSelectedAria);
 
     // Filter out hidden elements (duplicated page and article resources)
     const allVisibleElements = Array.from(
-      this.querySelectorAll("[data-predictive-search-item]")
+      this.querySelectorAll(attributes.predictiveSearchItem)
     ).filter((element) => element.offsetParent !== null);
     let activeElementIndex = 0;
 
@@ -143,20 +156,21 @@ class PredictiveSearch extends SearchForm {
 
     const activeElement = allVisibleElements[activeElementIndex];
 
-    activeElement.setAttribute("aria-selected", true);
-    if (selectedElement) selectedElement.setAttribute("aria-selected", false);
+    activeElement.setAttribute(attributes.ariaSelected, true);
+    if (selectedElement)
+      selectedElement.setAttribute(attributes.ariaSelected, false);
 
-    this.input.setAttribute("aria-activedescendant", activeElement.id);
+    this.input.setAttribute(attributes.activeDescendantAria, activeElement.id);
   }
 
   selectOption() {
-    const selectedOption = this.querySelector("[aria-selected='true'] a");
+    const selectedOption = this.querySelector(attributes.activeSelectedAriaTag);
     if (selectedOption) selectedOption.click();
   }
 
   getSearchResults(searchTerm) {
     const queryKey = searchTerm.replace(" ", "-").toLowerCase();
-    this.setAttribute("loading", true);
+    this.setAttribute(attributes.loading, true);
     if (this.cachedResults[queryKey]) {
       this.renderSearchResults(this.cachedResults[queryKey]);
       return;
@@ -165,7 +179,7 @@ class PredictiveSearch extends SearchForm {
     fetch(
       `${window.routes.predictive_search_url}?q=${encodeURIComponent(
         searchTerm
-      )}&section_id=${SECTION_ID}`,
+      )}&section_id=${SHOPIFY_SECTION_ID}`,
       { signal: this.abortController.signal }
     )
       .then((response) => {
@@ -180,9 +194,9 @@ class PredictiveSearch extends SearchForm {
       .then((text) => {
         const resultsMarkup = new DOMParser()
           .parseFromString(text, "text/html")
-          .querySelector(`#shopify-section-${SECTION_ID}`).innerHTML;
+          .querySelector(`#shopify-section-${SHOPIFY_SECTION_ID}`).innerHTML;
         // Save bandwidth keeping the cache in all instances synced
-        this.allInstances.forEach((predictiveSearchInstance) => {
+        this.$allInstances.forEach((predictiveSearchInstance) => {
           predictiveSearchInstance.cachedResults[queryKey] = resultsMarkup;
         });
         this.renderSearchResults(resultsMarkup);
@@ -198,16 +212,16 @@ class PredictiveSearch extends SearchForm {
   }
 
   renderSearchResults(resultsMarkup) {
-    this.results.innerHTML = resultsMarkup;
-    this.setAttribute("results", true);
+    this.$results.innerHTML = resultsMarkup;
+    this.setAttribute(attributes.results, true);
 
-    this.removeAttribute("loading");
+    this.removeAttribute(attributes.loading);
     this.open();
   }
 
   open() {
-    this.setAttribute("open", true);
-    this.input.setAttribute("aria-expanded", true);
+    this.setAttribute(attributes.open, true);
+    this.input.setAttribute(attributes.ariaExpanded, true);
     this.isOpen = true;
   }
 
@@ -219,17 +233,17 @@ class PredictiveSearch extends SearchForm {
   closeResults(clearSearchTerm = false) {
     if (clearSearchTerm) {
       this.input.value = "";
-      this.removeAttribute("results");
+      this.removeAttribute(attributes.results);
     }
-    const selected = this.querySelector("[aria-selected='true']");
+    const selected = this.querySelector(attributes.activeSelectedAria);
 
-    if (selected) selected.setAttribute("aria-selected", false);
+    if (selected) selected.setAttribute(attributes.ariaSelected, false);
 
-    this.input.setAttribute("aria-activedescendant", "");
-    this.removeAttribute("loading");
-    this.removeAttribute("open");
-    this.input.setAttribute("aria-expanded", false);
-    this.results.removeAttribute("style");
+    this.input.setAttribute(attributes.activeDescendantAria, "");
+    this.removeAttribute(attributes.loading);
+    this.removeAttribute(attributes.open);
+    this.input.setAttribute(attributes.ariaExpanded, false);
+    this.$results.removeAttribute("style");
   }
 }
-customElements.define("predictive-search", PredictiveSearch);
+customElements.define(ELEMENT_NAME, PredictiveSearch);
