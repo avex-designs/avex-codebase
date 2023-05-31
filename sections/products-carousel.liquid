@@ -16,7 +16,7 @@
         <div class="swiper-wrapper">
           {% for product in collections[section.settings.carousel_coll].products limit: limit %}
             <div class="swiper-slide">
-              {%- render 'product-card', product: product, without_css: true -%}
+              {%- render 'product-card', product: product, no_css: true -%}
             </div>
           {% endfor %}
         </div>

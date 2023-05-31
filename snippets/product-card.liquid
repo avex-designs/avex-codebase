@@ -6,7 +6,7 @@
 {% endcomment %}
 
 {%- liquid
-  unless without_css
+  unless no_css
     render 'stylesheet', name: 'product-card'
   endunless
 -%}
@@ -25,6 +25,7 @@
   else
     assign current_variant = product.selected_or_first_available_variant
   endif
+  assign product_media = current_variant.featured_media | default: product.featured_media
 -%}
 
 <div class="product-card">
@@ -39,16 +40,16 @@
   <product-section>
     {%- render 'product-section-json', product: product, variant_id: current_variant.id, section_id: 'product-card', update_url: false -%}
 
-    <div>
-      {%- if product.featured_media != blank -%}
+    <div data-product-section-area>
+      {%- if product_media != blank -%}
         <a href="{{ product.url | within: collection }}">
           <image-loader>
             {%- comment -%}
               TODO: adjust the "loading" and the "sizes" attributes according to the design
             {%- endcomment -%}
             {{-
-            product.featured_media.preview_image
-            | image_url: width: product.featured_media.preview_image.width
+              product_media.preview_image
+            | image_url: width: product_media.preview_image.width
             | image_tag: loading: "lazy", sizes: '(min-width: 768px) 30vw, 50vw'
             -}}
           </image-loader>

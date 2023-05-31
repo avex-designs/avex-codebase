@@ -1,156 +1,115 @@
-{%- render 'stylesheet', name: 'cart-page' -%}
+{% comment %}
+  DEMO Cart page.
+{% endcomment %}
+{% comment %}
+  This is demo css, should be removed on production.
+{% endcomment %}
+<style>
+  .cart {
+    border: 1px solid;
+    margin: 1rem 0;
+    padding: 1rem;
+  }
+  .cart-item__details {
+    display: flex;
+    gap: 1rem;
+  }
+  .cart-item__details img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+  }
+  table {
+    width: 100%;
+  }
+  th,
+  td {
+    padding: 6px;
+    text-align: left;
+  }
+  .quantity-picker {
+    display: flex;
+    gap: 4px;
+  }
+  .quantity-picker input {
+    max-width: 40px;
+    text-align: center;
+  }
+  .quantity-picker a {
+    text-decoration: none;
+  }
+</style>
+<div class="cart">
+  <h1 class="cart__title">{{ page_title }}</h1>
+  <div data-ajax-cart-section>
+    {% if cart != empty %}
+      <form action="{{ routes.cart_url }}" method="post" id="cart">
+        <table class="cart___main cart-main">
+          <caption class="visually-hidden">
+            {{ page_title }}
+          </caption>
+          <thead class="cart-main__row cart-item titles-row">
+            <tr>
+              <th class="caption-with-letter-spacing" colspan="1" scope="col">Product</th>
+              <th colspan="1" scope="col">Quantity</th>
+              <th colspan="1" scope="col">Price</th>
+              <th colspan="1" scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- render 'cart-item' for cart.items as item -%}
+          </tbody>
+        </table>
+        <div>
+          <br>
+          <h3>Cart note:</h3>
+          <textarea
+            data-ajax-cart-property-input
+            name="note"
+            placeholder="Cart note"
+          >
+            {{ cart.note }}
+          </textarea>
+          {%- comment -%}
+            data-ajax-cart-static-element keeps the container unchanged
+            when the cart and the surrounding HTML get updated
+          {%- endcomment -%}
+          <div data-ajax-cart-static-element class="my-cart__app-container"></div>
 
-<div class="cart" data-ajax-cart-section>
-  <div class="container container-min {% if cart.item_count == 0 %}empty{% endif %}">
-    <h1 class="h2 cart__title">{{ 'sections.cart.title' | t }}</h1>
-    {% if cart.item_count > 0 %}
-      <form action="/cart" method="post">
-        <div class="cart___main cart-main">
-          <div class="cart-main__row cart-item titles-row">
-            <h2 class="h6">{{ 'sections.cart.headings.product' | t }}</h2>
-            <h2></h2>
-            <h2 class="h6">{{ 'sections.cart.headings.price' | t }}</h2>
-            <h2 class="h6">{{ 'sections.cart.headings.quantity' | t }}</h2>
-            <h2 class="h6">{{ 'sections.cart.headings.total' | t }}</h2>
-          </div>
-          {% for item in cart.items %}
-            <div class="cart-main__row cart-item">
-              <div class="cart-item__image">
-                <a href="{{ item.url }}">
-                  {{ item.image | image_url: width: item.image.width | image_tag: preload: true, class: 'auto', loading: "lazy" }}
-                </a>
-              </div>
-              <div class="cart-item__name">
-                <h3 class="h5 product-title">
-                  <a href="{{ item.url }}">{{ item.product.title }}</a>
-                </h3>
-                {% unless item.product.has_only_default_variant %}
-                  <ul>
-                    {%- for option in item.options_with_values -%}
-                      <li>{{ option.name }}: {{ option.value }}</li>
-                    {%- endfor -%}
-                  </ul>
-                {% endunless %}
-
-                {% unless item.properties == empty %}
-                  <ul>
-                    {% for property in item.properties %}
-                      <li>{{ property.first }}: {{ property.last }}</li>
-                    {% endfor %}
-                  </ul>
-                {% endunless %}
-                <div class="cart-item__mobile">
-                  <div class="quantity-picker">
-                    <a
-                      href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}"
-                      data-ajax-cart-request-button
-                      class="quantity-picker__btn quantity-picker__btn--decrease"
-                      type="button"
-                      aria-label="{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}"
-                      >&#8212;</a
-                    >
-                    <span class="count">{{ item.quantity }}</span>
-                    <a
-                      href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}"
-                      data-ajax-cart-request-button
-                      class="quantity-picker__btn quantity-picker__btn--increase"
-                      type="button"
-                      aria-label="{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}"
-                      >&#43;</a
-                    >
-                  </div>
-                  <a
-                    href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0"
-                    data-ajax-cart-request-button
-                    class="remove"
-                    type="button"
-                    aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
-                  >
-                    {{- 'sections.cart.remove' | t -}}
-                  </a>
-                </div>
-
-                <div class="error-placeholder" data-ajax-cart-messages="{{ item.key }}"></div>
-              </div>
-
-              <div class="cart-item__price">
-                {% if item.original_price > item.final_price %}
-                  <h5 class="original-price">{{ item.original_price | money }}</h5>
-                {% endif %}
-                <h5 class="final-price">{{ item.final_price | money }}</h5>
-              </div>
-              <div class="cart-item__quantity">
-                <div class="quantity-picker">
-                  <a
-                    href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}"
-                    data-ajax-cart-request-button
-                    class="quantity-picker__btn quantity-picker__btn--decrease"
-                    type="button"
-                    aria-label="{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}"
-                  >
-                    &#8212;</a
-                  >
-                  <input
-                    class="count"
-                    type="number"
-                    value="{{ item.quantity }}"
-                    data-ajax-cart-quantity-input="{{ forloop.index }}"
-                    aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
-                  >
-                  <a
-                    href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}"
-                    data-ajax-cart-request-button
-                    class="quantity-picker__btn quantity-picker__btn--increase"
-                    type="button"
-                    aria-label="{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}"
-                    >&#43;</a
-                  >
-                </div>
-              </div>
-              <div class="cart-item__total">
-                <h5 class="line-total">{{ item.final_line_price | money }}</h5>
-                <div class="cart-item__remove">
-                  <a
-                    href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0"
-                    data-ajax-cart-request-button
-                    class="remove"
-                    type="button"
-                  >
-                    {{- 'sections.cart.remove' | t -}}
-                  </a>
-                </div>
-              </div>
+          {%- if cart.cart_level_discount_applications.size > 0 -%}
+            <div>
+              {%- for discount_application in cart.cart_level_discount_applications -%}
+                <span>{{ discount_application.title }}</span>
+                <span
+                  >-
+                  {{- discount_application.total_allocated_amount | money -}}
+                </span>
+              {%- endfor -%}
             </div>
-          {% endfor %}
+          {%- endif -%}
+          <p>Total: {{ cart.total_price | money_with_currency }}</p>
+          <button
+            type="submit"
+            id="checkout"
+            name="checkout"
+            {% if cart == empty %}
+              disabled
+            {% endif %}
+            form="cart"
+          >
+            Checkout
+          </button>
 
-          <div class="cart__bottom">
-            <div class="cart-bottom">
-              <div class="cart-bottom__title">
-                <h4>{{ 'sections.cart.subtotal' | t }}</h4>
-                <span>{{ cart. total_discount | money }}</span>
-                <span>{{ cart.total_price | money }}</span>
-              </div>
-              {%- capture taxes_shipping_checkout -%}
-                {%- if shop.taxes_included and shop.shipping_policy.body != blank -%}
-                  {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                {%- elsif shop.taxes_included -%}
-                  {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
-                {%- elsif shop.shipping_policy.body != blank -%}
-                  {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
-                {%- else -%}
-                  {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
-                {%- endif -%}
-              {%- endcapture -%}
-              <div class="cart-bottom__shipping">{{ taxes_shipping_checkout }}</div>
-
-              <input type="submit" name="checkout" value="Checkout" class="cart-checkout primary-button">
+          {%- if additional_checkout_buttons -%}
+            <div class="additional-checkout-buttons">
+              {{ content_for_additional_checkout_buttons }}
             </div>
-          </div>
+          {%- endif -%}
         </div>
       </form>
     {% else %}
-      <h4>{{ 'sections.cart.empty' | t }}</h4>
-      <a class="primary-button" href=" {{ routes.all_products_collection_url }}">{{ 'sections.cart.shop_now' | t }}</a>
+      <h2>Cart is empty</h2>
+      <a href=" {{ routes.all_products_collection_url }}">Shop all</a>
     {% endif %}
   </div>
 </div>

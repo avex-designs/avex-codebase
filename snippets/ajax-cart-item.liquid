@@ -1,12 +1,8 @@
-<tr class="cart-item">
-  <td class="cart-item__details">
+<div class="cart-item">
+  <div class="cart-item__details">
     {% if item.image %}
       <a href="{{ item.url }}">
-        {{
-          item.image
-          | image_url: width: item.image.width
-          | image_tag: preload: true, class: 'auto', loading: 'lazy'
-        }}
+        {{ item.image | image_url: width: item.image.width | image_tag: preload: true, class: 'auto', loading: 'lazy' }}
       </a>
     {%- endif -%}
     <div>
@@ -29,15 +25,15 @@
       <p>{{ item.selling_plan_allocation.selling_plan.name }}</p>
       <div class="error-placeholder" data-ajax-cart-messages="{{ item.key }}"></div>
     </div>
-  </td>
+  </div>
 
-  <td class="cart-item__price">
+  <div class="cart-item__price">
     {% if item.original_price > item.final_price %}
       <s class="original-price">{{ item.original_price | money }}</s>
     {% endif %}
     <div class="final-price">{{ item.final_price | money }}</div>
-  </td>
-  <td class="cart-item__quantity">
+  </div>
+  <div class="cart-item__quantity">
     <div class="quantity-picker">
       <a
         href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}"
@@ -64,9 +60,8 @@
         >&#43;</a
       >
     </div>
-  </td>
-  <td class="cart-item__total">
-    <div>{{ item.final_line_price | money }}</div>
+  </div>
+  <div class="cart-item__total">
     <div class="cart-item__remove">
       <a
         href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0"
@@ -77,5 +72,5 @@
         Remove
       </a>
     </div>
-  </td>
-</tr>
+  </div>
+</div>

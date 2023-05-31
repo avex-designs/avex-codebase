@@ -1,6 +1,6 @@
 {%- comment -%}
-Render product card styles in advance in order to avoid flickering when the content gets updated via ajax.
-TODO: consider using inline stylesheet if the first screen rendering is blocked by product card styles
+  Render product card styles in advance in order to avoid flickering when the content gets updated via ajax.
+  TODO: consider using inline stylesheet if the first screen rendering is blocked by product card styles
 {%- endcomment -%}
 {%- render 'stylesheet', name: 'product-card' -%}
 
@@ -15,27 +15,56 @@ TODO: consider using inline stylesheet if the first screen rendering is blocked 
 <form action="{{ routes.search_url }}" method="get" role="search">
   <input name="options[prefix]" type="hidden" value="last">
   <div>
-    <label for="main-search-input">[Search]</label>
-    <input
-      id="main-search-input"
-      type="search"
-      name="q"
-      value="{{ search.terms | escape }}"
-      placeholder="[Search]"
-      {%- comment -%}
-        TODO: uncomment the following attributes in case of predictive search
-        role="combobox"
-        aria-expanded="false"
-        aria-owns="predictive-search-results"
-        aria-controls="predictive-search-results"
-        aria-haspopup="listbox"
-        aria-autocomplete="list"
-        autocorrect="off"
-        autocomplete="off"
-        autocapitalize="off"
-        spellcheck="false"
-      {%- endcomment -%}
-    >
+    <predictive-search>
+      <form action="{{ routes.search_url }}" method="get" role="search">
+        <div>
+          <label for="HeaderSearch">Search</label>
+          <br>
+          <div class="predictive-search-input-wrapper">
+            <input
+              type="search"
+              id="HeaderSearch"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="Search"
+              role="combobox"
+              aria-expanded="false"
+              aria-owns="predictive-search-results"
+              aria-controls="predictive-search-results"
+              aria-haspopup="listbox"
+              aria-autocomplete="list"
+              autocorrect="off"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            >
+            <div class="predictive-search-loading"><span class="loader"></span></div>
+          </div>
+
+          <input type="hidden" name="options[prefix]" value="last">
+          <button
+            type="reset"
+            class="{% if search.terms == blank %} hidden{% endif %}"
+            aria-label="Clear"
+          >
+            Clear
+          </button>
+          <button aria-label="Search">Search</button>
+        </div>
+
+        <div
+          tabindex="-1"
+          data-predictive-search-results
+          class="predictive-search-results predictive-search-dropdown"
+        ></div>
+
+        <span
+          class="predictive-search-status visually-hidden"
+          role="status"
+          aria-hidden="true"
+        ></span>
+      </form>
+    </predictive-search>
   </div>
 </form>
 
@@ -53,7 +82,6 @@ TODO: consider using inline stylesheet if the first screen rendering is blocked 
 {%- endif -%}
 
 {%- if search.performed -%}
-
   {%- render 'facets', results: search -%}
 
   <div data-facets-form-content="product-list">
@@ -63,14 +91,16 @@ TODO: consider using inline stylesheet if the first screen rendering is blocked 
       {%- paginate search.results by 8 -%}
         <infinite-paginate>
           {%- render 'infinite-paginate', type: 'load-prev', paginate: paginate -%}
-          <div data-infinite-paginate-content
-               data-infinite-paginate-loading-class="my-js-loading">
+          <div
+            data-infinite-paginate-content
+            data-infinite-paginate-loading-class="my-js-loading"
+          >
             <component-loader>
               {%- for item in search.results -%}
-                <hr />
+                <hr>
                 {%- case item.object_type -%}
                   {%- when 'product' -%}
-                    {%- render 'product-card', product: item, without_css: true -%}
+                    {%- render 'product-card', product: item, no_css: true -%}
                   {%- when 'article' -%}
                     {%- render 'article-card', article: item -%}
                   {%- when 'page' -%}

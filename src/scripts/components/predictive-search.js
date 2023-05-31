@@ -24,7 +24,10 @@ class PredictiveSearch extends SearchForm {
     this.$allInstances = document.querySelectorAll(ELEMENT_NAME);
     this.$results = this.querySelector(attributes.predictiveSearchResults);
     this.abortController = new AbortController();
-
+    if (!this.$results)
+      throw new Error(
+        `[${ELEMENT_NAME}] [Element with data attribute ${attributes.predictiveSearchResults} not declared!]`
+      );
     this.setEventListeners();
   }
 

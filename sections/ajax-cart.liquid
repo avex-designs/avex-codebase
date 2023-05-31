@@ -1,58 +1,74 @@
-{% comment %} {%- render "stylesheet", name: "ajax-cart", defer: true -%} {% endcomment %}
-
-<div style="display: none" class="minicart">
-  <div class="minicart__overlay" data-ajax-cart-toggle-class-button="js-ajax-cart-opened"></div>
+{% comment %}
+  This is demo css, should be removed on production.
+{% endcomment %}
+<style>
+  .cart-item__details img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+  }
+  .ajax-cart {
+    border: 1px solid;
+    margin: 1rem 0;
+    padding: 0.5rem;
+  }
+</style>
+<div style="ddisplay: none" class="ajax-cart">
+  <div class="ajax-cart__overlay" data-ajax-cart-toggle-class-button="js-ajax-cart-opened"></div>
   <div
     aria-modal="true"
-    class="minicart__inner"
+    class="ajax-cart__inner"
     role="dialog"
   >
-    <div class="minicart__section" data-ajax-cart-section>
-      <div class="minicart__header">
-        <h3 class="title">{{ section.settings.cart_title }}</h3>
-        {%- if section.settings.cart_text != blank -%}
-          <p class="cart-info">{{ section.settings.cart_text }}</p>
-        {%- endif -%}
+    <div class="ajax-cart__section" data-ajax-cart-section>
+      <div class="ajax-cart__header">
+        <h2 class="title">Ajax cart</h2>
         <button
           class="close-button"
           data-ajax-cart-toggle-class-button="js-ajax-cart-opened"
           type="button"
-          aria-label="{{ 'accessibility.close' | t }}"
-        ></button>
+          aria-label="Close"
+        >
+          Close
+        </button>
       </div>
-      {%- if cart.item_count == 0 -%}
-        <div class="minicart__empty">
-          <div>
-            <h4 style="margin-bottom: 1rem;">{{ section.settings.cart_empty }}</h4>
-            <a class="primary-button" href=" {{ routes.all_products_collection_url }}">
-              {{- 'sections.ajax_cart.shop_now' | t -}}
-            </a>
-          </div>
-        </div>
-      {%- else -%}
-        <form class="minicart__body" action="/cart" method="post">
-          {% for item in cart.items %}
-            {% render 'cart-item', item: item, index: forloop.index %}
-          {% endfor %}
-        </form>
-        <div class="minicart__footer">
-          <div class="minicart__footer-title-section">
-            <h5 class="title">{{ 'sections.ajax_cart.subtotal' | t }}</h5>
-            <span class="subtotal">
-              {{ cart.total_price | money }}
-            </span>
-          </div>
+      {%- if cart != empty -%}
+        <form class="ajax-cart__body" action="/cart" method="post" id="ajax-cart">
+          {%- render 'ajax-cart-item' for cart.items as item -%}
+          <div class="ajax-cart__footer">
+            <div>
+              <h3>Cart note:</h3>
+              <textarea
+                data-ajax-cart-property-input
+                name="note"
+                placeholder="Cart note"
+              >
+              {{ cart.note }}
+            </textarea>
+            </div>
 
-          <div class="minicart__footer-buttons-section">
-            <a class="secondary-button" href="{{ routes.cart_url }}">
-              {{ 'sections.ajax_cart.go_to_cart' | t }}
-            </a>
-            <form action="/cart" method="post">
-              <button class="primary-button" name="checkout" type="submit">
-                {{ 'sections.ajax_cart.checkout' | t }}
+            <div class="ajax-cart__footer-buttons-section">
+              <button
+                type="submit"
+                id="checkout"
+                name="checkout"
+                {% if cart == empty %}
+                  disabled
+                {% endif %}
+                form="ajax-cart"
+              >
+                Checkout
               </button>
-            </form>
+              <br>
+              <a class="secondary-button" href="{{ routes.cart_url }}"> Cart page </a>
+            </div>
           </div>
+        </form>
+
+      {%- else -%}
+        <div class="ajax-cart__empty">
+          <h2>Cart is empty</h2>
+          <a href=" {{ routes.all_products_collection_url }}">Shop all</a>
         </div>
       {%- endif -%}
     </div>
