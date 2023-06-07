@@ -11,8 +11,9 @@ const attributes = {
 class KlaviyoBIS extends HTMLElement {
   constructor() {
     super();
-    this.closeElements = this.querySelectorAll(`[${attributes.close}]`);
-    this.formElement = this.querySelector("form");
+    this.$closeElements = this.querySelectorAll(`[${attributes.close}]`);
+    this.$formElement = this.querySelector("form");
+    if (!this.$formElement) throw new Error("[KlaviyoBIS] Form not found");
   }
 
   connectedCallback() {
@@ -28,14 +29,14 @@ class KlaviyoBIS extends HTMLElement {
   }
 
   async #setOpenEvent(event) {
-    const openElement = event.target.closest(`[${attributes.open}]`);
-    if (!openElement) return;
+    const $openElement = event.target.closest(`[${attributes.open}]`);
+    if (!$openElement) return;
 
     event.preventDefault();
     this.#toggle(true);
     this.#loading(true);
-    const form = openElement.closest("form");
-    const requestURL = openElement.getAttribute(attributes.requestUrl);
+    const form = $openElement.closest("form");
+    const requestURL = $openElement.getAttribute(attributes.requestUrl);
     const selectedVariantId = form?.querySelector("[name='id']")?.value || 0;
 
     const url = `${requestURL}${requestURL.indexOf("?") > -1 ? "&" : "?"}${
@@ -66,7 +67,6 @@ class KlaviyoBIS extends HTMLElement {
   }
 
   async #submitForm() {
-    if (!this.formElement) throw new Error("[KlaviyoBIS] Form not found");
     this.formElement.addEventListener("submit", async (event) => {
       event.preventDefault();
       this.#reset();
@@ -96,10 +96,10 @@ class KlaviyoBIS extends HTMLElement {
     document.addEventListener("keyup", (event) => {
       if (event.code?.toUpperCase() === "ESCAPE") _self.#toggle(false);
     });
-    if (!this.closeElements || !this.closeElements.length)
+    if (!this.$closeElements || !this.$closeElements.length)
       return console.warn("[KlaviyoBIS] Close element not found");
 
-    this.closeElements.forEach((element) =>
+    this.$closeElements.forEach((element) =>
       element.addEventListener("click", (e) => {
         e.preventDefault();
         _self.#toggle(false);
