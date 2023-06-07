@@ -47,11 +47,8 @@
     id="{{ page_title | handle }}"
     class="{% if customer %}customer-logged-in {% endif %}template-{{ request.page_type | handle }} template-{{ template.name }}"
   >
-    <a class="skip-to-content-link button visually-hidden" href="#MainContent">
-      {{- 'general.accessibility.skip_to_text' | t -}}
-    </a>
+    <a class="skip-link" href="#MainContent">{{- 'general.accessibility.skip_to_text' | t -}}</a>
 
-   
     <component-loader>
       {%- section 'header' -%}
       {%- render 'breadcrumbs' -%}
@@ -67,11 +64,20 @@
 
     <!-- Cart JSON -->
     <script type="application/json" data-ajax-cart-initial-state>
-      {{ cart | json }}
+      {{- cart | json -}}
+    </script>
+    
+    {%- comment -%} Use updateOnWindowFocus on dev mode {%- endcomment -%}
+    <script type="application/json" data-ajax-cart-configuration>
+      {
+        "requestErrorText": "{{ 'cart.cart_error' | t }}",
+        "updateOnWindowFocus": false
+      }
     </script>
 
     {%- render 'component-loader' -%}
 
+    {%- comment -%} Required for predictive search  {%- endcomment -%}
     <script>
       window.routes = {
         predictive_search_url: '{{ routes.predictive_search_url }}',

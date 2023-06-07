@@ -25,6 +25,9 @@
       "current_state": "{{ current }} of {{ total }}"
     }
   },
+  "cart": {
+    "cart_error": "Error adding to bag"
+  },
   "products": {
     "product": {
       "add_to_cart": "Add to cart",
@@ -55,6 +58,11 @@
       "expired": "Expired",
       "copy_code_success": "Code copied successfully",
       "print_gift_card": "Print"
+    }
+  },
+  "sections": {
+    "hero-banner": {
+
     }
   },
   "blogs": {

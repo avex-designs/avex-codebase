@@ -1,4 +1,4 @@
-import { ProductOption } from "../helpers";
+import { ProductOption } from "../base-components/product-option";
 
 const ELEMENT_NAME = "product-radio-option";
 

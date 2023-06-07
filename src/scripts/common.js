@@ -1,4 +1,3 @@
-import Swiper, { Navigation, Pagination, Thumbs } from "swiper";
 import "liquid-ajax-cart";
 
 /**
@@ -6,16 +5,10 @@ import "liquid-ajax-cart";
  */
 // move to theme.liquid refer to Kit&ace
 // configureCart("addToCartCssClass", "js-ajax-cart-opened");
-/**
- * Configure Swiper Modules
- */
-// try to use in component level
-Swiper.use([Navigation, Pagination, Thumbs]);
-window.Swiper = Swiper;
 
 /**
  * Event Listeners
- * Use one eventlistener for all methods
+ * You may use one eventlistener for all methods
  */
 document.addEventListener(
   "click",

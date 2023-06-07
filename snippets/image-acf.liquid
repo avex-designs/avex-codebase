@@ -1,6 +1,9 @@
 {%- if image -%}
   {%- liquid
-    assign sizes = "(min-width: 540px) 100vw, 50vw"
+    if image[0].src
+      assign image = image[0]
+    endif
+    assign sizes = '(min-width: 540px) 100vw, 50vw'
 
     if imageSizes
       assign sizes = imageSizes
@@ -16,7 +19,6 @@
         assign imageUrl = image.src | append: '&transform=resize=' | append: width | append: ' ' | append: width | append: 'w'
         assign srcSet = srcSet | append: imageUrl | append: ', '
       endif
-
     endfor
     assign imgMasterUrl = image.src
     assign srcSet = srcSet | append: imgMasterUrl | append: ' ' | append: image.width | append: 'w'
