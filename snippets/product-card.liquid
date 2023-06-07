@@ -19,7 +19,7 @@
   with the following line: [assign current_variant = product.selected_variant]
 {%- endcomment -%}
 {%- liquid
-  assign current_variant = nil
+  assign current_variant = null
   if product.has_only_default_variant
     assign current_variant = product.variants[0]
   else
@@ -29,7 +29,6 @@
 -%}
 
 <div class="product-card">
-
   {%- comment -%}
     TODO:
     if the product card doesn't have variant selectors
@@ -38,7 +37,12 @@
     and all related "data-product-section-*" attributes
   {%- endcomment -%}
   <product-section>
-    {%- render 'product-section-json', product: product, variant_id: current_variant.id, section_id: 'product-card', update_url: false -%}
+    {%- render 'product-section-json',
+      product: product,
+      variant_id: current_variant.id,
+      section_id: 'product-card',
+      update_url: false
+    -%}
 
     <div data-product-section-area>
       {%- if product_media != blank -%}
@@ -49,8 +53,8 @@
             {%- endcomment -%}
             {{-
               product_media.preview_image
-            | image_url: width: product_media.preview_image.width
-            | image_tag: loading: "lazy", sizes: '(min-width: 768px) 30vw, 50vw'
+              | image_url: width: product_media.preview_image.width
+              | image_tag: loading: 'lazy', sizes: '(min-width: 768px) 30vw, 50vw'
             -}}
           </image-loader>
         </a>
@@ -76,7 +80,7 @@
          * and replace the "my-loading-class" with appropriate one
          */
         .my-loading-class:after {
-            content: 'Loading'
+          content: 'Loading';
         }
       </style>
       <div class="no-js-hidden" data-product-section-loading-class="my-loading-class">
@@ -94,7 +98,10 @@
                       type="radio"
                       name="{{ section.id }}-{{ product.id }}-{{ option.name | escape }}"
                       value="{{ value | escape }}"
-                      {% if current_variant and option.selected_value == value %}checked{% endif %}>
+                      {% if current_variant and option.selected_value == value %}
+                        checked
+                      {% endif %}
+                    >
                     <span>{{ value | escape }}</span>
                   </label>
                 {%- endfor -%}
@@ -103,12 +110,12 @@
           </div>
         {%- endunless -%}
 
-        {% form "product", product %}
+        {% form 'product', product %}
           <input type="hidden" name="id" value="{{ current_variant.id }}">
           <button
             type="submit"
             name="add"
-            {% if current_variant == nil or current_variant.available == false %}
+            {% if current_variant == null or current_variant.available == false %}
               disabled
             {% endif %}
             data-product-section-area="innerHTML,disabled"
@@ -124,11 +131,16 @@
               endif
             -%}
           </button>
+          <div data-product-section-area="innerHTML">
+            {%- unless current_variant.available -%}
+              <button type="button" data-klaviyo-bis-open data-klaviyo-bis-url="{{ product.url | within: collection }}">
+                Notify me
+              </button>
+            {%- endunless -%}
+          </div>
           <div class="product-card__error error-note" data-ajax-cart-messages="form"></div>
         {% endform %}
-
       </div>
-
     </div>
   </product-section>
 </div>

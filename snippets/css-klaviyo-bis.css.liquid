@@ -1,0 +1,100 @@
+/**
+Include icons in scss/css.
+Usage: 
+ @include icon(close);
+*/
+/*
+Media query mixin.
+Usage: 
+@include media($bp-l, min)
+*/
+/*
+Mixin to add loading spinner to button/element.
+Usage: 
+@include loading()
+*/
+.klaviyo-bis {
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.klaviyo-bis__overlay {
+  background: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+}
+
+.klaviyo-bis__body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #fff;
+  overflow: auto;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 460px;
+  display: grid;
+  z-index: 1;
+}
+
+.klaviyo-bis__form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+.klaviyo-bis__form input,
+.klaviyo-bis__form select {
+  width: 100%;
+}
+
+.klaviyo-bis__close {
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+  color: #000;
+  appearance: none;
+  padding: 0;
+  cursor: pointer;
+  background: 0 0;
+  border: 0;
+  position: absolute;
+  top: 0;
+  right: 5px;
+  text-decoration: none;
+}
+
+.klaviyo-bis__response-error-message,
+.klaviyo-bis__response-success-message {
+  display: none;
+}
+
+klaviyo-bis[open] .klaviyo-bis {
+  opacity: 1;
+  visibility: visible;
+  z-index: 101;
+}
+
+klaviyo-bis[loading] .klaviyo-bis__body {
+  opacity: 0.5;
+  pointer-events: none;
+  background-color: yellow;
+}
+
+klaviyo-bis[error] .klaviyo-bis__response-error-message {
+  display: block;
+}
+
+klaviyo-bis[success] .klaviyo-bis__response-success-message {
+  display: block;
+}

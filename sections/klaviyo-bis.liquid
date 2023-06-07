@@ -1,0 +1,103 @@
+{%- comment -%}
+  # Klaviyo Back in Stock
+
+  This section should be placed in `theme.liquid`. It uses the Section API to grab product information on requests.
+
+  **Usage:**
+
+  1. Add this section to `theme.liquid` and make sure `klaviyo-bis.js` file is added as well.
+  2. Add Klaviyo listing ID in theme customizer.
+  3. Adjust CSS as needed.
+
+  **JS/CSS logic:**
+
+  1. All JavaScript is handled by the custom component `<klaviyo-bis>`.
+  2. `data-klaviyo-bis-close` is a data attribute that can be used for modal closing.
+  3. `data-klaviyo-bis-body` -- everything inside of the element will be replaced by data returned by Section API.
+  4. There are 3 different attributes of `<klaviyo-bis>` component:
+      - `<klaviyo-bis open>` -- modal is open/active.
+      - `<klaviyo-bis loading>` -- Section API or Klaviyo fetch request is happening.
+      - `<klaviyo-bis success>` -- Klaviyo submission success.
+      - `<klaviyo-bis error>` -- Klaviyo submission error.
+{%- endcomment -%}
+
+{%- unless section.settings.klaviyo_id == blank -%}
+  {%- liquid
+    style
+      render 'css-klaviyo-bis.css'
+    endstyle
+  -%}
+  <klaviyo-bis>
+    <div
+      role="dialog"
+      aria-label="Klaviyo back in stock modal"
+      aria-modal="true"
+      class="klaviyo-bis"
+      tabindex="-1"
+    >
+      <span class="klaviyo-bis__overlay" data-klaviyo-bis-close></span>
+      <div class="klaviyo-bis__body">
+        <a class="klaviyo-bis__close" href="#" aria-label="Close" data-klaviyo-bis-close>×</a>
+        <form
+          method="post"
+          action="https://a.klaviyo.com/onsite/components/back-in-stock/subscribe"
+          class="klaviyo-bis__form"
+        >
+          <input name="a" value="{{ section.settings.klaviyo_id }}" type="hidden">
+          <input name="platform" value="shopify" type="hidden">
+          <input
+            type="email"
+            required
+            name="email"
+            value="{% if customer %}{{ customer.email }}{% endif %}"
+            placeholder="Enter your email"
+          >
+          <div data-klaviyo-bis-body>
+            {%- if product.has_only_default_variant -%}
+              <input
+                type="hidden"
+                name="variant"
+                value="{{ product.selected_variant.id }}"
+              >
+            {%- else -%}
+              <select
+                name="variant"
+              >
+                {%- for variant in product.variants -%}
+                  <option
+                    {% if variant == product.selected_variant %}
+                      selected="selected"
+                    {% endif %}
+                    {% unless variant.available == false %}
+                      disabled
+                    {% endunless %}
+                    value="{{ variant.id }}"
+                  >
+                    {{ variant.title }}
+                  </option>
+                {%- endfor -%}
+              </select>
+            {%- endif -%}
+          </div>
+          <button type="submit" class="klaviyo-bis__submit">Submit</button>
+          <div class="klaviyo-bis__response-error-message">Error</div>
+          <div class="klaviyo-bis__response-success-message">Success</div>
+        </form>
+      </div>
+    </div>
+  </klaviyo-bis>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Klaviyo back in stock",
+  "settings": [
+    {
+      "type": "text",
+      "id": "klaviyo_id",
+      "label": "Klaviyo ID",
+      "default": "WXeasw"
+    }
+  ]
+}
+{% endschema %}
