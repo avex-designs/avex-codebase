@@ -1,0 +1,74 @@
+custom-select.form-element {
+  display: block;
+  position: relative;
+
+  select + div {
+    padding-right: rem(48px);
+    position: relative;
+    background-color: #ccc;
+
+    &::after {
+      @include icon(arrowBottom);
+
+      content: "";
+      position: absolute;
+      right: rem(24px);
+      top: 0;
+      bottom: 0;
+      width: rem(16px);
+      background-position: center;
+      background-size: rem(16px);
+      background-repeat: no-repeat;
+      transition: transform 0.15s;
+    }
+  }
+
+  ul {
+    min-width: rem(240px);
+    position: absolute;
+    left: 0;
+    width: 100%;
+    z-index: 5;
+    background-color: #c0c0c0;
+    transform: scaleY(0.7);
+    transition: all 0.15s;
+    opacity: 0;
+    visibility: hidden;
+    transform-origin: top;
+    max-height: rem(416px);
+    overflow-y: auto;
+
+    li {
+      padding: rem(8px) rem(24px);
+      background-color: transparent;
+      transition: all 0.15s;
+      cursor: pointer;
+
+      &[disabled] {
+        opacity: 0.3;
+        pointer-events: none;
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:focus-visible {
+        background-color: black;
+        color: white;
+      }
+    }
+  }
+
+  &[open] {
+    ul {
+      transform: scaleY(1);
+      visibility: visible;
+      opacity: 1;
+    }
+
+    select + div {
+      &::after {
+        transform: scaleY(-1);
+      }
+    }
+  }
+}

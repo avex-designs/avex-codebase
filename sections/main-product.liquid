@@ -1,4 +1,5 @@
 {%- render 'stylesheet', name: 'product' -%}
+{%- render 'stylesheet', name: 'form-element' -%}
 
 {%- comment -%}
   Calculation the current_variant variable
@@ -140,7 +141,7 @@
                     <span data-product-select-option-value=": [[value]]"> : {{ option.selected_value | escape -}}</span>
                   {%- endif -%}
                 </label>
-                <custom-select tabindex="-1">
+                <custom-select class="form-element" tabindex="-1">
                   <select id="{{ section.id }}-{{ product.id }}-{{ option.name | escape }}">
                     {%- unless current_variant -%}
                       <option value="" selected disabled>
