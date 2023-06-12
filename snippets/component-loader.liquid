@@ -33,33 +33,33 @@
 <script type="text/javascript">
   const components = window.components || {};
 
+  const injectScript = (src, element) => {
+    const elScript = document.createElement('script');
+    elScript.type = 'module';
+    elScript.src = src;
+    document.body.appendChild(elScript);
+    elScript.addEventListener('error', () =>
+      document.querySelectorAll(element).forEach((el) => el.classList.add('no-js'))
+    );
+    elScript.addEventListener('load', () => {
+      document.dispatchEvent(
+        new CustomEvent('component-loaded', {
+          detail: {
+            component: element,
+            components,
+          },
+        })
+      );
+    });
+  }
+
   class ComponentLoader extends HTMLElement {
-    constructor() {
-      super();
+    connectedCallback() {
       Object.keys(components).forEach((component) => {
         if (this.querySelector(component)) {
-          this.injectScript(components[component], component);
+          injectScript(components[component], component);
           delete components[component];
         }
-      });
-    }
-    injectScript(src, element) {
-      const elScript = document.createElement('script');
-      elScript.type = 'module';
-      elScript.src = src;
-      document.body.appendChild(elScript);
-      elScript.addEventListener('error', () =>
-        document.querySelectorAll(element).forEach((el) => el.classList.add('no-js'))
-      );
-      elScript.addEventListener('load', () => {
-        document.dispatchEvent(
-          new CustomEvent('component-loaded', {
-            detail: {
-              component: element,
-              components,
-            },
-          })
-        );
       });
     }
   }
