@@ -1,9 +1,10 @@
 const fs = require("fs");
 const fsAsync = require("fs/promises");
+const path = require("path")
 
-const COMPONENTS_PATH = __dirname + "/src/scripts/components";
-const SNIPPETS_PATH = __dirname + "/snippets";
-const FILE_PATH = `${SNIPPETS_PATH}/component-loader.liquid`;
+const COMPONENTS_PATH = path.join(__dirname, "/src/scripts/components");
+const SNIPPETS_PATH = path.join(__dirname, "/snippets");
+const FILE_PATH = path.join(SNIPPETS_PATH, "/component-loader.liquid")
 const mode = process.env.NODE_ENV || "development";
 
 populateComponents();
@@ -43,8 +44,12 @@ async function writeSnippet(components) {
   let content = await (await fsAsync.readFile(FILE_PATH, "utf8")).toString();
   
   const file = `window.components = ${JSON.stringify(components, null, 2)}`;
-  content = content.replace(new RegExp(/<script>(.|\n)*?<\/script>/), `<script>\n\t${file}\n</script>`)
-  fs.writeFile(FILE_PATH, content, (err) => {
+  const newContent = content.replace(new RegExp(/<script\b[^>]*>([\s\S]*?)<\/script>/), `<script>\n\t${file}\n</script>`)
+  if (newContent === content) {
+    console.log("NO CHANGES")
+    return;
+  }
+  fs.writeFile(FILE_PATH, newContent, (err) => {
     if (err) console.log(err);
     else console.log("Components list is generated!");
   });
