@@ -54,13 +54,13 @@
         {%- comment -%}
           TODO: Set the correct "sizes" argument according to the design
         {%- endcomment -%}
-        <image-loader>
+        <media-loader>
           {{-
             media.preview_image
             | image_url: width: media.preview_image.width
             | image_tag: loading: media_loading, sizes: '(min-width: 992px) 50vw, 100vw'
           -}}
-        </image-loader>
+        </media-loader>
       {%- endif -%}
     {%- endfor -%}
   </div>

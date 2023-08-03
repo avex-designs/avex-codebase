@@ -1,8 +1,7 @@
 // https://css-tricks.com/how-to-animate-the-details-element/
 
 class AccordionBlock extends HTMLElement {
-  constructor() {
-    super();
+  connectedCallback() {
     this.el = this.querySelector("details");
     this.summary = this.querySelector("summary");
     this.content = this.summary.nextElementSibling;

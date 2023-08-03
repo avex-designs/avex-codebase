@@ -70,12 +70,12 @@ body {
 
 /* Image loader */
 
-image-loader {
+media-loader {
   display: block;
 }
 
 @supports selector(:defined) {
-  image-loader {
+  media-loader {
     opacity: 0;
     transition: opacity 0.3s;
 

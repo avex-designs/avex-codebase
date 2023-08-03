@@ -19,9 +19,9 @@
   <div>{{ collection_description }}</div>
 {%- endif -%}
 {%- if collection.image -%}
-  <image-loader>
+  <media-loader>
     {{- collection.image | image_url: width: collection.image.width | image_tag: class: 'collection-image' -}}
-  </image-loader>
+  </media-loader>
 {%- endif -%}
 
 {%- render 'facets', results: collection -%}

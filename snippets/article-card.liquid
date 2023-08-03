@@ -9,7 +9,7 @@
 <article>
   {%- if article.image -%}
     <a href="{{ article.url }}">
-      <image-loader>
+      <media-loader>
         {%- comment -%}
             TODO: adjust the "loading" and the "sizes" attributes according to the design
           {%- endcomment -%}
@@ -18,7 +18,7 @@
         | image_url: width: article.image.width
         | image_tag: loading: "lazy", sizes: '(min-width: 768px) 30vw, 50vw'
         -}}
-      </image-loader>
+      </media-loader>
     </a>
   {%- endif -%}
 
