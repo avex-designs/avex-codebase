@@ -7,6 +7,10 @@ class MediaLoader extends HTMLElement {
     this.querySelectorAll("img, video").forEach(($element) => {
       if ($element instanceof HTMLVideoElement) {
         $element.addEventListener("loadeddata", this.#test.bind(this));
+        $element.addEventListener("loadedmetadata", this.#test.bind(this));
+        $element.addEventListener("canplay", this.#test.bind(this));
+        $element.addEventListener("canplaythrough", this.#test.bind(this));
+        $element.addEventListener("playing", this.#test.bind(this));
       } else {
         $element.addEventListener("load", this.#test.bind(this));
       }
@@ -17,6 +21,7 @@ class MediaLoader extends HTMLElement {
   }
 
   #test() {
+    if (this.hasAttribute("ready")) return;
     for (let i = 0; i < this.#$elements.length; i++) {
       const $element = this.#$elements[i];
 
