@@ -1,3 +1,4 @@
+/// KlaviyoBIS
 const ELEMENT_ID = "klaviyo-bis";
 
 const attributes = {
@@ -97,7 +98,7 @@ class KlaviyoBIS extends HTMLElement {
       if (event.code?.toUpperCase() === "ESCAPE") _self.#toggle(false);
     });
     if (!this.$closeElements || !this.$closeElements.length)
-      return console.warn("[KlaviyoBIS] Close element not found!!");
+      return console.warn("[KlaviyoBIS] Close element not found");
 
     this.$closeElements.forEach((element) =>
       element.addEventListener("click", (e) => {

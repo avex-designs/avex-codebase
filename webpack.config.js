@@ -16,7 +16,6 @@ const files = {
   resources: __dirname + "/src/scss/resources.scss",
 };
 
-
 function getFileName(path) {
   let isSnippet = false;
   let isAsset = true;
@@ -90,6 +89,7 @@ for (let file of glob.sync(files.blocks_scssPath)) {
 
 module.exports = (env, argv) => {
   mode = argv.mode || "development";
+  console.log(mode);
   const config = {
     mode: mode,
     devtool: false, //disable sourcemap for js
@@ -110,6 +110,19 @@ module.exports = (env, argv) => {
     },
     module: {
       rules: [
+        // {
+        //   test: /\.(?:js)$/,
+        //   exclude: /node_modules/,
+        //   use: {
+        //     loader: 'babel-loader',
+        //     options: {
+        //       presets: [
+        //         ['@babel/preset-env', { targets: "since 2022" }] // https://github.com/browserslist/browserslist
+        //       ],
+        //       plugins: ['@babel/plugin-transform-private-methods']
+        //     }
+        //   }
+        // },
         {
           test: /\.(scss|css)$/,
           use: [
@@ -162,7 +175,11 @@ module.exports = (env, argv) => {
     optimization: {
       minimizer:
         mode === "production"
-          ? [new TerserPlugin({ extractComments: false })]
+          ? [
+              new TerserPlugin({
+                extractComments: false,
+              }),
+            ]
           : [],
     },
     stats: "errors-only",
