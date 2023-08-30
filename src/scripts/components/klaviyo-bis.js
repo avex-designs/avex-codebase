@@ -94,6 +94,7 @@ class KlaviyoBIS extends HTMLElement {
   #setCloseEvent() {
     const _self = this;
     document.addEventListener("keyup", (event) => {
+      var test = "";
       if (event.code?.toUpperCase() === "ESCAPE") _self.#toggle(false);
     });
     if (!this.$closeElements || !this.$closeElements.length)
