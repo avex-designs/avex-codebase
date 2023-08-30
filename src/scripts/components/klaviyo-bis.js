@@ -1,3 +1,4 @@
+/// KlaviyoBIS
 const ELEMENT_ID = "klaviyo-bis";
 
 const attributes = {
@@ -67,13 +68,13 @@ class KlaviyoBIS extends HTMLElement {
   }
 
   async #submitForm() {
-    this.formElement.addEventListener("submit", async (event) => {
+    this.$formElement.addEventListener("submit", async (event) => {
       event.preventDefault();
       this.#reset();
       this.#loading(true);
       try {
-        const formData = new FormData(this.formElement);
-        const response = await fetch(this.formElement.action, {
+        const formData = new FormData(this.$formElement);
+        const response = await fetch(this.$formElement.action, {
           method: "post",
           body: formData,
         }).then((response) => response.json());
