@@ -1,7 +1,7 @@
 {% comment %}
   The object should be full {{ product | json }} or only needed properties of that object
 {% endcomment %}
-{%- liquid 
+{%- liquid
   unless section_id
     assign section_id = section.id
   endunless
@@ -15,9 +15,14 @@
   else
     assign update_url = 'false'
   endif
+  assign request_url = product.url | within: collection
+
+  if request.path contains 'products_preview'
+    assign request_url = request.path
+  endif
 -%}
 <script type="application/json" data-product-section-json>
-  { 
+  {
     "product": {
       "options": {{ product.options | json }},
       "variants": [
@@ -33,7 +38,7 @@
     },
     "section": {
       "sectionId": "{{ section_id }}",
-      "requestURL": "{{ product.url | within: collection }}",
+      "requestURL": "{{ request_url }}",
       "variantId": {{ variant_id }},
       "updateURL": {{ update_url }}
     }
