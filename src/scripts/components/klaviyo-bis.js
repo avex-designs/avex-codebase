@@ -73,15 +73,45 @@ class KlaviyoBIS extends HTMLElement {
       this.#reset();
       this.#loading(true);
       try {
+        const payload = {
+          data: {
+            type: "back-in-stock-subscription",
+            attributes: {
+              profile: {
+                data: {
+                  type: "profile",
+                  attributes: {
+                    email: formData.get("email"),
+                  },
+                },
+              },
+              channels: ["EMAIL"],
+            },
+            relationships: {
+              variant: {
+                data: {
+                  type: "catalog-variant",
+                  id: `$shopify:::$default:::${formData.get("variant")}`,
+                },
+              },
+            },
+          },
+        };
         const formData = new FormData(this.$formElement);
         const response = await fetch(this.$formElement.action, {
           method: "post",
-          body: formData,
-        }).then((response) => response.json());
-        if (response?.success) {
-          this.#success(true);
+          headers: {
+            "Content-Type": "application/json",
+            accept: "application/json",
+            revision: "2023-09-15",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (response?.status === 202) {
+          this._success(true);
         } else {
-          this.#error(true);
+          this._error(true);
         }
 
         this.#loading(false);

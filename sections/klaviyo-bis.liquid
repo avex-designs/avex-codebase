@@ -40,11 +40,9 @@
         <a class="klaviyo-bis__close" href="#" aria-label="Close" data-klaviyo-bis-close>×</a>
         <form
           method="post"
-          action="https://a.klaviyo.com/onsite/components/back-in-stock/subscribe"
+          action="https://a.klaviyo.com/client/back-in-stock-subscriptions/?company_id={{ section.settings.klaviyo_id }}"
           class="klaviyo-bis__form"
         >
-          <input name="a" value="{{ section.settings.klaviyo_id }}" type="hidden">
-          <input name="platform" value="shopify" type="hidden">
           <input
             type="email"
             required
