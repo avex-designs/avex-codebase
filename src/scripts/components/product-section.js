@@ -80,6 +80,27 @@ class ProductSection extends HTMLElement {
     this.addEventListener(Events.STATECHANGE, this.#render.bind(this));
     this.#latestHTML = `<div>${this.outerHTML}</div>`;
     this.#hydrate();
+    this.#adjustRequestURL();
+  }
+
+  #adjustRequestURL() {
+    if (this._data.section.requestURL !== "/products_preview") return;
+
+    this.previewKey = new URLSearchParams(window.location.search).get(
+      "preview_key"
+    );
+  }
+
+  #getURL(isReplaceUrl = false) {
+    const urlArr = this._data.section.requestURL.split("?");
+    const searchParams = new URLSearchParams(urlArr[1]);
+
+    if (this._variantId > 0) searchParams.set("variant", this._variantId);
+    if (!isReplaceUrl)
+      searchParams.set("secetion_id", this._data.section.sectionId);
+    if (this.previewKey) searchParams.set("preview_key", this.previewKey);
+
+    return `${urlArr[0]}?${searchParams.toString()}`;
   }
 
   #hydrate() {
@@ -254,21 +275,8 @@ class ProductSection extends HTMLElement {
       return;
     }
 
-    if (this.#data.section.updateURL) {
-      window.history.replaceState(
-        {},
-        "",
-        `${this.#data.section.requestURL}${
-          this.#data.section.requestURL.indexOf("?") > -1 ? "&" : "?"
-        }${this.#variantId > 0 ? `variant=${this.#variantId}` : ""}`
-      );
-    }
-
-    const url = `${this.#data.section.requestURL}${
-      this.#data.section.requestURL.indexOf("?") > -1 ? "&" : "?"
-    }${this.#variantId > 0 ? `variant=${this.#variantId}&` : ""}section_id=${
-      this.#data.section.sectionId
-    }`;
+    if (this._data.section.updateURL)
+      window.history.replaceState({}, "", this._getURL(true));
 
     this.#abortController = new AbortController();
 
@@ -279,7 +287,7 @@ class ProductSection extends HTMLElement {
     this.#toggleLoadingClasses(true);
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(this.#getURL(), {
         signal: this.#abortController.signal,
       });
       if (!response.ok)
