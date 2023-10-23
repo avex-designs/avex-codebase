@@ -9,7 +9,7 @@
   with the following line: [assign current_variant = product.selected_variant]
 {%- endcomment -%}
 {%- liquid
-  assign current_variant = null
+  assign current_variant = nil
   if product.has_only_default_variant
     assign current_variant = product.variants[0]
   else
