@@ -81,7 +81,7 @@
               {{ filter.label | escape }}
             </div>
             <div data-facets-form-content="filter-block-{{ forloop.index }}">
-              {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+              {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
                 <a href="{{ filter.url_to_remove }}" data-facets-form-link>clear</a>
               {%- endif -%}
               <div>
@@ -175,7 +175,7 @@
       </a>
     {%- endfor -%}
     {% if filter.type == 'price_range' %}
-      {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+      {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
         <a href="{{ filter.url_to_remove }}" data-facets-form-link>
           {%- if filter.min_value.value -%}
             {{ filter.min_value.value | money }}
