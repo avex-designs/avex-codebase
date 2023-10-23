@@ -37,7 +37,8 @@
     and all related "data-product-section-*" attributes
   {%- endcomment -%}
   <product-section>
-    {%- render 'product-section-json',
+    {%-
+      render 'product-section-json',
       product: product,
       variant_id: current_variant.id,
       section_id: 'product-card',
@@ -111,11 +112,15 @@
         {%- endunless -%}
 
         {% form 'product', product %}
-          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          <input
+            type="hidden"
+            name="id"
+            value="{{ current_variant.id }}"
+          >
           <button
             type="submit"
             name="add"
-            {% if current_variant == null or current_variant.available == false %}
+            {% if current_variant == nil or current_variant.available == false %}
               disabled
             {% endif %}
             data-product-section-area="innerHTML,disabled"
@@ -133,7 +138,11 @@
           </button>
           <div data-product-section-area="innerHTML">
             {%- unless current_variant.available -%}
-              <button type="button" data-klaviyo-bis-open data-klaviyo-bis-url="{{ product.url | within: collection }}">
+              <button
+                type="button"
+                data-klaviyo-bis-open
+                data-klaviyo-bis-url="{{ product.url | within: collection }}"
+              >
                 Notify me
               </button>
             {%- endunless -%}

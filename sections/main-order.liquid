@@ -45,7 +45,7 @@
                 <p>{{ line_item.title }}</p>
               {%- endif -%}
               {%- assign property_size = line_item.properties | size -%}
-              {%- unless line_item.selling_plan_allocation == null and property_size == 0 -%}
+              {%- unless line_item.selling_plan_allocation == nil and property_size == 0 -%}
                 {% comment %} ## Properties {% endcomment %}
                 <div>
                   {%- unless line_item.product.has_only_default_variant -%}
@@ -53,7 +53,7 @@
                       {{ line_item.variant.title }}
                     </span>
                   {%- endunless -%}
-                  {%- unless line_item.selling_plan_allocation == null -%}
+                  {%- unless line_item.selling_plan_allocation == nil -%}
                     <span>
                       {{ line_item.selling_plan_allocation.selling_plan.name }}
                     </span>
