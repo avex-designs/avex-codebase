@@ -4,7 +4,8 @@
   "scss.validate": false,
   "stylelint.validate": ["css", "scss"],
   "[liquid]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "Shopify.theme-check-vscode",
+    "editor.formatOnSave": true
   },
   "emmet.includeLanguages": {
     "liquid": "html"
