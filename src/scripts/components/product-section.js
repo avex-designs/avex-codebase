@@ -13,23 +13,23 @@ const Events = {
 };
 
 class ProductSection extends HTMLElement {
-  // if #variantId is undefinded, means the element is not initialized
-  // if #variantId is 0, means not all the options are selected so no specific variant is chosen
-  // if #variantId is null, means all the options are selected but no variant exists for the options' combination
-  #variantId;
+  // if _variantId is undefinded, means the element is not initialized
+  // if _variantId is 0, means not all the options are selected so no specific variant is chosen
+  // if _variantId is null, means all the options are selected but no variant exists for the options' combination
+  _variantId;
 
-  #data;
+  _data;
 
-  // The #optionsValues keeps the state of options' values, where the index is the option's index.
+  // The _optionsValues keeps the state of options' values, where the index is the option's index.
   // [
   //   0 => {
   //      name: 'Size',
   //      value: 'Medium'
   //   }
   // ]
-  #optionsValues = [];
+  _optionsValues = [];
 
-  // The #optionsHierarchy keeps the info which option is considered as the first option, which is the second etc.
+  // The _optionsHierarchy keeps the info which option is considered as the first option, which is the second etc.
   // The index of this array is hierarchy number, the value -- is the index of a related option:
   // [
   //   0 => 1,
@@ -46,7 +46,7 @@ class ProductSection extends HTMLElement {
   //   1 => 1,
   //   2 => 2
   // ]
-  #optionsHierarchy = [];
+  _optionsHierarchy = [];
 
   // {
   //   'Size': {
@@ -58,32 +58,32 @@ class ProductSection extends HTMLElement {
   //     'Blue': true
   //   }
   // }
-  #optionsAvailability = {};
+  _optionsAvailability = {};
 
   // List of form inputs that send variant ID to the server
-  #$variantInputs;
-  #$addToCartButtons;
+  _$variantInputs;
+  _$addToCartButtons;
 
-  #isHydration = false;
+  _isHydration = false;
 
   // to abort previous Section API fetch requests
-  #abortController;
+  _abortController;
 
   // keeps the latest HTML of the component to get back to it if a fetch error occurs
-  #latestHTML;
+  _latestHTML;
 
   constructor() {
     super();
   }
 
   connectedCallback() {
-    this.addEventListener(Events.STATECHANGE, this.#render.bind(this));
-    this.#latestHTML = `<div>${this.outerHTML}</div>`;
-    this.#hydrate();
-    this.#adjustRequestURL();
+    this.addEventListener(Events.STATECHANGE, this._render.bind(this));
+    this._latestHTML = `<div>${this.outerHTML}</div>`;
+    this._hydrate();
+    this._adjustRequestURL();
   }
 
-  #adjustRequestURL() {
+  _adjustRequestURL() {
     if (this._data.section.requestURL !== "/products_preview") return;
 
     this.previewKey = new URLSearchParams(window.location.search).get(
@@ -91,20 +91,20 @@ class ProductSection extends HTMLElement {
     );
   }
 
-  #getURL(isReplaceUrl = false) {
+  _getURL(isReplaceUrl = false) {
     const urlArr = this._data.section.requestURL.split("?");
     const searchParams = new URLSearchParams(urlArr[1]);
 
     if (this._variantId > 0) searchParams.set("variant", this._variantId);
     if (!isReplaceUrl)
-      searchParams.set("secetion_id", this._data.section.sectionId);
+      searchParams.set("section_id", this._data.section.sectionId);
     if (this.previewKey) searchParams.set("preview_key", this.previewKey);
 
     return `${urlArr[0]}?${searchParams.toString()}`;
   }
 
-  #hydrate() {
-    this.#isHydration = true;
+  _hydrate() {
+    this._isHydration = true;
 
     try {
       const $jsonScript = this.querySelector(`[${attributes.json}]`);
@@ -112,32 +112,32 @@ class ProductSection extends HTMLElement {
         throw new Error(
           `[${ELEMENT_NAME}] [The mandatory ${attributes.json} element is not found]`
         );
-      this.#data = JSON.parse($jsonScript.innerHTML);
+      this._data = JSON.parse($jsonScript.innerHTML);
 
-      // set the #optionsHierarchy to match the options order
-      this.#optionsHierarchy = this.#data.product.options.map(
+      // set the _optionsHierarchy to match the options order
+      this._optionsHierarchy = this._data.product.options.map(
         (option, index) => index
       );
 
       if (
-        !("requestURL" in this.#data.section) ||
-        !("sectionId" in this.#data.section)
+        !("requestURL" in this._data.section) ||
+        !("sectionId" in this._data.section)
       )
         throw new Error(
           `[${ELEMENT_NAME}] [Wrong ${attributes.json} data structure]`
         );
 
-      this.#$variantInputs = this.querySelectorAll("input[name='id']");
+      this._$variantInputs = this.querySelectorAll("input[name='id']");
 
-      this.#$addToCartButtons = this.querySelectorAll("[name='add']");
+      this._$addToCartButtons = this.querySelectorAll("[name='add']");
 
-      this.setVariantId(this.#data.section.variantId || 0);
+      this.setVariantId(this._data.section.variantId || 0);
     } catch (e) {
-      this.#isHydration = false;
+      this._isHydration = false;
       throw e;
     }
 
-    this.#isHydration = false;
+    this._isHydration = false;
   }
 
   /**
@@ -148,7 +148,7 @@ class ProductSection extends HTMLElement {
     let optionsValues;
 
     if (variantId > 0) {
-      const variant = this.#data.product.variants.find(
+      const variant = this._data.product.variants.find(
         (variant) => variant.id === variantId
       );
       if (!variant)
@@ -156,19 +156,19 @@ class ProductSection extends HTMLElement {
           `[${ELEMENT_NAME}] [The variant "${variantId}" is not found in the product data object]`
         );
 
-      optionsValues = this.#data.product.options.map((name, index) => {
+      optionsValues = this._data.product.options.map((name, index) => {
         return {
           name,
           value: variant.options[index],
         };
       });
 
-      return this.#changeState({ variantId, optionsValues });
+      return this._changeState({ variantId, optionsValues });
     }
 
-    return this.#changeState({
+    return this._changeState({
       variantId: 0,
-      optionsValues: this.#data.product.options.map((name) => {
+      optionsValues: this._data.product.options.map((name) => {
         return {
           name,
           value: null,
@@ -187,7 +187,7 @@ class ProductSection extends HTMLElement {
   setOptions(changedOptions) {
     let areAllSelected = true;
 
-    const optionsValues = this.#optionsValues.map(({ name, value }) => {
+    const optionsValues = this._optionsValues.map(({ name, value }) => {
       let newValue = name in changedOptions ? changedOptions[name] : value;
       if (newValue === null || newValue === undefined || newValue === "") {
         newValue = null;
@@ -200,9 +200,9 @@ class ProductSection extends HTMLElement {
     });
 
     if (!areAllSelected)
-      return this.#changeState({ variantId: 0, optionsValues });
+      return this._changeState({ variantId: 0, optionsValues });
 
-    const variant = this.#data.product.variants.find((variant) => {
+    const variant = this._data.product.variants.find((variant) => {
       for (let i = 0; i < optionsValues.length; i++) {
         if (optionsValues[i].value !== variant.options[i]) {
           return false;
@@ -212,25 +212,25 @@ class ProductSection extends HTMLElement {
     });
 
     const variantId = variant ? variant.id : null;
-    return this.#changeState({ variantId, optionsValues });
+    return this._changeState({ variantId, optionsValues });
   }
 
-  #changeState({ variantId, optionsValues }) {
-    const isVariantChanged = variantId !== this.#variantId;
+  _changeState({ variantId, optionsValues }) {
+    const isVariantChanged = variantId !== this._variantId;
     const areOptionsChanged = optionsValues.reduce((acc, el, index) => {
       return (
         acc ||
-        el.name !== this.#optionsValues[index]?.name ||
-        el.value !== this.#optionsValues[index]?.value
+        el.name !== this._optionsValues[index]?.name ||
+        el.value !== this._optionsValues[index]?.value
       );
     }, false);
 
-    this.#variantId = variantId;
-    this.#optionsValues = optionsValues;
+    this._variantId = variantId;
+    this._optionsValues = optionsValues;
 
     const isAvailabilityChanged =
-      areOptionsChanged || this.#isHydration
-        ? this.#updateAvailability()
+      areOptionsChanged || this._isHydration
+        ? this._updateAvailability()
         : false;
 
     if (isVariantChanged || areOptionsChanged || isAvailabilityChanged) {
@@ -244,24 +244,24 @@ class ProductSection extends HTMLElement {
     }
   }
 
-  async #render(event) {
-    if (this.#abortController) {
-      this.#abortController.abort();
-      this.#abortController = undefined;
+  async _render(event) {
+    if (this._abortController) {
+      this._abortController.abort();
+      this._abortController = undefined;
     }
 
-    this.#$variantInputs.forEach(($input) => {
-      $input.value = this.#variantId || "";
-      $input.setAttribute("value", this.#variantId || "");
+    this._$variantInputs.forEach(($input) => {
+      $input.value = this._variantId || "";
+      $input.setAttribute("value", this._variantId || "");
     });
 
-    this.#toggleLoadingClasses(false);
-    this.#showErrorMessages(false);
+    this._toggleLoadingClasses(false);
+    this._showErrorMessages(false);
 
-    if (!event.detail.isVariantChanged || this.#isHydration) return;
+    if (!event.detail.isVariantChanged || this._isHydration) return;
 
-    if (this.#variantId === null) {
-      this.#$addToCartButtons.forEach(($button) => {
+    if (this._variantId === null) {
+      this._$addToCartButtons.forEach(($button) => {
         $button.disabled = true;
       });
       this.querySelectorAll(`[${attributes.doesNotExistText}]`).forEach(
@@ -278,17 +278,17 @@ class ProductSection extends HTMLElement {
     if (this._data.section.updateURL)
       window.history.replaceState({}, "", this._getURL(true));
 
-    this.#abortController = new AbortController();
+    this._abortController = new AbortController();
 
-    this.#$addToCartButtons.forEach(($button) => {
+    this._$addToCartButtons.forEach(($button) => {
       $button.disabled = true;
     });
 
-    this.#toggleLoadingClasses(true);
+    this._toggleLoadingClasses(true);
 
     try {
-      const response = await fetch(this.#getURL(), {
-        signal: this.#abortController.signal,
+      const response = await fetch(this._getURL(), {
+        signal: this._abortController.signal,
       });
       if (!response.ok)
         throw new Error(
@@ -296,23 +296,23 @@ class ProductSection extends HTMLElement {
         );
 
       const html = await response.text();
-      this.#changeHTML(html);
-      this.#toggleLoadingClasses(false);
+      this._changeHTML(html);
+      this._toggleLoadingClasses(false);
     } catch (error) {
       if (error.name !== "AbortError") {
-        this.#changeHTML(this.#latestHTML);
-        this.#toggleLoadingClasses(false);
-        this.#showErrorMessages(true);
+        this._changeHTML(this._latestHTML);
+        this._toggleLoadingClasses(false);
+        this._showErrorMessages(true);
         throw error;
       }
     }
   }
 
-  #toggleLoadingClasses(on) {
+  _toggleLoadingClasses(on) {
     toggleClassFromAttribute(this, attributes.loadingClass, on);
   }
 
-  #showErrorMessages(show) {
+  _showErrorMessages(show) {
     this.querySelectorAll(`[${attributes.errorMessage}]`).forEach(
       ($element) => {
         $element.hidden = !show;
@@ -320,7 +320,7 @@ class ProductSection extends HTMLElement {
     );
   }
 
-  #changeHTML(html) {
+  _changeHTML(html) {
     const newDocument = new DOMParser().parseFromString(html, "text/html");
     const $newElement = newDocument.querySelector(
       `${ELEMENT_NAME}${this.id ? "#" + this.id : ""}`
@@ -329,7 +329,7 @@ class ProductSection extends HTMLElement {
       throw new Error(
         `[${ELEMENT_NAME}] [The "${ELEMENT_NAME}" element is not found]`
       );
-    this.#latestHTML = html;
+    this._latestHTML = html;
 
     this.querySelector(`[${attributes.json}]`).innerHTML =
       $newElement.querySelector(`[${attributes.json}]`).innerHTML;
@@ -374,16 +374,16 @@ class ProductSection extends HTMLElement {
       });
     }
     if (hasShopifyPaymentButton) window.Shopify?.PaymentButton?.init();
-    this.#hydrate();
+    this._hydrate();
   }
 
-  #updateAvailability() {
+  _updateAvailability() {
     const newAvailability = {};
 
-    this.#data.product.variants.forEach((variant) => {
-      for (let i = 0; i < this.#optionsHierarchy.length; i++) {
-        const optionIndex = this.#optionsHierarchy[i];
-        const optionName = this.#data.product.options[optionIndex];
+    this._data.product.variants.forEach((variant) => {
+      for (let i = 0; i < this._optionsHierarchy.length; i++) {
+        const optionIndex = this._optionsHierarchy[i];
+        const optionName = this._data.product.options[optionIndex];
         const variantOptionValue = variant.options[optionIndex];
 
         if (!(optionName in newAvailability)) {
@@ -398,15 +398,15 @@ class ProductSection extends HTMLElement {
 
         if (
           variant.options[optionIndex] !==
-          this.#optionsValues[optionIndex].value
+          this._optionsValues[optionIndex].value
         ) {
           break;
         }
       }
     });
 
-    const prevAvailability = this.#optionsAvailability;
-    this.#optionsAvailability = newAvailability;
+    const prevAvailability = this._optionsAvailability;
+    this._optionsAvailability = newAvailability;
 
     const newAvailabilityKeys = Object.keys(newAvailability);
     if (newAvailabilityKeys.length !== Object.keys(prevAvailability).length)
@@ -438,9 +438,9 @@ class ProductSection extends HTMLElement {
 
   get state() {
     return {
-      variantId: this.#variantId,
-      optionsValues: this.#optionsValues,
-      optionsAvailability: this.#optionsAvailability,
+      variantId: this._variantId,
+      optionsValues: this._optionsValues,
+      optionsAvailability: this._optionsAvailability,
     };
   }
 }
