@@ -1,13 +1,13 @@
 export class ProductOption extends HTMLElement {
-  #elementName;
-  #valueLabelPlaceholder = "[[value]]";
-  #availabilityStatuses = {
+  _elementName;
+  _valueLabelPlaceholder = "[[value]]";
+  _availabilityStatuses = {
     undefined: "undefined",
     available: "available",
     not_available: "not-available",
     does_not_exist: "does-not-exist",
   };
-  #classPrefix = "js-product-option-";
+  _classPrefix = "js-product-option-";
 
   dataAttributes = {};
   optionName;
@@ -15,7 +15,7 @@ export class ProductOption extends HTMLElement {
 
   constructor(elementName) {
     super();
-    this.#elementName = elementName;
+    this._elementName = elementName;
     this.dataAttributes = {
       name: `data-${elementName}-name`,
       valueLabel: `data-${elementName}-value`,
@@ -27,19 +27,17 @@ export class ProductOption extends HTMLElement {
     this.optionName = this.getAttribute(this.dataAttributes.name);
     if (this.optionName === undefined || this.optionName === "")
       throw new Error(
-        `[${this.#elementName}] [Product option name is not set]`
+        `[${this._elementName}] [Product option name is not set]`
       );
 
     this.$productSection = this.closest("product-section");
     if (!this.$productSection)
       throw new Error(
-        `[${
-          this.#elementName
-        }] [A related product-section element is not found]`
+        `[${this._elementName}] [A related product-section element is not found]`
       );
 
-    this.#classPrefix =
-      this.getAttribute(this.dataAttributes.classPrefix) || this.#classPrefix;
+    this._classPrefix =
+      this.getAttribute(this.dataAttributes.classPrefix) || this._classPrefix;
   }
 
   connectedCallbackEnd() {
@@ -55,28 +53,28 @@ export class ProductOption extends HTMLElement {
     );
   }
 
-  #getValueAvailability(value) {
+  _getValueAvailability(value) {
     const availability =
       this.$productSection.state.optionsAvailability[this.optionName];
-    let status = this.#availabilityStatuses.undefined;
+    let status = this._availabilityStatuses.undefined;
     if (availability) {
       if (!(value in availability))
-        status = this.#availabilityStatuses.does_not_exist;
+        status = this._availabilityStatuses.does_not_exist;
       else if (availability[value])
-        status = this.#availabilityStatuses.available;
-      else status = this.#availabilityStatuses.not_available;
+        status = this._availabilityStatuses.available;
+      else status = this._availabilityStatuses.not_available;
     }
     return status;
   }
 
   addAvailabilityClass($element, value) {
     $element.classList.remove(
-      ...Object.values(this.#availabilityStatuses).map(
-        (status) => this.#classPrefix + status
+      ...Object.values(this._availabilityStatuses).map(
+        (status) => this._classPrefix + status
       )
     );
     $element.classList.add(
-      this.#classPrefix + this.#getValueAvailability(value)
+      this._classPrefix + this._getValueAvailability(value)
     );
   }
 
@@ -92,9 +90,9 @@ export class ProductOption extends HTMLElement {
           }
           const template =
             $element.getAttribute(this.dataAttributes.valueLabel) ||
-            this.#valueLabelPlaceholder;
+            this._valueLabelPlaceholder;
           $element.innerHTML = template.replaceAll(
-            this.#valueLabelPlaceholder,
+            this._valueLabelPlaceholder,
             value
           );
         }
