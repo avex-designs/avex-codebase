@@ -66,14 +66,6 @@
     <script type="application/json" data-ajax-cart-initial-state>
       {{- cart | json -}}
     </script>
-    
-    {%- comment -%} Use updateOnWindowFocus on dev mode {%- endcomment -%}
-    <script type="application/json" data-ajax-cart-configuration>
-      {
-        "requestErrorText": "{{ 'cart.cart_error' | t }}",
-        "updateOnWindowFocus": false
-      }
-    </script>
 
     {%- render 'component-loader' -%}
 

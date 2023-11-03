@@ -111,44 +111,46 @@
           </div>
         {%- endunless -%}
 
-        {% form 'product', product %}
-          <input
-            type="hidden"
-            name="id"
-            value="{{ current_variant.id }}"
-          >
-          <button
-            type="submit"
-            name="add"
-            {% if current_variant == nil or current_variant.available == false %}
-              disabled
-            {% endif %}
-            data-product-section-area="innerHTML,disabled"
-            data-product-section-doesnotexist="{{ 'products.product.unavailable' | t }}"
-          >
-            {%- liquid
-              if current_variant.available
-                echo 'products.product.add_to_cart' | t
-              elsif current_variant.available == false or product.available == false
-                echo 'products.product.sold_out' | t
-              else
-                echo 'products.product.choose_options' | t
-              endif
-            -%}
-          </button>
-          <div data-product-section-area="innerHTML">
-            {%- unless current_variant.available -%}
-              <button
-                type="button"
-                data-klaviyo-bis-open
-                data-klaviyo-bis-url="{{ product.url | within: collection }}"
-              >
-                Notify me
-              </button>
-            {%- endunless -%}
-          </div>
-          <div class="product-card__error error-note" data-ajax-cart-messages="form"></div>
-        {% endform %}
+        <ajax-cart-product-form>
+          {% form 'product', product %}
+            <input
+              type="hidden"
+              name="id"
+              value="{{ current_variant.id }}"
+            >
+            <button
+              type="submit"
+              name="add"
+              {% if current_variant == nil or current_variant.available == false %}
+                disabled
+              {% endif %}
+              data-product-section-area="innerHTML,disabled"
+              data-product-section-doesnotexist="{{ 'products.product.unavailable' | t }}"
+            >
+              {%- liquid
+                if current_variant.available
+                  echo 'products.product.add_to_cart' | t
+                elsif current_variant.available == false or product.available == false
+                  echo 'products.product.sold_out' | t
+                else
+                  echo 'products.product.choose_options' | t
+                endif
+              -%}
+            </button>
+            <div data-product-section-area="innerHTML">
+              {%- unless current_variant.available -%}
+                <button
+                  type="button"
+                  data-klaviyo-bis-open
+                  data-klaviyo-bis-url="{{ product.url | within: collection }}"
+                >
+                  Notify me
+                </button>
+              {%- endunless -%}
+            </div>
+            <div class="product-card__error error-note" data-ajax-cart-errors="form"></div>
+          {% endform %}
+        </ajax-cart-product-form>
       </div>
     </div>
   </product-section>

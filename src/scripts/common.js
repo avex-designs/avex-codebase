@@ -1,10 +1,14 @@
 import "liquid-ajax-cart";
 
 /**
- * Configure Liquid Ajax Cart
+ * Open ajax-cart when a product is added to the cart
  */
-// move to theme.liquid refer to Kit&ace
-// configureCart("addToCartCssClass", "js-ajax-cart-opened");
+document.addEventListener("liquid-ajax-cart:request-end", (event) => {
+  const { requestState } = event.detail;
+  if (requestState.requestType === "add" && requestState.responseData?.ok) {
+    document.body.classList.add("js-ajax-cart-open");
+  }
+});
 
 /**
  * Event Listeners
