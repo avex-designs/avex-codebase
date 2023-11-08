@@ -1,1 +1,75 @@
-custom-select.form-element{display:block;position:relative}custom-select.form-element select+div{padding-right:3rem;position:relative;background-color:#ccc}custom-select.form-element select+div::after{background-image:url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 7L8 11L12 7' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");content:"";position:absolute;right:1.5rem;top:0;bottom:0;width:1rem;background-position:center;background-size:1rem;background-repeat:no-repeat;transition:transform .15s}custom-select.form-element ul{min-width:15rem;position:absolute;left:0;width:100%;z-index:5;background-color:silver;transform:scaleY(0.7);transition:all .15s;opacity:0;visibility:hidden;transform-origin:top;max-height:26rem;overflow-y:auto}custom-select.form-element ul li{padding:.5rem 1.5rem;background-color:rgba(0,0,0,0);transition:all .15s;cursor:pointer}custom-select.form-element ul li[disabled]{opacity:.3;pointer-events:none;text-decoration:none}custom-select.form-element ul li:hover,custom-select.form-element ul li:focus-visible{background-color:#000;color:#fff}custom-select.form-element[open] ul{transform:scaleY(1);visibility:visible;opacity:1}custom-select.form-element[open] select+div::after{transform:scaleY(-1)}
+/**
+Include icons in scss/css.
+Usage: 
+ @include icon(close);
+*/
+/*
+Media query mixin.
+Usage: 
+@include media($bp-l, min)
+*/
+/*
+Mixin to add loading spinner to button/element.
+Usage: 
+@include loading()
+*/
+custom-select.form-element {
+  display: block;
+  position: relative;
+}
+custom-select.form-element select + div {
+  padding-right: 3rem;
+  position: relative;
+  background-color: #ccc;
+}
+custom-select.form-element select + div::after {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 7L8 11L12 7' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  content: "";
+  position: absolute;
+  right: 1.5rem;
+  top: 0;
+  bottom: 0;
+  width: 1rem;
+  background-position: center;
+  background-size: 1rem;
+  background-repeat: no-repeat;
+  transition: transform 0.15s;
+}
+custom-select.form-element ul {
+  min-width: 15rem;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  z-index: 5;
+  background-color: #c0c0c0;
+  transform: scaleY(0.7);
+  transition: all 0.15s;
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: top;
+  max-height: 26rem;
+  overflow-y: auto;
+}
+custom-select.form-element ul li {
+  padding: 0.5rem 1.5rem;
+  background-color: transparent;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+custom-select.form-element ul li[disabled] {
+  opacity: 0.3;
+  pointer-events: none;
+  text-decoration: none;
+}
+custom-select.form-element ul li:hover, custom-select.form-element ul li:focus-visible {
+  background-color: black;
+  color: white;
+}
+custom-select.form-element[open] ul {
+  transform: scaleY(1);
+  visibility: visible;
+  opacity: 1;
+}
+custom-select.form-element[open] select + div::after {
+  transform: scaleY(-1);
+}
