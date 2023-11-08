@@ -7,7 +7,16 @@ You can insert here any critical styles, these will be loaded first as inline st
 :root,
 ::before,
 ::after {
-  // TODO: put global CSS vars here
+  --container-width: 100%;
+  --container-space: #{rem(16px)};
+
+  @include media($bp-m) {
+    --container-space: #{rem(24px)};
+  }
+
+  @include media($bp-xl) {
+    --container-space: #{rem(64px)};
+  }
 }
 
 html {

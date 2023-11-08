@@ -72,5 +72,18 @@
         "other": "{{ count }} comments"
       }
     }
+  },
+  "customer": {
+    "greeting": {
+      "general": "Welcome!",
+      "personal": "Welcome, {{ name }}!"
+    },
+    "log_out": "Log out",
+    "account": {
+      "page_title": "Account dashboard"
+    },
+    "addresses": {
+      "page_title": "Address book"
+    }
   }
 }
