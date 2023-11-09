@@ -1,12 +1,12 @@
 $display1-375: (
   "font-size": rem(40px),
   "line-height": 1.1,
-  "font-weight": 400,
+  "font-weight": 600,
 );
 $display1-1440: (
   "font-size": rem(56px),
   "line-height": 1.1,
-  "font-weight": 400,
+  "font-weight": 600,
 );
 $display1: (
   "type": "responsive",
@@ -17,12 +17,12 @@ $display1: (
 $display2-375: (
   "font-size": rem(30px),
   "line-height": 1.1,
-  "font-weight": 400,
+  "font-weight": 600,
 );
 $display2-1440: (
   "font-size": rem(40px),
   "line-height": 1.1,
-  "font-weight": 400,
+  "font-weight": 600,
 );
 $display2: (
   "type": "responsive",
@@ -33,12 +33,12 @@ $display2: (
 $display3-375: (
   "font-size": rem(24px),
   "line-height": 1.2,
-  "font-weight": 400,
+  "font-weight": 600,
 );
 $display3-1440: (
   "font-size": rem(32px),
   "line-height": 1.2,
-  "font-weight": 400,
+  "font-weight": 600,
 );
 $display3: (
   "type": "responsive",
@@ -49,12 +49,12 @@ $display3: (
 $display4-375: (
   "font-size": rem(20px),
   "line-height": 1.2,
-  "font-weight": 400,
+  "font-weight": 600,
 );
 $display4-1440: (
   "font-size": rem(28px),
   "line-height": 1.2,
-  "font-weight": 400,
+  "font-weight": 600,
 );
 $display4: (
   "type": "responsive",
@@ -103,7 +103,7 @@ $paragraph-l: (
 $label-m: (
   "font-size": rem(12px),
   "line-height": 1.4,
-  "font-weight": 400,
+  "font-weight": 500,
   "text-transform": "uppercase",
   "letter-spacing": 0.08em,
 );

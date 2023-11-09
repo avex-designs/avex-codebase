@@ -128,4 +128,11 @@
 
 .customer-portal__main-title {
   @include font-style($display4);
+
+  &--desktop {
+    display: none;
+    @include media($bp-l) {
+      display: block;
+    }
+  }
 }
