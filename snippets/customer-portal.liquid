@@ -15,6 +15,16 @@
   else
     assign side_title = 'customer.greeting.general' | t
   endif
+
+  assign is_dashboard = false
+  if request.page_type == 'customers/account'
+    assign is_dashboard = true
+  endif
+
+  assign is_addresses = false
+  if request.page_type == 'customers/addresses'
+    assign is_addresses = true
+  endif
 %}
 
 <div class="customer-portal">
@@ -23,25 +33,45 @@
       <div class="customer-portal__side-title">
         {{ side_title }}
       </div>
-      <ul class="customer-portal__side-menu">
-        <li>
-          <a href="{{ routes.account_url }}"
-             class="customer-portal__side-menu-link {% if request.page_type == 'customers/account' %}customer-portal__side-menu-link--active{% endif %}">
-            {{ 'customer.account.page_title' | t }}
-          </a>
-        </li>
-        <li>
-          <a href="{{ routes.account_addresses_url }}"
-             class="customer-portal__side-menu-link {% if request.page_type == 'customers/addresses' %}customer-portal__side-menu-link--active{% endif %}">
-            {{ 'customer.addresses.page_title' | t }}
-          </a>
-        </li>
-        <li>
-          <a href="{{ routes.account_logout_url }}">
-            {{ 'customer.log_out' | t }}
-          </a>
-        </li>
-      </ul>
+
+      <div class="customer-portal__side-menu">
+        <input type="checkbox" id="customer-portal-menu-toggle" hidden>
+        <label class="customer-portal__side-menu-chosen" for="customer-portal-menu-toggle">
+          {% liquid
+            if is_dashboard
+              echo 'customer.account.page_title' | t
+            elsif is_addresses
+              echo 'customer.addresses.page_title' | t
+            endif
+          %}
+        </label>
+        <ul class="customer-portal__side-menu-list">
+          <li class="customer-portal__side-menu-item">
+            <a
+              href="{{ routes.account_url }}"
+              class="customer-portal__side-menu-link {% if is_dashboard %}customer-portal__side-menu-link--active{% endif %}"
+            >
+              {{ 'customer.account.page_title' | t }}
+            </a>
+          </li>
+          <li class="customer-portal__side-menu-item">
+            <a
+              href="{{ routes.account_addresses_url }}"
+              class="customer-portal__side-menu-link {% if is_addresses %}customer-portal__side-menu-link--active{% endif %}"
+            >
+              {{ 'customer.addresses.page_title' | t }}
+            </a>
+          </li>
+          <li class="customer-portal__side-menu-item">
+            <a
+              href="{{ routes.account_logout_url }}"
+              class="customer-portal__side-menu-link"
+            >
+              {{ 'customer.log_out' | t }}
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="customer-portal__main-content">
       {{ content }}
