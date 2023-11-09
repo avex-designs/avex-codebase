@@ -100,6 +100,14 @@ $paragraph-l: (
   "font-weight": 400,
 );
 
+$label-m: (
+  "font-size": rem(12px),
+  "line-height": 1.4,
+  "font-weight": 400,
+  "text-transform": "uppercase",
+  "letter-spacing": 0.08em,
+);
+
 @mixin font-style(
   $font-variable,
   $rewrite-font-variable: false,

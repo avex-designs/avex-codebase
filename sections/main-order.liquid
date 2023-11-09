@@ -1,25 +1,26 @@
-{{ 'customer.css' | asset_url | stylesheet_tag }}
+{% capture content %}
+  {{ 'customer.css' | asset_url | stylesheet_tag }}
 
-<div>
-  <h1>Order page</h1>
   <a href="{{ routes.account_url }}">Return to account</a>
-</div>
+  <h1 class="customer-portal__main-title">
+    {{ 'customer.order.page_title' | t: name: order.name }}
+  </h1>
 
-<div>
-  <h2>{{ order.name }}</h2>
-  {%- assign order_date = order.created_at | time_tag: format: 'date_at_time' -%}
-  <p>{{ order_date }}</p>
-  {%- if order.cancelled -%}
-    {%- assign cancelled_at = order.cancelled_at | time_tag: format: 'date_at_time' -%}
-    <p>{{ cancelled_at }}</p>
-    <p>{{ order.cancel_reason_label }}</p>
-  {%- endif -%}
+  <div>
+    <h2>{{ order.name }}</h2>
+    {%- assign order_date = order.created_at | time_tag: format: 'date_at_time' -%}
+    <p>{{ order_date }}</p>
+    {%- if order.cancelled -%}
+      {%- assign cancelled_at = order.cancelled_at | time_tag: format: 'date_at_time' -%}
+      <p>{{ cancelled_at }}</p>
+      <p>{{ order.cancel_reason_label }}</p>
+    {%- endif -%}
 
-  <table role="table">
-    <caption class="visually-hidden">
-      {{ order.name }}
-    </caption>
-    <thead role="rowgroup">
+    <table role="table">
+      <caption class="visually-hidden">
+        {{ order.name }}
+      </caption>
+      <thead role="rowgroup">
       <tr role="row">
         <th id="ColumnProduct" scope="col" role="columnheader">Product</th>
         <th id="ColumnSku" scope="col" role="columnheader">SKU</th>
@@ -27,8 +28,8 @@
         <th id="ColumnQuantity" scope="col" role="columnheader">Quantity</th>
         <th id="ColumnTotal" scope="col" role="columnheader">Total</th>
       </tr>
-    </thead>
-    <tbody role="rowgroup">
+      </thead>
+      <tbody role="rowgroup">
       {%- for line_item in order.line_items -%}
         <tr role="row">
           <td
@@ -202,8 +203,8 @@
           </td>
         </tr>
       {%- endfor -%}
-    </tbody>
-    <tfoot role="rowgroup">
+      </tbody>
+      <tfoot role="rowgroup">
       <tr role="row">
         <td id="RowSubtotal" role="rowheader" scope="row" colspan="4">
           Subtotal
@@ -235,7 +236,7 @@
       {%- for shipping_method in order.shipping_methods -%}
         <tr role="row">
           <td id="RowShipping" role="rowheader" scope="row" colspan="4">
-           Shipping({{ shipping_method.title }})
+            Shipping({{ shipping_method.title }})
           </td>
           <td
             headers="RowShipping"
@@ -275,27 +276,29 @@
           {{ order.total_price | money_with_currency }}
         </td>
       </tr>
-    </tfoot>
-  </table>
-</div>
-<div>
-  <div>
-    <h2>Billing address</h2>
-    <p>
-      <strong>Payment status:</strong>
-      {{ order.financial_status_label }}
-    </p>
-    {{ order.billing_address | format_address }}
+      </tfoot>
+    </table>
   </div>
   <div>
-    <h2>Shipping address</h2>
-    <p>
-      <strong>Fulfillment status:</strong>
-      {{ order.fulfillment_status_label }}
-    </p>
-    {{ order.shipping_address | format_address }}
+    <div>
+      <h2>Billing address</h2>
+      <p>
+        <strong>Payment status:</strong>
+        {{ order.financial_status_label }}
+      </p>
+      {{ order.billing_address | format_address }}
+    </div>
+    <div>
+      <h2>Shipping address</h2>
+      <p>
+        <strong>Fulfillment status:</strong>
+        {{ order.fulfillment_status_label }}
+      </p>
+      {{ order.shipping_address | format_address }}
+    </div>
   </div>
-</div>
+{% endcapture %}
+{% render 'customer-portal', content: content %}
 
 {% schema %}
 {

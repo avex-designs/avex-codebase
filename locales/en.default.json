@@ -84,6 +84,9 @@
     },
     "addresses": {
       "page_title": "Address book"
+    },
+    "order": {
+      "page_title": "Order {{ name }}"
     }
   }
 }
