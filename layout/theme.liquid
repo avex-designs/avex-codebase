@@ -32,6 +32,8 @@
     <!-- Shopify Header Hooks -->
     {{ content_for_header }}
 
+    <link rel="stylesheet" href="https://use.typekit.net/aab3ogq.css">
+
     <!-- Critical CSS -->
     {%- style -%}
       {%- render 'critical.css' -%}
@@ -48,6 +50,7 @@
     class="{% if customer %}customer-logged-in {% endif %}template-{{ request.page_type | handle }} template-{{ template.name }}"
   >
     <a class="skip-link" href="#MainContent">{{- 'general.accessibility.skip_to_text' | t -}}</a>
+
 
     <component-loader>
       {%- section 'header' -%}

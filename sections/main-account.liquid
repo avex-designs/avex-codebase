@@ -1,134 +1,139 @@
-<h1 class="main-account_title">Account</h1>
-<a href="{{ routes.account_logout_url }}"> Logout</a>
+{% capture content %}
 
-<div>
-  <a href="{{ routes.account_addresses_url }}">Addresses</a><br />
-  <hr />
-  <h2>Orders history</h2>
+  <h1 class="customer-portal__main-title customer-portal__main-title--desktop">
+    {{ 'customer.account.page_title' | t }}
+  </h1>
 
-  <html-fetcher id="html-fetcher-orders-pagination-{{ section.id }}">
-    <component-loader>
-      {% paginate customer.orders by 5 %}
-        {%- if customer.orders.size > 0 -%}
-          <table role="table">
-            <caption class="visually-hidden">
-              Orders history
-            </caption>
-            <thead role="rowgroup">
-            <tr role="row">
-              <th id="ColumnOrder" scope="col" role="columnheader">Order number</th>
-              <th id="ColumnDate" scope="col" role="columnheader">Order date</th>
-              <th id="ColumnPayment" scope="col" role="columnheader">Payment status</th>
-              <th id="ColumnFulfillment" scope="col" role="columnheader">Fulfillment Status</th>
-              <th id="ColumnTotal" scope="col" role="columnheader">Total</th>
-            </tr>
-            </thead>
-            <tbody role="rowgroup">
-            {%- for order in customer.orders -%}
+  <button class="button">Button</button>
+
+  <div>
+    <h2>Orders history</h2>
+
+    <html-fetcher id="html-fetcher-orders-pagination-{{ section.id }}">
+      <component-loader>
+        {% paginate customer.orders by 5 %}
+          {%- if customer.orders.size > 0 -%}
+            <table role="table">
+              <caption class="visually-hidden">
+                Orders history
+              </caption>
+              <thead role="rowgroup">
               <tr role="row">
-                <td
-                  id="RowOrder"
-                  role="cell"
-                  headers="ColumnOrder"
-                  data-label="Order number"
-                >
-                  <a
-                    href="{{ order.customer_url }}"
-                    aria-label="{{ order.name }}"
-                  >
-                    {{ order.name }}
-                  </a>
-                </td>
-                <td headers="RowOrder ColumnDate" role="cell" data-label="Order date">
-                  {{ order.created_at | time_tag: format: 'date' }}
-                </td>
-                <td
-                  headers="RowOrder ColumnPayment"
-                  role="cell"
-                  data-label="Payment status"
-                >
-                  {{ order.financial_status_label }}
-                </td>
-                <td
-                  headers="RowOrder ColumnFulfillment"
-                  role="cell"
-                  data-label="Fulfillment Status"
-                >
-                  {{ order.fulfillment_status_label }}
-                </td>
-                <td headers="RowOrder ColumnTotal" role="cell" data-label="Total">
-                  {{ order.total_price | money_with_currency }}
-                </td>
+                <th id="ColumnOrder" scope="col" role="columnheader">Order number</th>
+                <th id="ColumnDate" scope="col" role="columnheader">Order date</th>
+                <th id="ColumnPayment" scope="col" role="columnheader">Payment status</th>
+                <th id="ColumnFulfillment" scope="col" role="columnheader">Fulfillment Status</th>
+                <th id="ColumnTotal" scope="col" role="columnheader">Total</th>
               </tr>
-            {%- endfor -%}
-            </tbody>
-          </table>
-        {%- else -%}
-          <p>No orders</p>
-        {%- endif -%}
-        <br>
-        {%- if paginate.pages > 1 -%}
-          {%- if paginate.parts.size > 0 -%}
-            <nav role="navigation" aria-label="Pagination">
-              <ul role="list">
-                {%- if paginate.previous -%}
-                  <li>
+              </thead>
+              <tbody role="rowgroup">
+              {%- for order in customer.orders -%}
+                <tr role="row">
+                  <td
+                    id="RowOrder"
+                    role="cell"
+                    headers="ColumnOrder"
+                    data-label="Order number"
+                  >
                     <a
-                      href="{{ paginate.previous.url }}"
-                      data-html-fetcher-link="{{ paginate.previous.url }}&section_id={{ section.id }}"
-                      aria-label="Previous page">
-                      Previous
+                      href="{{ order.customer_url }}"
+                      aria-label="{{ order.name }}"
+                    >
+                      {{ order.name }}
                     </a>
-                  </li>
-                {%- endif -%}
-
-                {%- for part in paginate.parts -%}
-                  <li>
-                    {%- if part.is_link -%}
+                  </td>
+                  <td headers="RowOrder ColumnDate" role="cell" data-label="Order date">
+                    {{ order.created_at | time_tag: format: 'date' }}
+                  </td>
+                  <td
+                    headers="RowOrder ColumnPayment"
+                    role="cell"
+                    data-label="Payment status"
+                  >
+                    {{ order.financial_status_label }}
+                  </td>
+                  <td
+                    headers="RowOrder ColumnFulfillment"
+                    role="cell"
+                    data-label="Fulfillment Status"
+                  >
+                    {{ order.fulfillment_status_label }}
+                  </td>
+                  <td headers="RowOrder ColumnTotal" role="cell" data-label="Total">
+                    {{ order.total_price | money_with_currency }}
+                  </td>
+                </tr>
+              {%- endfor -%}
+              </tbody>
+            </table>
+          {%- else -%}
+            <p>No orders</p>
+          {%- endif -%}
+          <br>
+          {%- if paginate.pages > 1 -%}
+            {%- if paginate.parts.size > 0 -%}
+              <nav role="navigation" aria-label="Pagination">
+                <ul role="list">
+                  {%- if paginate.previous -%}
+                    <li>
                       <a
-                        href="{{ part.url }}"
-                        data-html-fetcher-link="{{ part.url }}&section_id={{ section.id }}"
-                        aria-label="Page number {{ part.title }}">
-                        {{- part.title -}}
+                        href="{{ paginate.previous.url }}"
+                        data-html-fetcher-link="{{ paginate.previous.url }}&section_id={{ section.id }}"
+                        aria-label="Previous page">
+                        Previous
                       </a>
-                    {%- else -%}
-                      {%- if part.title == paginate.current_page -%}
-                        <span aria-current="page" aria-label="Page number {{ part.title }}">
+                    </li>
+                  {%- endif -%}
+
+                  {%- for part in paginate.parts -%}
+                    <li>
+                      {%- if part.is_link -%}
+                        <a
+                          href="{{ part.url }}"
+                          data-html-fetcher-link="{{ part.url }}&section_id={{ section.id }}"
+                          aria-label="Page number {{ part.title }}">
+                          {{- part.title -}}
+                        </a>
+                      {%- else -%}
+                        {%- if part.title == paginate.current_page -%}
+                          <span aria-current="page" aria-label="Page number {{ part.title }}">
                         {{- part.title -}}
                       </span>
-                      {%- else -%}
-                        <span>{{ part.title }}</span>
+                        {%- else -%}
+                          <span>{{ part.title }}</span>
+                        {%- endif -%}
                       {%- endif -%}
-                    {%- endif -%}
-                  </li>
-                {%- endfor -%}
+                    </li>
+                  {%- endfor -%}
 
-                {%- if paginate.next -%}
-                  <li>
-                    <a
-                      href="{{ paginate.next.url }}"
-                      data-html-fetcher-link="{{ paginate.next.url }}&section_id={{ section.id }}"
-                      aria-label="Next page">
-                      Next
-                    </a>
-                  </li>
-                {%- endif -%}
-              </ul>
-            </nav>
+                  {%- if paginate.next -%}
+                    <li>
+                      <a
+                        href="{{ paginate.next.url }}"
+                        data-html-fetcher-link="{{ paginate.next.url }}&section_id={{ section.id }}"
+                        aria-label="Next page">
+                        Next
+                      </a>
+                    </li>
+                  {%- endif -%}
+                </ul>
+              </nav>
+            {%- endif -%}
           {%- endif -%}
-        {%- endif -%}
-      {% endpaginate %}
-    </component-loader>
-  </html-fetcher>
-</div>
+        {% endpaginate %}
+      </component-loader>
+    </html-fetcher>
+  </div>
 
-<div>
-  <h2>Customer details</h2>
+  <div>
+    <h2>Customer details</h2>
 
-  {{ customer.default_address | format_address }}
+    {{ customer.default_address | format_address }}
 
-  <a href="{{ routes.account_addresses_url }}"> View addresses ({{ customer.addresses_count }}) </a>
-</div>
+    <a href="{{ routes.account_addresses_url }}"> View addresses ({{ customer.addresses_count }}) </a>
+  </div>
+{% endcapture %}
+{% render 'customer-portal', content: content %}
 
 {% schema %}
 {
