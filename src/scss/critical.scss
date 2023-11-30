@@ -7,14 +7,24 @@ You can insert here any critical styles, these will be loaded first as inline st
 :root,
 ::before,
 ::after {
-  // TODO: put global CSS vars here
+  --color-customer-light-gray: #ddd;
+  --color-accent: #c9aef1;
+  --container-width: 100%;
+  --container-space: #{rem(16px)};
+
+  @include media($bp-m) {
+    --container-space: #{rem(24px)};
+  }
+
+  @include media($bp-xl) {
+    --container-space: #{rem(64px)};
+  }
 }
 
 html {
-  font-family: var(--font-main);
+  font-family: sofia-pro, sans-serif;
   font-size: 16px;
-  font-weight: 300;
-  line-height: 136%;
+  font-weight: 400;
   scroll-behavior: smooth;
 }
 
@@ -24,7 +34,7 @@ body {
   scroll-behavior: smooth;
   text-rendering: optimizespeed;
 
-  &.js-ajax-cart-opened {
+  &.js-ajax-cart-open {
     overflow: hidden;
   }
 }
@@ -108,3 +118,5 @@ media-loader {
     opacity: 1;
   }
 }
+
+@import "./blocks/button.ignore";

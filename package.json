@@ -21,7 +21,7 @@
   "author": "avexdesigns",
   "license": "ISC",
   "dependencies": {
-    "liquid-ajax-cart": "^1.10.0",
+    "liquid-ajax-cart": "^2.1.0",
     "stylelint-config-standard": "^26.0.0",
     "swiper": "^9.0.3"
   },

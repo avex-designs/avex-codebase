@@ -1,0 +1,83 @@
+{% comment %}
+  Renders layout for the customer pages
+
+  Accepts:
+  - content: {String} HTML of the content for the current page
+{% endcomment %}
+{% render 'stylesheet', name: 'customer-portal' %}
+
+{% liquid
+  # Side title
+  assign side_title = ''
+  assign first_name = customer.first_name | strip
+  if first_name and first_name != ''
+    assign side_title = 'customer.greeting.personal' | t: name: first_name
+  else
+    assign side_title = 'customer.greeting.general' | t
+  endif
+
+  assign is_dashboard = false
+  if request.page_type == 'customers/account'
+    assign is_dashboard = true
+  endif
+
+  assign is_addresses = false
+  if request.page_type == 'customers/addresses'
+    assign is_addresses = true
+  endif
+%}
+
+<div class="customer-portal">
+  {% if customer %}
+    <div class="customer-portal__side-content">
+      <div class="customer-portal__side-title">
+        {{ side_title }}
+      </div>
+
+      <div class="customer-portal__side-menu">
+        <input type="checkbox" id="customer-portal-menu-toggle" hidden>
+        <label class="customer-portal__side-menu-chosen" for="customer-portal-menu-toggle">
+          {% liquid
+            if is_dashboard
+              echo 'customer.account.page_title' | t
+            elsif is_addresses
+              echo 'customer.addresses.page_title' | t
+            endif
+          %}
+        </label>
+        <ul class="customer-portal__side-menu-list">
+          <li class="customer-portal__side-menu-item">
+            <a
+              href="{{ routes.account_url }}"
+              class="customer-portal__side-menu-link {% if is_dashboard %}customer-portal__side-menu-link--active{% endif %}"
+            >
+              {{ 'customer.account.page_title' | t }}
+            </a>
+          </li>
+          <li class="customer-portal__side-menu-item">
+            <a
+              href="{{ routes.account_addresses_url }}"
+              class="customer-portal__side-menu-link {% if is_addresses %}customer-portal__side-menu-link--active{% endif %}"
+            >
+              {{ 'customer.addresses.page_title' | t }}
+            </a>
+          </li>
+          <li class="customer-portal__side-menu-item">
+            <a
+              href="{{ routes.account_logout_url }}"
+              class="customer-portal__side-menu-link"
+            >
+              {{ 'customer.log_out' | t }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="customer-portal__main-content">
+      {{ content }}
+    </div>
+  {% else %}
+    <!-- TODO: add JS redirect here -->
+    <a href="{{ routes.account_login_url }}">Login</a>
+  {% endif %}
+</div>

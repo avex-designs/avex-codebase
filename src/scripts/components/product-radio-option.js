@@ -11,10 +11,10 @@ class ProductRadioOption extends ProductOption {
     super.connectedCallbackStart();
     // your init code here
     super.connectedCallbackEnd();
-    this.#internalEvents();
+    this._internalEvents();
   }
 
-  #internalEvents() {
+  _internalEvents() {
     this.querySelectorAll("input[type='radio']").forEach(($input) => {
       $input.addEventListener("change", (e) => {
         if (this.$productSection.state) {

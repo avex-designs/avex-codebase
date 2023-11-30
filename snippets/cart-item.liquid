@@ -27,7 +27,7 @@
         </ul>
       {% endunless %}
       <p>{{ item.selling_plan_allocation.selling_plan.name }}</p>
-      <div class="error-placeholder" data-ajax-cart-messages="{{ item.key }}"></div>
+      <div class="error-placeholder" data-ajax-cart-errors="{{ item.key }}"></div>
     </div>
   </td>
 
@@ -38,10 +38,10 @@
     <div class="final-price">{{ item.final_price | money }}</div>
   </td>
   <td class="cart-item__quantity">
-    <div class="quantity-picker">
+    <ajax-cart-quantity class="quantity-picker">
       <a
         href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}"
-        data-ajax-cart-request-button
+        data-ajax-cart-quantity-minus
         class="quantity-picker__btn quantity-picker__btn--decrease"
         type="button"
         aria-label="{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}"
@@ -57,13 +57,13 @@
       >
       <a
         href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}"
-        data-ajax-cart-request-button
+        data-ajax-cart-quantity-plus
         class="quantity-picker__btn quantity-picker__btn--increase"
         type="button"
         aria-label="{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}"
         >&#43;</a
       >
-    </div>
+    </ajax-cart-quantity>
   </td>
   <td class="cart-item__total">
     <div>{{ item.final_line_price | money }}</div>

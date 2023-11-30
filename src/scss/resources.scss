@@ -32,6 +32,14 @@ Usage:
   }
 }
 
+@mixin container() {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--container-space);
+}
+
 /*
 Mixin to add loading spinner to button/element.
 Usage: 
@@ -72,3 +80,5 @@ Usage:
   white-space: nowrap !important;
   border: 0 !important;
 }
+
+@import "./font-styles";

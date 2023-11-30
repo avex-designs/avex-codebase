@@ -1,0 +1,147 @@
+$display1-375: (
+  "font-size": rem(40px),
+  "line-height": 1.1,
+  "font-weight": 600,
+);
+$display1-1440: (
+  "font-size": rem(56px),
+  "line-height": 1.1,
+  "font-weight": 600,
+);
+$display1: (
+  "type": "responsive",
+  "base": $display1-375,
+  "desktop": $display1-1440,
+);
+
+$display2-375: (
+  "font-size": rem(30px),
+  "line-height": 1.1,
+  "font-weight": 600,
+);
+$display2-1440: (
+  "font-size": rem(40px),
+  "line-height": 1.1,
+  "font-weight": 600,
+);
+$display2: (
+  "type": "responsive",
+  "base": $display2-375,
+  "desktop": $display2-1440,
+);
+
+$display3-375: (
+  "font-size": rem(24px),
+  "line-height": 1.2,
+  "font-weight": 600,
+);
+$display3-1440: (
+  "font-size": rem(32px),
+  "line-height": 1.2,
+  "font-weight": 600,
+);
+$display3: (
+  "type": "responsive",
+  "base": $display3-375,
+  "desktop": $display3-1440,
+);
+
+$display4-375: (
+  "font-size": rem(20px),
+  "line-height": 1.2,
+  "font-weight": 600,
+);
+$display4-1440: (
+  "font-size": rem(28px),
+  "line-height": 1.2,
+  "font-weight": 600,
+);
+$display4: (
+  "type": "responsive",
+  "base": $display4-375,
+  "desktop": $display4-1440,
+);
+
+$display5-375: (
+  "font-size": rem(18px),
+  "line-height": 1.2,
+  "font-weight": 400,
+);
+$display5-1440: (
+  "font-size": rem(22px),
+  "line-height": 1.2,
+  "font-weight": 400,
+);
+$display5: (
+  "type": "responsive",
+  "base": $display5-375,
+  "desktop": $display5-1440,
+);
+
+$display6-375: (
+  "font-size": rem(16px),
+  "line-height": 1.2,
+  "font-weight": 400,
+);
+$display6-1440: (
+  "font-size": rem(18px),
+  "line-height": 1.2,
+  "font-weight": 400,
+);
+$display6: (
+  "type": "responsive",
+  "base": $display6-375,
+  "desktop": $display6-1440,
+);
+
+$paragraph-l: (
+  "font-size": rem(16px),
+  "line-height": 1.4,
+  "font-weight": 400,
+);
+
+$label-m: (
+  "font-size": rem(12px),
+  "line-height": 1.4,
+  "font-weight": 500,
+  "text-transform": "uppercase",
+  "letter-spacing": 0.08em,
+);
+
+@mixin font-style(
+  $font-variable,
+  $rewrite-font-variable: false,
+  $important: false
+) {
+  @if map-get($font-variable, "type") == "responsive" {
+    $base-font: map-get($font-variable, "base");
+    @include font-style($base-font, false, $important);
+    $current-rewrite-font: $base-font;
+
+    $tablet-font: map-get($font-variable, "tablet");
+    @if $tablet-font {
+      @media (min-width: $bp-m) {
+        @include font-style($tablet-font, $current-rewrite-font, $important);
+      }
+      $current-rewrite-font: $tablet-font;
+    }
+
+    $desktop-font: map-get($font-variable, "desktop");
+    @if $desktop-font {
+      @media (min-width: $bp-l) {
+        @include font-style($desktop-font, $current-rewrite-font, $important);
+      }
+      $current-rewrite-font: $desktop-font;
+    }
+  } @else {
+    @each $property, $value in $font-variable {
+      @if $rewrite-font-variable ==
+        false or
+        $value !=
+        map-get($rewrite-font-variable, $property)
+      {
+        #{$property}: #{$value} is-important($important);
+      }
+    }
+  }
+}
