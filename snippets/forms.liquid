@@ -1,0 +1,40 @@
+{%- render 'stylesheet', name: 'form-element' -%}
+
+<div class="forms" style="background-color: #fafafa;padding: 3rem">
+  <div class="form-element">
+    <input id="example-textfield" type="text" placeholder="Label">
+    <label for="example-textfield">Label</label>
+  </div>
+  <div class="form-element">
+    <input id="example-textfield2" type="text" placeholder="Label">
+    <label for="example-textfield2">Error Message</label>
+    <small role="alert" class="form-element__alert form-element__alert--error">Error message content</small>
+  </div>
+  <div class="form-element">
+    <input id="example-textfield3" type="text" placeholder="Label">
+    <label for="example-textfield3">Success Message</label>
+    <small role="alert" class="form-element__alert form-element__alert--success">Success message content</small>
+  </div>
+  <custom-select class="form-element" label="Label" placeholder="Select Value">
+    <select>
+      {% comment %} USE THIS HIDDEN OPTION TO SHOW PLACEHOLDER {% endcomment %}
+      <option value="reset" selected>Select value</option>
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+      <option value="3">Option 3</option>
+      <option value="4">Option 4</option>
+      <option value="5">Option 5</option>
+      <option value="6">Option 6</option>
+      <option value="7">Option 7</option>
+      <option value="8">Option 8</option>
+    </select>
+  </custom-select>
+  <div class="form-element">
+    <input id="example-checkbox" type="checkbox">
+    <label for="example-checkbox">Checkbox</label>
+  </div>
+  <div class="form-element">
+    <input id="example-radio" type="radio">
+    <label for="example-radio">Radio</label>
+  </div>
+</div>

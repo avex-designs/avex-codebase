@@ -102,7 +102,9 @@ class CustomSelect extends HTMLElement {
     this.$currentOption = document.createElement("div");
 
     this.$currentOption.textContent =
-      this.selectedOption?.textContent || this.placeholder;
+      this.$select.selectedIndex > 0
+        ? this.selectedOption?.textContent
+        : this.placeholder;
     this.$options.forEach(($option, i) => {
       const $li = document.createElement("li");
 
@@ -127,7 +129,8 @@ class CustomSelect extends HTMLElement {
       this.$optionsList.appendChild($li);
     });
 
-    this.$select.parentElement.append(this.$currentOption, this.$optionsList);
+    this.$select.insertAdjacentElement("afterend", this.$optionsList);
+    this.$select.insertAdjacentElement("afterend", this.$currentOption);
     this.toggleAttribute(
       attributes.stateSelected,
       !this.$select.value.includes("reset")

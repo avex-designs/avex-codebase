@@ -13,6 +13,25 @@ $max-bp-m: 991px;
 $max-bp-s: 767px;
 $max-bp-xs: 575px;
 
+//Primary Colors
+$color-primary-flamingo: #ef6351;
+$color-primary-lavender: #c9aef1;
+$color-primary-clay: #bbc7b6;
+
+//System Colors
+$color-error: #db3545;
+$color-success: #198754;
+$color-warning: #ffaf20;
+$color-focus: #0d6efd;
+
+//Neutral Colors
+$color-neutral-black: #1a1a1a;
+$color-neutral-dark-gray: #666;
+$color-neutral-medium-gray: #828282;
+$color-neutral-light-gray: #ddd;
+$color-neutral-alabaster: #fafafa;
+$color-neutral-white: #fff;
+
 /*
 Media query mixin.
 Usage: 
