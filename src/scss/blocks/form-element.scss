@@ -1,18 +1,171 @@
-custom-select.form-element {
+/* stylelint-disable no-descending-specificity */
+.form-element {
+  position: relative;
   display: block;
+  flex-direction: column;
+
+  label {
+    position: absolute;
+    left: rem(16px);
+    top: rem(8px);
+    transition: 0.3s ease;
+    opacity: 0;
+
+    // TODO: change with font-style snippet
+    font-size: rem(10px);
+    color: $color-neutral-dark-gray;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  input {
+    padding: rem(16px);
+    border: 1px solid $color-neutral-light-gray;
+    transition: 0.3s ease;
+    background-color: transparent;
+
+    // TODO: change with font-style snippet
+    font-size: rem(14px);
+    color: $color-neutral-dark-gray;
+
+    &:focus-visible {
+      border-color: $color-neutral-dark-gray;
+    }
+
+    &:not(:placeholder-shown) {
+      padding-bottom: rem(8px);
+      padding-top: rem(24px);
+      border-color: $color-neutral-medium-gray;
+
+      + label {
+        opacity: 1;
+      }
+    }
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    @include visually-hidden;
+
+    + label {
+      position: static;
+      display: flex;
+      align-items: center;
+      text-transform: none;
+      opacity: 1;
+
+      // TODO: change with font-style snippet
+      font-size: 14px;
+      letter-spacing: normal;
+
+      &::before {
+        display: inline-block;
+        content: "";
+        width: rem(15px);
+        height: rem(15px);
+        border: 1px solid $color-neutral-black;
+        background-color: transparent;
+        background-position: center;
+        margin-right: rem(8px);
+      }
+    }
+
+    &:disabled + label {
+      cursor: initial;
+      color: $color-neutral-medium-gray;
+
+      &::before {
+        border-color: $color-neutral-medium-gray;
+      }
+    }
+
+    &:checked + label::before {
+      @include icon(checked, $color-neutral-black);
+    }
+  }
+
+  input[type="radio"] {
+    + label {
+      &::before {
+        border-radius: 50%;
+      }
+    }
+
+    &:checked + label::before {
+      @include icon(circle, $color-neutral-black);
+    }
+  }
+}
+
+.form-element__alert {
+  margin-top: rem(8px);
+  display: flex;
+  align-items: center;
+
+  // TODO: change with font-style snippet
+  font-size: rem(14px);
+
+  &::before {
+    content: "";
+    width: rem(20px);
+    height: rem(20px);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    margin-right: rem(4px);
+  }
+
+  &--error {
+    &::before {
+      @include icon(error, $color-error);
+    }
+  }
+
+  &--success {
+    &::before {
+      @include icon(done, $color-success);
+    }
+  }
+}
+
+custom-select.form-element {
   position: relative;
 
+  &::before {
+    position: absolute;
+    left: rem(16px);
+    top: rem(8px);
+    transition: 0.3s ease;
+    opacity: 0;
+    content: attr(label);
+
+    // TODO: change with font-style snippet
+    font-size: rem(10px);
+    color: $color-neutral-dark-gray;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
   select + div {
+    min-width: rem(200px);
+    padding: rem(16px);
     padding-right: rem(48px);
     position: relative;
-    background-color: #ccc;
+    border: 1px solid $color-neutral-light-gray;
+    transition: 0.3s ease;
+
+    // TODO: change with font-style snippet
+    font-size: rem(14px);
+    line-height: 1;
+    color: $color-neutral-dark-gray;
 
     &::after {
       @include icon(arrowBottom);
 
       content: "";
       position: absolute;
-      right: rem(24px);
+      right: rem(12px);
       top: 0;
       bottom: 0;
       width: rem(16px);
@@ -23,20 +176,33 @@ custom-select.form-element {
     }
   }
 
+  &[data-custom-select-selected] {
+    &::before {
+      opacity: 1;
+    }
+
+    select + div {
+      padding-bottom: rem(8px);
+      padding-top: rem(24px);
+    }
+  }
+
   ul {
     min-width: rem(240px);
+    background-color: $color-neutral-white;
     position: absolute;
     left: 0;
     width: 100%;
     z-index: 5;
-    background-color: #c0c0c0;
     transform: scaleY(0.7);
     transition: all 0.15s;
     opacity: 0;
     visibility: hidden;
     transform-origin: top;
-    max-height: rem(416px);
+    max-height: rem(312px);
     overflow-y: auto;
+    border: 1px solid $color-neutral-light-gray;
+    border-top: 0;
 
     li {
       padding: rem(8px) rem(24px);
@@ -52,8 +218,12 @@ custom-select.form-element {
 
       &:hover,
       &:focus-visible {
-        background-color: black;
-        color: white;
+        background-color: $color-neutral-alabaster;
+      }
+
+      &[data-custom-select-option-selected] {
+        background-color: $color-neutral-black;
+        color: $color-neutral-white;
       }
     }
   }
@@ -66,6 +236,8 @@ custom-select.form-element {
     }
 
     select + div {
+      border-color: $color-neutral-black;
+
       &::after {
         transform: scaleY(-1);
       }
