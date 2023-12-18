@@ -25,6 +25,8 @@
   if request.page_type == 'customers/addresses'
     assign is_addresses = true
   endif
+
+  assign page_type = request.page_type | replace: 'customers/', ''
 %}
 
 <div class="customer-portal">
@@ -73,7 +75,7 @@
         </ul>
       </div>
     </div>
-    <div class="customer-portal__main-content">
+    <div class="customer-portal__main-content {{ page_type }}">
       {{ content }}
     </div>
   {% else %}
