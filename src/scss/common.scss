@@ -24,3 +24,54 @@ Restricted:
 .skip-link:focus {
   transform: translateY(0%);
 }
+
+body.overflow-hidden {
+  overflow: hidden;
+}
+
+// buttons
+.btn {
+  border: none;
+  color: $color-neutral-black;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  letter-spacing: 1.12px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: rem(16px) rem(40px);
+
+  &--light {
+    background-color: $color-primary-lavender;
+  }
+
+  &--dark {
+    background-color: $color-neutral-black;
+    color: $color-neutral-white;
+  }
+}
+
+// temporarily hiding hav + breadcrumbs
+#shopify-section-header,
+#shopify-section-ajax-cart {
+  display: none;
+}
+
+nav[aria-label="Breadcrumb"] {
+  ul {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-bottom: 1px solid;
+  }
+}
+
+#shopify-section-footer {
+  border-top: 1px solid;
+
+  ul {
+    display: flex;
+  }
+}
