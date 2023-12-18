@@ -36,6 +36,7 @@
       padding-bottom: rem(8px);
       padding-top: rem(24px);
       border-color: $color-neutral-medium-gray;
+      color: $color-neutral-black;
 
       + label {
         opacity: 1;
@@ -188,7 +189,6 @@ custom-select.form-element {
   }
 
   ul {
-    min-width: rem(240px);
     background-color: $color-neutral-white;
     position: absolute;
     left: 0;
@@ -205,6 +205,7 @@ custom-select.form-element {
     border-top: 0;
 
     li {
+      font-size: rem(14px);
       padding: rem(8px) rem(24px);
       background-color: transparent;
       transition: all 0.15s;
