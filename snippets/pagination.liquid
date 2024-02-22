@@ -1,23 +1,34 @@
-<ul class="pagination">
-  {% unless paginate.previous.is_link %}
-    <li aria-hidden="true">
-      <button class="btn btn--tertiary btn--narrow" disabled>&lt;</button>
-    </li>
-  {% else %}
+<nav class="pagination" role="navigation" aria-label="Pagination">
+  <ul role="list">
     <li>
-      <a href="{{ paginate.previous.url }}" class="btn btn--tertiary btn--narrow"> &lt; </a>
+      <a class="pagination__prev {% unless paginate.previous %}disabled{% endunless %}"
+        href="{{ paginate.previous.url }}"
+        data-html-fetcher-link="{{ paginate.previous.url }}&section_id={{ section.id }}"
+        aria-label="Previous page"> </a>
     </li>
-  {% endunless %}
-  <li class="pagination__text">
-    {{ 'general.pagination.current_page' | t: current: paginate.current_page, total: paginate.pages }}
-  </li>
-  {% unless paginate.next.is_link %}
-    <li aria-hidden="true">
-      <button class="btn btn--tertiary btn--narrow" disabled>&lt;</button>
-    </li>
-  {% else %}
+    {%- for part in paginate.parts -%}
     <li>
-      <a href="{{ paginate.next.url }}" class="btn btn--tertiary btn--narrow"> &gt; </a>
+      {%- if part.is_link -%}
+      <a href="{{ part.url }}" data-html-fetcher-link="{{ part.url }}&section_id={{ section.id }}"
+        aria-label="Page number {{ part.title }}">
+        {{- part.title -}}
+      </a>
+      {%- else -%}
+      {%- if part.title == paginate.current_page -%}
+      <span class="pagination__current" aria-current="page" aria-label="Page number {{ part.title }}">
+        {{- part.title -}}
+      </span>
+      {%- else -%}
+      <span>{{ part.title }}</span>
+      {%- endif -%}
+      {%- endif -%}
     </li>
-  {% endunless %}
-</ul>
+    {%- endfor -%}
+    <li>
+      <a class="pagination__next {% unless paginate.next %}disabled{% endunless %}"
+        href="{{ paginate.next.url }}"
+        data-html-fetcher-link="{{ paginate.next.url }}&section_id={{ section.id }}" aria-label="Next page">
+      </a>
+    </li>
+  </ul>
+</nav>

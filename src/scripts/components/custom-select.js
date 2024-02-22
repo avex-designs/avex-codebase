@@ -124,6 +124,7 @@ class CustomSelect extends HTMLElement {
       if ($option.selected) {
         $li.setAttribute(attributes.optionSelected, true);
         this.$selectedOption = $li;
+        this.$currentOption.textContent = $option.textContent;
       }
 
       this.$optionsList.appendChild($li);

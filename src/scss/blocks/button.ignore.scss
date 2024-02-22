@@ -1,7 +1,7 @@
 .button {
   @include font-style($label-m);
 
-  background-color: var(--color-accent);
+  background-color: $color-primary-lavender;
   padding: rem(12px) rem(20px);
-  border: 1px solid var(--color-accent);
+  border: 1px solid $color-primary-lavender;
 }

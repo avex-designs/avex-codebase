@@ -80,10 +80,37 @@
     },
     "log_out": "Log out",
     "account": {
-      "page_title": "Account dashboard"
+      "page_title": "Account dashboard",
+      "account_info": "Account information",
+      "contact_info": "Contact information",
+      "order_history": "Order history",
+      "order_num": "Order #",
+      "order_date": "Date",
+      "payment_status": "Payment status",
+      "fulfilment_status": "Fulfilment status",
+      "order_total": "Total",
+      "no_order_text": "You haven't placed any orders yet."
     },
     "addresses": {
-      "page_title": "Address book"
+      "page_title": "Address book",
+      "no_address_text": "You have no address in your address book.",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "company": "Company",
+      "address_1": "Address 1",
+      "address_2": "Address 2",
+      "country": "Country/Region",
+      "province": "Province/State",
+      "city": "City",
+      "zip": "Zip",
+      "phone": "Phone",
+      "set_default": "Set as default address",
+      "add_new": "Add new address",
+      "cancel": "Cancel",
+      "edit": "Edit address",
+      "update": "Update address",
+      "delete_message": "Are you sure you wish to delete this address?"
+      
     },
     "order": {
       "page_title": "Order {{ name }}"
