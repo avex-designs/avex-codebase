@@ -18,24 +18,24 @@ class KlaviyoBIS extends HTMLElement {
   }
 
   connectedCallback() {
-    this.#setCloseEvent();
-    this.#submitForm();
+    this._setCloseEvent();
+    this._submitForm();
     document.addEventListener(
       "click",
       (event) => {
-        this.#setOpenEvent(event);
+        this._setOpenEvent(event);
       },
       false
     );
   }
 
-  async #setOpenEvent(event) {
+  async _setOpenEvent(event) {
     const $openElement = event.target.closest(`[${attributes.open}]`);
     if (!$openElement) return;
 
     event.preventDefault();
-    this.#toggle(true);
-    this.#loading(true);
+    this._toggle(true);
+    this._loading(true);
     const form = $openElement.closest("form");
     const requestURL = $openElement.getAttribute(attributes.requestUrl);
     const selectedVariantId = form?.querySelector("[name='id']")?.value || 0;
@@ -49,17 +49,17 @@ class KlaviyoBIS extends HTMLElement {
       if (!response.ok) throw new Error("[KlaviyoBIS] Response error");
 
       const html = await response.text();
-      this.#replaceHTML(html);
-      this.#loading(false);
+      this._replaceHTML(html);
+      this._loading(false);
     } catch (error) {
       throw new Error(`[KlaviyoBIS] ${error}`);
     }
   }
 
-  #replaceHTML(html) {
+  _replaceHTML(html) {
     const newDocument = new DOMParser().parseFromString(html, "text/html");
     const $newElement = newDocument.querySelector(
-      `${ELEMENT_ID}${this.id ? "#" + this.id : ""}`
+      `${ELEMENT_ID}${this.id ? "_" + this.id : ""}`
     );
 
     if (!$newElement) throw new Error("[KlaviyoBIS] Element not found");
@@ -67,11 +67,14 @@ class KlaviyoBIS extends HTMLElement {
       $newElement.querySelector(`[${attributes.body}]`).innerHTML;
   }
 
-  async #submitForm() {
+  async _submitForm() {
     this.$formElement.addEventListener("submit", async (event) => {
       event.preventDefault();
-      this.#reset();
-      this.#loading(true);
+
+      const formData = new FormData(this.$formElement);
+
+      this._reset();
+      this._loading(true);
       try {
         const payload = {
           data: {
@@ -97,7 +100,7 @@ class KlaviyoBIS extends HTMLElement {
             },
           },
         };
-        const formData = new FormData(this.$formElement);
+
         const response = await fetch(this.$formElement.action, {
           method: "post",
           headers: {
@@ -114,18 +117,18 @@ class KlaviyoBIS extends HTMLElement {
           this._error(true);
         }
 
-        this.#loading(false);
+        this._loading(false);
       } catch (error) {
-        this.#loading(false);
+        this._loading(false);
         throw new Error(`[KlaviyoBIS] ${error}`);
       }
     });
   }
 
-  #setCloseEvent() {
+  _setCloseEvent() {
     const _self = this;
     document.addEventListener("keyup", (event) => {
-      if (event.code?.toUpperCase() === "ESCAPE") _self.#toggle(false);
+      if (event.code?.toUpperCase() === "ESCAPE") _self._toggle(false);
     });
     if (!this.$closeElements || !this.$closeElements.length)
       return console.warn("[KlaviyoBIS] Close element not found");
@@ -133,36 +136,36 @@ class KlaviyoBIS extends HTMLElement {
     this.$closeElements.forEach((element) =>
       element.addEventListener("click", (e) => {
         e.preventDefault();
-        _self.#toggle(false);
+        _self._toggle(false);
       })
     );
   }
 
-  #toggle(open) {
-    this.#reset();
+  _toggle(open) {
+    this._reset();
     open ? this.setAttribute("open", "") : this.removeAttribute("open");
   }
 
-  #loading(activate) {
+  _loading(activate) {
     activate
       ? this.setAttribute("loading", "")
       : this.removeAttribute("loading");
   }
 
-  #success(activate) {
+  _success(activate) {
     activate
       ? this.setAttribute("success", "")
       : this.removeAttribute("success");
   }
 
-  #error(activate) {
+  _error(activate) {
     activate ? this.setAttribute("error", "") : this.removeAttribute("error");
   }
 
-  #reset() {
-    this.#error(false);
-    this.#success(false);
-    this.#loading(false);
+  _reset() {
+    this._error(false);
+    this._success(false);
+    this._loading(false);
   }
 }
 customElements.define(ELEMENT_ID, KlaviyoBIS);
