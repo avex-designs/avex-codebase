@@ -1,29 +1,29 @@
 const ELEMENT_NAME = "media-loader";
 
 class MediaLoader extends HTMLElement {
-  #$elements = [];
+  _$elements = [];
 
   connectedCallback() {
     this.querySelectorAll("img, video").forEach(($element) => {
       if ($element instanceof HTMLVideoElement) {
-        $element.addEventListener("loadeddata", this.#test.bind(this));
-        $element.addEventListener("loadedmetadata", this.#test.bind(this));
-        $element.addEventListener("canplay", this.#test.bind(this));
-        $element.addEventListener("canplaythrough", this.#test.bind(this));
-        $element.addEventListener("playing", this.#test.bind(this));
+        $element.addEventListener("loadeddata", this._test.bind(this));
+        $element.addEventListener("loadedmetadata", this._test.bind(this));
+        $element.addEventListener("canplay", this._test.bind(this));
+        $element.addEventListener("canplaythrough", this._test.bind(this));
+        $element.addEventListener("playing", this._test.bind(this));
       } else {
-        $element.addEventListener("load", this.#test.bind(this));
+        $element.addEventListener("load", this._test.bind(this));
       }
-      this.#$elements.push($element);
+      this._$elements.push($element);
     });
 
-    this.#test();
+    this._test();
   }
 
-  #test() {
+  _test() {
     if (this.hasAttribute("ready")) return;
-    for (let i = 0; i < this.#$elements.length; i++) {
-      const $element = this.#$elements[i];
+    for (let i = 0; i < this._$elements.length; i++) {
+      const $element = this._$elements[i];
 
       if (
         ($element instanceof HTMLVideoElement && $element.readyState < 3) ||
@@ -32,10 +32,10 @@ class MediaLoader extends HTMLElement {
         return;
       }
     }
-    this.#setReady();
+    this._setReady();
   }
 
-  #setReady() {
+  _setReady() {
     this.setAttribute("ready", "");
     const event = new CustomEvent(`${ELEMENT_NAME}:ready`);
     this.dispatchEvent(event);
