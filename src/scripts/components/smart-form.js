@@ -23,12 +23,12 @@ class SmartForm extends HTMLElement {
     const _self = this;
     this.$form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const validation = _self.#setFormValidationRules();
+      const validation = _self._setFormValidationRules();
       if (validation) {
         e.currentTarget.submit();
       } else {
         _self.$allFields.forEach(($formElement) =>
-          this.#setFieldValidationRules($formElement)
+          this._setFieldValidationRules($formElement)
         );
       }
     });
@@ -39,32 +39,32 @@ class SmartForm extends HTMLElement {
     this.$allFields.forEach(($formElement) => {
       ["blur", "change", "input"].forEach((event) => {
         $formElement.addEventListener(event, () => {
-          this.#setFormValidationRules();
-          this.#setFieldValidationRules($formElement);
+          this._setFormValidationRules();
+          this._setFieldValidationRules($formElement);
         });
       });
     });
   }
 
-  #setFieldValidationRules($element) {
+  _setFieldValidationRules($element) {
     $element.setAttribute("aria-invalid", !$element.checkValidity());
-    this.#validateFormPasswords(true);
+    this._validateFormPasswords(true);
   }
 
-  #setFormValidationRules() {
+  _setFormValidationRules() {
     let isInvalid = 1;
-    isInvalid *= this.#validateFormHTML();
-    isInvalid *= this.#validateFormPasswords();
+    isInvalid *= this._validateFormHTML();
+    isInvalid *= this._validateFormPasswords();
 
     this.$form.setAttribute("data-invalid", isInvalid === 0);
     return isInvalid === 1;
   }
 
-  #validateFormHTML() {
+  _validateFormHTML() {
     return this.$allFields.some(($input) => !$input.checkValidity()) ? 0 : 1;
   }
 
-  #validateFormPasswords(setAria = false) {
+  _validateFormPasswords(setAria = false) {
     let notEqual = false;
     const confirmPwdField = this.$form.querySelector(
       "input[name='customer[password_confirmation]']"

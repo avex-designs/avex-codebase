@@ -14,13 +14,13 @@ const attributes = {
 };
 
 class InfinitePaginate extends HTMLElement {
-  #isLoading = false;
+  _isLoading = false;
 
   connectedCallback() {
-    this.#addEventListeners();
+    this._addEventListeners();
   }
 
-  #addEventListeners() {
+  _addEventListeners() {
     const loadMoreLinkQuery = `[${attributes.container}="${LOAD_MORE_TYPE}"] [${attributes.link}]`;
     const loadPrevLinkQuery = `[${attributes.container}="${LOAD_PREV_TYPE}"] [${attributes.link}]`;
     this.querySelectorAll(`${loadPrevLinkQuery}, ${loadMoreLinkQuery}`).forEach(
@@ -30,14 +30,14 @@ class InfinitePaginate extends HTMLElement {
           .getAttribute(attributes.container);
         $link.addEventListener("click", (event) => {
           event.preventDefault();
-          this.#fetch($link.href, linkContainerType);
+          this._fetch($link.href, linkContainerType);
         });
       }
     );
   }
 
-  #fetch(url, requestType) {
-    if (this.#isLoading) return;
+  _fetch(url, requestType) {
+    if (this._isLoading) return;
     const requestURL = new URL(url, window.location.origin);
     const [sectionId] = getShopifySection(this);
     if (!sectionId)
@@ -54,20 +54,20 @@ class InfinitePaginate extends HTMLElement {
     }
     requestURL.search = requestURL.search + `&section_id=${sectionId}`;
 
-    this.#isLoading = true;
-    this.#addLoadingClasses(this.#isLoading, requestType);
+    this._isLoading = true;
+    this._addLoadingClasses(this._isLoading, requestType);
     fetch(requestURL)
       .then((response) => response.text())
       .then((html) => {
-        this.#render(html, requestType);
+        this._render(html, requestType);
       })
       .finally(() => {
-        this.#isLoading = false;
-        this.#addLoadingClasses(this.#isLoading, requestType);
+        this._isLoading = false;
+        this._addLoadingClasses(this._isLoading, requestType);
       });
   }
 
-  #addLoadingClasses(on, requestType) {
+  _addLoadingClasses(on, requestType) {
     toggleClassFromAttribute(this, attributes.loadingClass, on);
     toggleClassFromAttribute(
       this,
@@ -81,7 +81,7 @@ class InfinitePaginate extends HTMLElement {
     );
   }
 
-  #render(html, linkContainerType) {
+  _render(html, linkContainerType) {
     const receivedDOM = new DOMParser().parseFromString(html, "text/html");
     this.querySelectorAll(`[${attributes.container}]`).forEach(($container) => {
       const containerType = $container.getAttribute(attributes.container);
@@ -122,7 +122,7 @@ class InfinitePaginate extends HTMLElement {
       );
     }
 
-    this.#addEventListeners();
+    this._addEventListeners();
   }
 }
 

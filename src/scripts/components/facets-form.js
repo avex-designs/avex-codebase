@@ -142,29 +142,29 @@ function renderPage(html) {
 }
 
 class FacetsForm extends HTMLElement {
-  #$form;
+  _$form;
   connectedCallback() {
-    this.#$form = this.querySelector("form");
-    if (!this.#$form)
+    this._$form = this.querySelector("form");
+    if (!this._$form)
       throw new Error(`[${ELEMENT_NAME}] [The "form" element isn't found]`);
 
-    this.#$form.addEventListener("submit", (event) => {
+    this._$form.addEventListener("submit", (event) => {
       event.preventDefault();
-      this.#ajaxSubmit();
+      this._ajaxSubmit();
     });
 
     document.body.addEventListener("change", (event) => {
       if (
-        event.target.form === this.#$form &&
+        event.target.form === this._$form &&
         event.target.hasAttribute(attributes.ajaxInput)
       ) {
-        this.#ajaxSubmit();
+        this._ajaxSubmit();
       }
     });
   }
 
-  #ajaxSubmit() {
-    const formData = new FormData(this.#$form);
+  _ajaxSubmit() {
+    const formData = new FormData(this._$form);
     facetsChangeHandler(new URLSearchParams(formData).toString());
   }
 }

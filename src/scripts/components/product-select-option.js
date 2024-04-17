@@ -3,7 +3,7 @@ import { ProductOption } from "../base-components/product-option";
 const ELEMENT_NAME = "product-select-option";
 
 class ProductSelectOption extends ProductOption {
-  #$select;
+  _$select;
   constructor() {
     super(ELEMENT_NAME);
   }
@@ -11,16 +11,16 @@ class ProductSelectOption extends ProductOption {
   connectedCallback() {
     super.connectedCallbackStart();
 
-    this.#$select = this.querySelector("select");
-    if (!this.#$select)
+    this._$select = this.querySelector("select");
+    if (!this._$select)
       throw new Error(`[${ELEMENT_NAME}] [A select element if not found]`);
 
     super.connectedCallbackEnd();
-    this.#internalEvents();
+    this._internalEvents();
   }
 
-  #internalEvents() {
-    this.#$select.addEventListener("change", (e) => {
+  _internalEvents() {
+    this._$select.addEventListener("change", (e) => {
       if (this.$productSection.state) {
         this.$productSection.setOptions({
           [this.optionName]: e.currentTarget.value,
@@ -34,8 +34,8 @@ class ProductSelectOption extends ProductOption {
 
     const option = this.getOptionState();
     if (option) {
-      this.#$select.value = option.value || "";
-      this.#$select.querySelectorAll("option").forEach(($element) => {
+      this._$select.value = option.value || "";
+      this._$select.querySelectorAll("option").forEach(($element) => {
         this.addAvailabilityClass($element, $element.value);
       });
     }

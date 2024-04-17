@@ -82,14 +82,14 @@ const attributes = {
 };
 
 class HTMLFetcher extends HTMLElement {
-  #url;
-  #abortController;
-  #loading = loadingTypes.EAGER;
-  #intersectionObserver;
+  _url;
+  _abortController;
+  _loading = loadingTypes.EAGER;
+  _intersectionObserver;
 
   constructor() {
     super();
-    this.#intersectionObserver = new IntersectionObserver(
+    this._intersectionObserver = new IntersectionObserver(
       (entries, observer) => {
         if (!entries[0].isIntersecting) return;
         observer.unobserve(this);
@@ -120,7 +120,7 @@ class HTMLFetcher extends HTMLElement {
   connectedCallback() {
     const loading = this.getAttribute("loading");
     if (Object.values(loadingTypes).includes(loading)) {
-      this.#loading = loading;
+      this._loading = loading;
     }
 
     const url = this.getAttribute("href");
@@ -130,23 +130,23 @@ class HTMLFetcher extends HTMLElement {
   }
 
   setUrl(url) {
-    this.#url = url;
-    if (this.#loading === loadingTypes.EAGER) {
+    this._url = url;
+    if (this._loading === loadingTypes.EAGER) {
       this.updateHTML();
       return;
     }
-    this.#intersectionObserver.observe(this);
+    this._intersectionObserver.observe(this);
   }
 
   async updateHTML() {
-    if (this.#abortController) {
-      this.#abortController.abort();
+    if (this._abortController) {
+      this._abortController.abort();
     }
-    this.#abortController = new AbortController();
+    this._abortController = new AbortController();
     try {
-      this.#toggleLoadingClasses(true);
-      const response = await fetch(this.#url, {
-        signal: this.#abortController.signal,
+      this._toggleLoadingClasses(true);
+      const response = await fetch(this._url, {
+        signal: this._abortController.signal,
       });
       if (!response.ok)
         throw new Error(`Response error from the "${response.url}" URL`);
@@ -173,10 +173,10 @@ class HTMLFetcher extends HTMLElement {
         throw error;
       }
     }
-    this.#toggleLoadingClasses(false);
+    this._toggleLoadingClasses(false);
   }
 
-  #toggleLoadingClasses(on) {
+  _toggleLoadingClasses(on) {
     toggleClassFromAttribute(this, attributes.loadingClass, on);
   }
 }
