@@ -16,8 +16,9 @@
     
 4. Connect theme in Shopify admin via Github - `Themes -> Add theme -> Connect from Github`
 5. Checkout to the new branch (not `main` branch) - `git checkout -b ‘dev’`
-6. Run `npm start` to start the dev theme and start development.
-7. Once done with changes, push to `dev` branch, open and merge PR
+6. `npm run prepare` for husky prepare, to avoid conflicts with min files.
+7. Run `npm start` to start the dev theme and start development.
+8. Once done with changes, push to `dev` branch, open and merge PR
 
 ## Quick start and practical usage
 
