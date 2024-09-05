@@ -1,4 +1,67 @@
+/*
+* ------------------------------------------------------------
+* IMPORTANT: The contents of this file are auto-generated.
+*
+* This file may be updated by the Shopify admin theme editor
+* or related systems. Please exercise caution as any changes
+* made to this file may be overwritten.
+* ------------------------------------------------------------
+*/
 {
   "current": {
+    "sections": {
+      "header": {
+        "type": "header",
+        "blocks": {
+          "menu_item_QjEABx": {
+            "type": "menu_item",
+            "settings": {
+              "title": "Test",
+              "url": "",
+              "linklist": "",
+              "promo_heading": "",
+              "promo_link_text": "",
+              "promo_link_url": ""
+            }
+          }
+        },
+        "block_order": [
+          "menu_item_QjEABx"
+        ],
+        "settings": {
+          "logo_svg": "",
+          "menu": "main-menu"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "menu": "",
+          "social_menu": "",
+          "newsletter_code": "",
+          "copyrights": "[Y] My company",
+          "payment_enable": true,
+          "enable_country_selector": true,
+          "enable_language_selector": true
+        }
+      },
+      "ajax-cart": {
+        "type": "ajax-cart",
+        "settings": {
+          "cart_title": "My Bag",
+          "cart_text": "Free shipping on all domestic orders over $150",
+          "cart_empty": "Oops, There’s nothing in your cart"
+        }
+      },
+      "klaviyo-bis": {
+        "type": "klaviyo-bis",
+        "settings": {
+          "klaviyo_id": "WXeasw"
+        }
+      }
+    },
+    "content_for_index": [
+
+    ]
   }
 }
